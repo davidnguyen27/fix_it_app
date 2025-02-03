@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "fix-it-right-app",
-    "slug": "fix-it-right-app",
+    "name": "FixItPro",
+    "slug": "FixItPro",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon1.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon1.png",
         "backgroundColor": "#ffffff"
       }
     },
@@ -27,10 +27,22 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "image": "./assets/images/splash1.png",
           "resizeMode": "contain",
+          "enableFullScreenImage_legacy": true,
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "font": [
+            "./assets/fonts/Unbounded-Light.ttf",
+            "./assets/fonts/Unbounded-Regular.ttf",
+            "./assets/fonts/Unbounded-Medium.ttf",
+            "./assets/fonts/Unbounded-SemiBold.ttf",
+            "./assets/fonts/Unbounded-Bold.ttf"
+          ]
         }
       ]
     ],
