@@ -1,5 +1,6 @@
 import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
+import icons from "@/constants/icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -26,7 +27,7 @@ const ResetPassword = () => {
       <ScrollView className="flex-1 px-6">
         <View className="mt-8">
           <ActionIcon
-            icon={require("../../../assets/icons/arrow_left.png")}
+            icon={icons.arrowLeft}
             backgroundColor="bg-[#4A628A]"
             tintColor="#DFF2EB"
             onPress={() => router.back()}
@@ -62,11 +63,7 @@ const ResetPassword = () => {
             >
               <Text className="text-[14px] font-unbounded-light">
                 <Image
-                  source={
-                    passwordVisible
-                      ? require("../../../assets/icons/eye-off.png")
-                      : require("../../../assets/icons/eye-on.png")
-                  }
+                  source={passwordVisible ? icons.eyeOff : icons.eyeOn}
                   className="size-6"
                 />
               </Text>
@@ -93,11 +90,7 @@ const ResetPassword = () => {
             >
               <Text className="text-[14px] font-unbounded-light">
                 <Image
-                  source={
-                    passwordVisible
-                      ? require("../../../assets/icons/eye-off.png")
-                      : require("../../../assets/icons/eye-on.png")
-                  }
+                  source={passwordVisible ? icons.eyeOff : icons.eyeOn}
                   className="size-6"
                 />
               </Text>

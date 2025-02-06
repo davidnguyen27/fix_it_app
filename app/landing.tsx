@@ -1,3 +1,4 @@
+import icons from "@/constants/icons";
 import { useRouter } from "expo-router";
 import {
   View,
@@ -30,10 +31,7 @@ const Landing = () => {
           className="bg-[#B9E5E8] w-[66px] h-[57px] rounded-[22px] items-center justify-center"
           onPress={() => router.push("/screens/sign-up")}
         >
-          <Image
-            source={require("../assets/icons/arrow_right.png")}
-            className="size-8"
-          />
+          <Image source={icons.arrowRight} className="size-8" />
         </TouchableOpacity>
       </View>
     </ImageBackground>

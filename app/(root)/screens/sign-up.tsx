@@ -1,5 +1,6 @@
 import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
+import icons from "@/constants/icons";
 import useUser from "@/hooks/useUser";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -37,7 +38,7 @@ const SignUp = () => {
       <ScrollView className="flex-1 px-6">
         <View className="mt-8">
           <ActionIcon
-            icon={require("../../../assets/icons/arrow_left.png")}
+            icon={icons.arrowLeft}
             backgroundColor="bg-[#4A628A]"
             tintColor="#DFF2EB"
             onPress={() => router.back()}
@@ -91,11 +92,7 @@ const SignUp = () => {
             >
               <Text className="text-[14px] font-unbounded-light">
                 <Image
-                  source={
-                    passwordVisible
-                      ? require("../../../assets/icons/eye-off.png")
-                      : require("../../../assets/icons/eye-on.png")
-                  }
+                  source={passwordVisible ? icons.eyeOff : icons.eyeOn}
                   className="size-6"
                 />
               </Text>
@@ -128,11 +125,7 @@ const SignUp = () => {
               isChecked ? "border-[#4A628A]" : "border-[#4A628A]"
             } items-center justify-center`}
           >
-            {isChecked && (
-              <Image
-                source={require("../../../assets/icons/tick-square.png")}
-              />
-            )}
+            {isChecked && <Image source={icons.tickSquare} />}
           </TouchableOpacity>
           <Text className="ml-3 font-unbounded text-[13px]">
             Agree with{" "}
@@ -166,15 +159,13 @@ const SignUp = () => {
 
         <View className="flex-row justify-center my-4">
           <TouchableOpacity className="p-4 rounded-full bg-[#D9D9D9]">
-            <Image source={require("../../../assets/icons/apple-logo.png")} />
+            <Image source={icons.apple} />
           </TouchableOpacity>
           <TouchableOpacity className="p-4 mx-5 rounded-full bg-[#D9D9D9]">
-            <Image source={require("../../../assets/icons/google-logo.png")} />
+            <Image source={icons.google} />
           </TouchableOpacity>
           <TouchableOpacity className="p-4 rounded-full bg-[#D9D9D9]">
-            <Image
-              source={require("../../../assets/icons/facebook-logo.png")}
-            />
+            <Image source={icons.facebook} />
           </TouchableOpacity>
         </View>
 

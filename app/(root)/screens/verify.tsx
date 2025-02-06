@@ -1,5 +1,6 @@
 import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
+import icons from "@/constants/icons";
 import useCoundownTimer from "@/hooks/useCountdownTimer";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
@@ -56,7 +57,7 @@ const Verify = () => {
       <View className="flex-1 px-6">
         <View className="mt-8">
           <ActionIcon
-            icon={require("../../../assets/icons/arrow_left.png")}
+            icon={icons.arrowLeft}
             backgroundColor="bg-[#4A628A]"
             tintColor="#DFF2EB"
             onPress={() => router.back()}
