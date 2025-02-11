@@ -1,18 +1,16 @@
+import { getCurrentUser } from "@/services/auth.service";
 import { registerUser } from "@/services/user.service";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 
 const useUser = () => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
-  const signUp = async (
-    username: string,
-    password: string,
-    phoneNumber: string
-  ) => {
-    if (!username || !password || !phoneNumber) {
+  const signUp = async (username: string, email: string, password: string) => {
+    if (!username || !password || !email) {
       Toast.show({
         type: "error",
         text1: "Registration Error",
@@ -21,37 +19,35 @@ const useUser = () => {
       return;
     }
 
-    console.log("Data registration: ", {
-      username,
-      password,
-      phoneNumber,
+    await registerUser({
+      UserName: username,
+      Password: password,
+      Email: email,
     });
 
-    setIsLoading(true);
-    try {
-      const response = await registerUser({
-        UserName: username,
-        Password: password,
-        PhoneNumber: phoneNumber,
-      });
+    Toast.show({
+      type: "success",
+      text1: "Registration Successful",
+    });
 
-      console.log("✅ Debug: Phản hồi từ server:", response);
-
-      Toast.show({
-        type: "success",
-        text1: "Account created",
-        text2: "You can now log in",
-      });
-
-      router.push("/(root)/screens/sign-in");
-    } catch (error) {
-      console.error("❌ Debug: Lỗi đăng ký:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    router.push("/(root)/screens/sign-in");
   };
 
-  return { signUp, isLoading };
+  const fetchUser = async () => {
+    const token = await AsyncStorage.getItem("AccessToken");
+    if (!token) {
+      setUser(null);
+      return;
+    }
+
+    await getCurrentUser();
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  return { signUp, user, refetch: fetchUser };
 };
 
 export default useUser;

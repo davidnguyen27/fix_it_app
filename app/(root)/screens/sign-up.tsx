@@ -1,6 +1,7 @@
 import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
 import icons from "@/constants/icons";
+import { useLoading } from "@/hooks/useLoading";
 import useUser from "@/hooks/useUser";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -17,16 +18,18 @@ import {
 
 const SignUp = () => {
   const router = useRouter();
-  const { signUp, isLoading } = useUser();
 
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
+  const { signUp } = useUser();
+  const isLoading = useLoading();
+
   const handleRegister = () => {
-    signUp(username, password, phoneNumber);
+    if (!isLoading) signUp(username, email, password);
   };
 
   return (
@@ -44,9 +47,7 @@ const SignUp = () => {
             onPress={() => router.back()}
           />
 
-          <Text className="text-[20px] text-center font-unbounded">
-            Create Account
-          </Text>
+          <Text className="text-[20px] text-center font-unbounded">Create Account</Text>
         </View>
 
         <Text className="text-[14px] font-unbounded-light text-center mt-4">
@@ -55,9 +56,7 @@ const SignUp = () => {
 
         {/* Input Username */}
         <View className="mt-8">
-          <Text className="text-[14px] font-unbounded-light mb-3">
-            Username
-          </Text>
+          <Text className="text-[14px] font-unbounded-light mb-3">Username</Text>
           <TextInput
             className="bg-[#DFF2EB] rounded-2xl px-4 py-4 font-unbounded-light"
             placeholder="Enter your username"
@@ -70,11 +69,24 @@ const SignUp = () => {
           />
         </View>
 
+        {/* Input Email */}
+        <View className="mt-8">
+          <Text className="text-[14px] font-unbounded-light mb-3">Email</Text>
+          <TextInput
+            className="bg-[#DFF2EB] rounded-2xl px-4 py-4 font-unbounded-light"
+            placeholder="Enter your email"
+            placeholderTextColor="#A9A9A9"
+            textAlignVertical="center"
+            numberOfLines={1}
+            maxLength={50}
+            value={email}
+            onChangeText={setEmail}
+          />
+        </View>
+
         {/* Input Password */}
         <View className="mt-8">
-          <Text className="text-[14px] font-unbounded-light mb-3">
-            Password
-          </Text>
+          <Text className="text-[14px] font-unbounded-light mb-3">Password</Text>
           <View className="flex-row items-center bg-[#DFF2EB] rounded-2xl px-4">
             <TextInput
               className="flex-1 font-unbounded-light py-4"
@@ -86,35 +98,12 @@ const SignUp = () => {
               value={password}
               onChangeText={setPassword}
             />
-            <TouchableOpacity
-              onPress={() => setPasswordVisible(!passwordVisible)}
-              className="px-2"
-            >
+            <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)} className="px-2">
               <Text className="text-[14px] font-unbounded-light">
-                <Image
-                  source={passwordVisible ? icons.eyeOff : icons.eyeOn}
-                  className="size-6"
-                />
+                <Image source={passwordVisible ? icons.eyeOff : icons.eyeOn} className="size-6" />
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-
-        {/* Input PhoneNumber */}
-        <View className="mt-8">
-          <Text className="text-[14px] font-unbounded-light mb-3">
-            Phone Number
-          </Text>
-          <TextInput
-            className="bg-[#DFF2EB] rounded-2xl px-4 py-4 font-unbounded-light"
-            placeholder="Enter your phone number"
-            placeholderTextColor="#A9A9A9"
-            textAlignVertical="center"
-            numberOfLines={1}
-            maxLength={15}
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-          />
         </View>
 
         {/* Checkbox */}
@@ -128,32 +117,23 @@ const SignUp = () => {
             {isChecked && <Image source={icons.tickSquare} />}
           </TouchableOpacity>
           <Text className="ml-3 font-unbounded text-[13px]">
-            Agree with{" "}
-            <Text className="font-unbounded-light underline">
-              Term & Condition
-            </Text>
+            Agree with <Text className="font-unbounded-light underline">Term & Condition</Text>
           </Text>
         </View>
 
         {/* Sign Up button */}
         <View className="mt-8">
           {isLoading ? (
-            <ActivityIndicator size="large" color="4A628A" />
+            <ActivityIndicator size="large" color="FFFFFF" />
           ) : (
-            <Button
-              title="Sign Up"
-              backgroundColor="bg-[#4A628A]"
-              onPress={handleRegister}
-            />
+            <Button title="Sign Up" backgroundColor="bg-[#4A628A]" onPress={handleRegister} />
           )}
         </View>
 
         {/* Sign in by social media */}
         <View className="flex-row items-center mt-8">
           <View className="flex-1 h-px bg-black" />
-          <Text className="font-unbounded text-[13px] color-[#292D32] mx-3">
-            Or sign in with
-          </Text>
+          <Text className="font-unbounded text-[13px] color-[#292D32] mx-3">Or sign in with</Text>
           <View className="flex-1 h-px bg-black" />
         </View>
 

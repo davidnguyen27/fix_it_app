@@ -2,6 +2,7 @@ import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
 import icons from "@/constants/icons";
 import useAuth from "@/hooks/useAuth";
+import { useLoading } from "@/hooks/useLoading";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -22,10 +23,11 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const { login, isLoading } = useAuth();
+  const { login } = useAuth();
+  const isLoading = useLoading();
 
   const handleSignIn = () => {
-    login(username, password);
+    if (!isLoading) login(username, password);
   };
 
   return (
@@ -43,9 +45,7 @@ const SignIn = () => {
             onPress={() => router.back()}
           />
 
-          <Text className="text-[20px] text-center font-unbounded">
-            Sign In
-          </Text>
+          <Text className="text-[20px] text-center font-unbounded">Sign In</Text>
         </View>
 
         <Text className="text-[14px] font-unbounded-light text-center mt-4">
@@ -54,9 +54,7 @@ const SignIn = () => {
 
         {/* Input Username */}
         <View className="mt-8">
-          <Text className="text-[14px] font-unbounded-light mb-3">
-            Username
-          </Text>
+          <Text className="text-[14px] font-unbounded-light mb-3">Username</Text>
           <TextInput
             className="bg-[#DFF2EB] rounded-2xl px-4 py-4 font-unbounded-light"
             placeholder="Enter your username"
@@ -66,14 +64,13 @@ const SignIn = () => {
             numberOfLines={1}
             value={username}
             onChangeText={setUsername}
+            editable={!isLoading}
           />
         </View>
 
         {/* Input Password */}
         <View className="mt-8">
-          <Text className="text-[14px] font-unbounded-light mb-3">
-            Password
-          </Text>
+          <Text className="text-[14px] font-unbounded-light mb-3">Password</Text>
           <View className="flex-row items-center bg-[#DFF2EB] rounded-2xl px-4">
             <TextInput
               className="flex-1 font-unbounded-light py-4"
@@ -84,16 +81,15 @@ const SignIn = () => {
               secureTextEntry={!passwordVisible}
               value={password}
               onChangeText={setPassword}
+              editable={!isLoading}
             />
             <TouchableOpacity
               onPress={() => setPasswordVisible(!passwordVisible)}
               className="mr-2"
+              disabled={isLoading}
             >
               <Text className="text-[14px] font-unbounded-light">
-                <Image
-                  source={passwordVisible ? icons.eyeOff : icons.eyeOn}
-                  className="size-6"
-                />
+                <Image source={passwordVisible ? icons.eyeOff : icons.eyeOn} className="size-6" />
               </Text>
             </TouchableOpacity>
           </View>
@@ -109,22 +105,16 @@ const SignIn = () => {
         {/* Sign In button */}
         <View className="mt-8">
           {isLoading ? (
-            <ActivityIndicator size="large" color="#4A628A" />
+            <ActivityIndicator size="large" color="FFFFFF" />
           ) : (
-            <Button
-              title="Sign In"
-              backgroundColor="bg-[#4A628A]"
-              onPress={handleSignIn}
-            />
+            <Button title="Sign In" backgroundColor="bg-[#4A628A]" onPress={handleSignIn} />
           )}
         </View>
 
         {/* Sign in by social media */}
         <View className="flex-row items-center mt-8">
           <View className="flex-1 h-px bg-black" />
-          <Text className="font-unbounded text-[13px] color-[#292D32] mx-3">
-            Or sign in with
-          </Text>
+          <Text className="font-unbounded text-[13px] color-[#292D32] mx-3">Or sign in with</Text>
           <View className="flex-1 h-px bg-black" />
         </View>
 
@@ -144,8 +134,7 @@ const SignIn = () => {
           href="/(root)/screens/sign-up"
           className="text-center font-unbounded-light text-[13px] text-[#292D32]"
         >
-          Don’t have an account?{" "}
-          <Text className="font-unbounded underline">Sign Up</Text>
+          Don’t have an account? <Text className="font-unbounded underline">Sign Up</Text>
         </Link>
       </ScrollView>
     </ImageBackground>

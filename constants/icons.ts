@@ -1,4 +1,5 @@
 import apple from "@/assets/icons/apple-logo.png";
+import arrowDown from "@/assets/icons/arrow_down.png";
 import arrowLeft from "@/assets/icons/arrow_left.png";
 import arrowRight from "@/assets/icons/arrow_right.png";
 import bag from "@/assets/icons/bag.png";
@@ -12,6 +13,7 @@ import home from "@/assets/icons/home.png";
 import calendar from "@/assets/icons/jam_calendar-alt.png";
 import locationLight from "@/assets/icons/location-light.png";
 import location from "@/assets/icons/location.png";
+import logout from "@/assets/icons/logout.png";
 import message from "@/assets/icons/message_notif.png";
 import mingcuteRight from "@/assets/icons/mingcute_right-line.png";
 import notification from "@/assets/icons/notification.png";
@@ -26,6 +28,7 @@ import wallet from "@/assets/icons/wallet.png";
 
 export default {
   apple,
+  arrowDown,
   arrowLeft,
   arrowRight,
   bag,
@@ -39,6 +42,7 @@ export default {
   calendar,
   locationLight,
   location,
+  logout,
   message,
   mingcuteRight,
   notification,

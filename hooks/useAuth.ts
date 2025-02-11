@@ -1,35 +1,26 @@
-import { useState } from "react";
 import { loginUser } from "@/services/auth.service";
-import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
 const useAuth = () => {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
   const login = async (username: string, password: string) => {
-    if (!username || !password) {
+    try {
+      if (!username || !password) {
+        throw new Error("Vui lòng nhập đầy đủ thông tin");
+      }
+
+      await loginUser({ UserName: username, Password: password });
+    } catch (error) {
       Toast.show({
         type: "error",
-        text1: "Login Error",
-        text2: "Username and Password cannot be empty.",
+        text1: "Lỗi đăng nhập",
+        text2: error.message || "Đã có lỗi xảy ra",
+        position: "top",
       });
-      return;
+      throw error;
     }
-
-    setIsLoading(true);
-
-    await loginUser({ UserName: username, Password: password });
-    Toast.show({
-      type: "success",
-      text1: "Login Successful",
-    });
-    router.push("/profile");
-
-    setIsLoading(false);
   };
 
-  return { login, isLoading };
+  return { login };
 };
 
 export default useAuth;

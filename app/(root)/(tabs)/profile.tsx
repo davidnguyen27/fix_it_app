@@ -1,17 +1,22 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  ImageBackground,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
 import ActionIcon from "@/components/ActionIcon";
 import icons from "@/constants/icons";
 import { useRouter } from "expo-router";
+import MenuItem from "@/components/MenuItem";
+import useUser from "@/hooks/useUser";
+import useAuth from "@/hooks/useAuth";
+import { useLoading } from "@/hooks/useLoading";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const ProfileScreen = () => {
   const router = useRouter();
+  // const { user, refetch } = useUser();
+  const { logout } = useGlobalContext();
+  const isLoading = useLoading();
+
+  const handleLogout = () => {
+    if (!isLoading) logout();
+  };
 
   return (
     <View className="flex-1">
@@ -36,7 +41,7 @@ const ProfileScreen = () => {
       </ImageBackground>
 
       {/* White Background Container */}
-      <View className="bg-white rounded-t-[30px] -mt-6 px-6 flex-1">
+      <View className="bg-white rounded-t-[30px] -mt-7 px-6 flex-1">
         {/* Avatar */}
         <View className="items-center -mt-14">
           <View className="relative">
@@ -46,76 +51,67 @@ const ProfileScreen = () => {
             </TouchableOpacity>
           </View>
           <Text className="mt-5 font-unbounded-medium text-[16px]">
-            Lê Ngã Lễ
+            Full Name
+            {/* {isLoading ? "Loading..." : user?.Fullname} */}
           </Text>
         </View>
 
         {/* List menu */}
         <ScrollView className="mt-6">
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-[#C5C5C5]">
-            <View className="flex-row items-center">
-              <Image className="mr-4" source={icons.profileLight} />
-              <Text className="font-unbounded text-[16px]">Your Profile</Text>
-            </View>
-            <Image source={icons.mingcuteRight} />
-          </TouchableOpacity>
+          <MenuItem
+            icon={icons.profileLight}
+            title="Your Profile"
+            mingcuteRight={icons.mingcuteRight}
+            onPress={() => router.push("/(root)/properties/profile-id")}
+          />
 
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-[#C5C5C5]">
-            <View className="flex-row items-center">
-              <Image className="mr-4" source={icons.locationLight} />
-              <Text className="font-unbounded text-[16px]">Manage Address</Text>
-            </View>
-            <Image source={icons.mingcuteRight} />
-          </TouchableOpacity>
+          <MenuItem
+            icon={icons.locationLight}
+            title="Manage Address"
+            mingcuteRight={icons.mingcuteRight}
+            onPress={() => console.log("Manage address!")}
+          />
 
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-[#C5C5C5]">
-            <View className="flex-row items-center">
-              <Image className="mr-4" source={icons.fluentPayment} />
-              <Text className="font-unbounded text-[16px]">
-                Payment Methods
-              </Text>
-            </View>
-            <Image source={icons.mingcuteRight} />
-          </TouchableOpacity>
+          <MenuItem
+            icon={icons.fluentPayment}
+            title="Payment Methods"
+            mingcuteRight={icons.mingcuteRight}
+            onPress={() => console.log("Payment Methods!")}
+          />
 
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-[#C5C5C5]">
-            <View className="flex-row items-center">
-              <Image className="mr-4" source={icons.calendar} />
-              <Text className="font-unbounded text-[16px]">My Bookings</Text>
-            </View>
-            <Image source={icons.mingcuteRight} />
-          </TouchableOpacity>
+          <MenuItem
+            icon={icons.calendar}
+            title="My Bookings"
+            mingcuteRight={icons.mingcuteRight}
+            onPress={() => console.log("My Bookings!")}
+          />
 
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-[#C5C5C5]">
-            <View className="flex-row items-center">
-              <Image className="mr-4" source={icons.wallet} />
-              <Text className="font-unbounded text-[16px]">My Wallet</Text>
-            </View>
-            <Image source={icons.mingcuteRight} />
-          </TouchableOpacity>
+          <MenuItem
+            icon={icons.wallet}
+            title="My Wallet"
+            mingcuteRight={icons.mingcuteRight}
+            onPress={() => console.log("My Wallet!")}
+          />
 
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-[#C5C5C5]">
-            <View className="flex-row items-center">
-              <Image className="mr-4" source={icons.setting} />
-              <Text className="font-unbounded text-[16px]">Settings</Text>
-            </View>
-            <Image source={icons.mingcuteRight} />
-          </TouchableOpacity>
+          <MenuItem
+            icon={icons.setting}
+            title="Settings"
+            mingcuteRight={icons.mingcuteRight}
+            onPress={() => console.log("Settings")}
+          />
 
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-[#C5C5C5]">
-            <View className="flex-row items-center">
-              <Image className="mr-4" source={icons.help} />
-              <Text className="font-unbounded text-[16px]">Help Center</Text>
-            </View>
-            <Image source={icons.mingcuteRight} />
-          </TouchableOpacity>
+          <MenuItem
+            icon={icons.policy}
+            title="Privacy Policy"
+            mingcuteRight={icons.mingcuteRight}
+            onPress={() => console.log("Privacy Policy!")}
+          />
 
-          <TouchableOpacity className="flex-row items-center justify-between py-4 border-b border-[#C5C5C5]">
+          <TouchableOpacity onPress={handleLogout} className="py-4">
             <View className="flex-row items-center">
-              <Image className="mr-4" source={icons.policy} />
-              <Text className="font-unbounded text-[16px]">Privacy Policy</Text>
+              <Image className="mr-4" source={icons.logout} />
+              <Text className="font-unbounded text-[16px]">Logout</Text>
             </View>
-            <Image source={icons.mingcuteRight} />
           </TouchableOpacity>
         </ScrollView>
       </View>

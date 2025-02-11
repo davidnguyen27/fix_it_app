@@ -1,134 +1,140 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import { BASE_URL } from "@/constants/baseUrl";
 
 interface ErrorResponse {
   message?: string;
   errors?: { message?: string }[];
 }
 
-// Global variable
+// Biến toàn cục để kiểm soát trạng thái loading
+let isLoading = false;
 let setLoading: (loading: boolean) => void = () => {};
 
-export const setGlobalLoadingHandler = (
-  loadingHandler: (loading: boolean) => void
-) => {
+export const setGlobalLoadingHandler = (loadingHandler: (loading: boolean) => void) => {
   setLoading = loadingHandler;
 };
 
-// Handle Unauthorized (401)
-const handleUnauthorized = async () => {
-  await AsyncStorage.removeItem("token");
-  await AsyncStorage.removeItem("refreshToken");
+// Xử lý lỗi 401 (Unauthorized)
+const handleUnauthorized = async (error: AxiosError<ErrorResponse>) => {
+  const errMessage = error.response?.data?.message || "Unauthorized";
 
+  if (error.config?.url?.includes("/api/authentications/login")) {
+    return handleErrorByNotification(error);
+  }
+
+  await AsyncStorage.multiRemove(["AccessToken", "RefreshToken"]);
   Toast.show({
     type: "error",
     text1: "Session Expired",
     text2: "Please login again!",
     position: "top",
-    visibilityTime: 5000,
+    visibilityTime: 4000,
   });
 
-  return Promise.reject(new Error("Unauthorized - Please login again!"));
+  return Promise.reject(new Error(errMessage));
 };
 
-const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
-  const data = errors.response?.data as ErrorResponse;
-  const message: string = data?.message || "An error occurred";
+// Handle API error
+const handleErrorByNotification = (error: AxiosError<ErrorResponse>) => {
+  const message = error.response?.data?.message || "Something went wrong!";
 
-  console.error("API Error: ", errors.response?.data || errors.message);
+  Toast.show({
+    type: "error",
+    text1: "Notification",
+    text2: message,
+    position: "top",
+    visibilityTime: 4000,
+  });
 
-  if (message) {
-    Toast.show({
-      type: "error",
-      text1: "Notification",
-      text2: message,
-      position: "top",
-      visibilityTime: 5000,
-    });
-  }
-
-  return Promise.reject(errors);
+  return Promise.reject(error);
 };
 
-const autoSetContentType = (config: any) => {
-  if (config.data instanceof FormData) {
-    config.headers["Content-Type"] = "multipart/form-data";
-  } else {
+// Set Content-Type
+const autoSetContentType = (config: InternalAxiosRequestConfig) => {
+  if (!config.headers["Content-Type"]) {
     config.headers["Content-Type"] = "application/json";
   }
 };
 
-// Create defaultAxiosInstance with loading
-const defaultAxiosInstance: AxiosInstance = axios.create({
-  baseURL: "https://fixitright.azurewebsites.net",
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
-  timeout: 30000,
-  timeoutErrorMessage: "Connection timeout exceeded",
-});
+// Create an Axios instance
+const createAxiosInstance = (enableLoading: boolean = true): AxiosInstance => {
+  const instance = axios.create({
+    baseURL: BASE_URL,
+    timeout: 30000,
+    headers: {
+      Accept: "application/json",
+    },
+    validateStatus: (status) => status >= 200 && status <= 500,
+  });
 
-// Interceptor request
-defaultAxiosInstance.interceptors.request.use(
-  async (config) => {
-    setLoading(true);
-    const token = await AsyncStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  // Request Interceptor
+  instance.interceptors.request.use(
+    async (config) => {
+      if (enableLoading) {
+        isLoading = true;
+        setLoading(true);
+      }
+
+      // Lấy token ngay lập tức từ AsyncStorage
+      const token = await AsyncStorage.getItem("AccessToken");
+      console.log("✅ Axios Token:", token);
+
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      autoSetContentType(config);
+      return config;
+    },
+    (error) => {
+      if (enableLoading) {
+        isLoading = false;
+        setLoading(false);
+      }
+      return Promise.reject(error);
     }
-    autoSetContentType(config);
-    return config;
-  },
-  (error) => {
-    setLoading(false);
-    return Promise.reject(error);
+  );
+
+  // Response Interceptor
+  instance.interceptors.response.use(
+    async (response: AxiosResponse) => {
+      if (enableLoading) {
+        isLoading = false;
+        setLoading(false);
+      }
+      return response;
+    },
+    async (error: AxiosError<ErrorResponse>) => {
+      if (enableLoading) {
+        isLoading = false;
+        setLoading(false);
+      }
+      if (error.response?.status === 401) {
+        return handleUnauthorized(error);
+      }
+      return handleErrorByNotification(error);
+    }
+  );
+
+  return instance;
+};
+
+// Create instances
+const defaultAxiosInstance = createAxiosInstance(true);
+const axiosWithoutLoading = createAxiosInstance(false);
+
+// ✅ Cập nhật token cho Axios sau khi tạo instance
+export const updateAxiosToken = async () => {
+  const token = await AsyncStorage.getItem("AccessToken");
+  console.log("🔄 Cập nhật token cho Axios:", token);
+
+  if (token) {
+    defaultAxiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete defaultAxiosInstance.defaults.headers.common["Authorization"];
   }
-);
-
-// Interceptor response
-defaultAxiosInstance.interceptors.response.use(
-  async (response: AxiosResponse) => {
-    setLoading(false);
-    return response.data;
-  },
-  async (err: AxiosError<ErrorResponse>) => {
-    setLoading(false);
-    if (err.response?.status === 401) {
-      return handleUnauthorized();
-    }
-    return handleErrorByNotification(err);
-  }
-);
-
-const axiosWithoutLoading: AxiosInstance = axios.create({
-  baseURL: "https://fixitright.azurewebsites.net",
-  timeout: 30000,
-  timeoutErrorMessage: "Connection timeout exceeded",
-});
-
-// Interceptor request (axiosWithoutLoading)
-axiosWithoutLoading.interceptors.request.use(
-  async (config) => {
-    const token = await AsyncStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    autoSetContentType(config);
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Interceptor response (axiosWithoutLoading)
-axiosWithoutLoading.interceptors.response.use(
-  (response: AxiosResponse) => response.data,
-  async (err: AxiosError<ErrorResponse>) => {
-    if (err.response?.status === 401) {
-      return handleUnauthorized();
-    }
-    return handleErrorByNotification(err);
-  }
-);
+};
 
 export { defaultAxiosInstance, axiosWithoutLoading };
