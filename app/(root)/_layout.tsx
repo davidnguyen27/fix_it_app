@@ -7,7 +7,7 @@ export default function RootLayout() {
   const pathname = usePathname();
   const { isLoading, isLoggedIn } = useGlobalContext();
 
-  const publicRoutes = ["/landing", "/sign-up", "/sign-in"];
+  const publicRoutes = ["/landing", "/screens/sign-up", "/screens/sign-in"];
 
   if (isLoading) {
     return (
@@ -17,14 +17,14 @@ export default function RootLayout() {
     );
   }
 
-  if (isLoggedIn && publicRoutes.includes(pathname)) {
-    return <Redirect href="/(root)/(tabs)" />;
-  }
+  // if (isLoggedIn && publicRoutes.includes(pathname)) {
+  //   return <Redirect href="/(root)/(tabs)" />;
+  // }
 
-  // Nếu chưa đăng nhập và đang ở trang không public, chuyển hướng đến trang landing
-  if (!isLoggedIn && !publicRoutes.includes(pathname)) {
-    return <Redirect href="/landing" />;
-  }
+  // // Nếu chưa đăng nhập và đang ở trang không public, chuyển hướng đến trang landing
+  // if (!isLoggedIn && !publicRoutes.includes(pathname)) {
+  //   return <Redirect href="/landing" />;
+  // }
 
   return <Slot />;
 }

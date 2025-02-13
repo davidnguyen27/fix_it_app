@@ -19,16 +19,16 @@ import {
 const SignIn = () => {
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const { login } = useAuth();
-  const isLoading = useLoading();
+  // const { login } = useAuth();
+  // const isLoading = useLoading();
 
-  const handleSignIn = () => {
-    if (!isLoading) login(username, password);
-  };
+  // const handleSignIn = () => {
+  //   if (!isLoading) login(username, password);
+  // };
 
   return (
     <ImageBackground
@@ -62,9 +62,9 @@ const SignIn = () => {
             maxLength={50}
             textAlignVertical="center"
             numberOfLines={1}
-            value={username}
-            onChangeText={setUsername}
-            editable={!isLoading}
+            // value={username}
+            // onChangeText={setUsername}
+            // editable={!isLoading}
           />
         </View>
 
@@ -78,15 +78,15 @@ const SignIn = () => {
               placeholderTextColor="#A9A9A9"
               textAlignVertical="center"
               numberOfLines={1}
-              secureTextEntry={!passwordVisible}
-              value={password}
-              onChangeText={setPassword}
-              editable={!isLoading}
+              // secureTextEntry={!passwordVisible}
+              // value={password}
+              // onChangeText={setPassword}
+              // editable={!isLoading}
             />
             <TouchableOpacity
               onPress={() => setPasswordVisible(!passwordVisible)}
               className="mr-2"
-              disabled={isLoading}
+              // disabled={isLoading}
             >
               <Text className="text-[14px] font-unbounded-light">
                 <Image source={passwordVisible ? icons.eyeOff : icons.eyeOn} className="size-6" />
@@ -104,11 +104,16 @@ const SignIn = () => {
 
         {/* Sign In button */}
         <View className="mt-8">
-          {isLoading ? (
+          <Button
+            title="Sign In"
+            backgroundColor="bg-[#4A628A]"
+            onPress={() => router.push("/(root)/(tabs)")}
+          />
+          {/* {isLoading ? (
             <ActivityIndicator size="large" color="FFFFFF" />
           ) : (
             <Button title="Sign In" backgroundColor="bg-[#4A628A]" onPress={handleSignIn} />
-          )}
+          )} */}
         </View>
 
         {/* Sign in by social media */}

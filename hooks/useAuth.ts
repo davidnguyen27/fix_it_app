@@ -1,7 +1,9 @@
 import { loginUser } from "@/services/auth.service";
+import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
 const useAuth = () => {
+  const router = useRouter();
   const login = async (username: string, password: string) => {
     try {
       if (!username || !password) {
@@ -9,6 +11,7 @@ const useAuth = () => {
       }
 
       await loginUser({ UserName: username, Password: password });
+      router.push("/(root)/(tabs)");
     } catch (error) {
       Toast.show({
         type: "error",
