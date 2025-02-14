@@ -1,23 +1,50 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
-import { useRouter } from "expo-router";
-import Button from "@/components/Button"; // Assuming you have a Button component
-import icons from "@/constants/icons"; // Ensure you have the icons available in the project
 import ActionIcon from "@/components/ActionIcon";
+import Button from "@/components/Button";
+import icons from "@/constants/icons";
+import useCoundownTimer from "@/hooks/useCountdownTimer";
+import { useRouter } from "expo-router";
+import { useRef, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ImageBackground,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData,
+} from "react-native";
 
-const EmailInput = () => {
-  const [email, setEmail] = useState("");
+const Verify = () => {
   const router = useRouter();
 
-  const handleNext = () => {
-    if (email) {
-      // Pass email as a parameter to the next screen (Verify)
-      router.push({
-        pathname: "/(root)/screens/verify",
-        params: { email: email },
-      });
-    } else {
-      alert("Please enter a valid email address");
+  const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
+  const inputRefs = useRef<Array<TextInput | null>>([]);
+  const { timer, resetTimer } = useCoundownTimer(59);
+
+  const handleResendCode = () => {
+    if (timer === 0) {
+      resetTimer(); // Đặt lại thời gian chờ
+    }
+  };
+
+  const handleInputChange = (text: string, index: number) => {
+    const sanitizedText = text.replace(/[^0-9]/g, "");
+    const newOtp = [...otp];
+    newOtp[index] = sanitizedText;
+    setOtp(newOtp);
+
+    // Chuyển đến ô tiếp theo nếu có dữ liệu
+    if (sanitizedText && index < otp.length - 1) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyPress = (
+    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
+    index: number
+  ) => {
+    if (e.nativeEvent.key === "Backspace" && index > 0 && otp[index] === "") {
+      inputRefs.current[index - 1]?.focus();
     }
   };
 
@@ -35,42 +62,59 @@ const EmailInput = () => {
             tintColor="#DFF2EB"
             onPress={() => router.back()}
           />
-        </View>
 
-        <Text className="text-[20px] text-center font-unbounded mt-8">
-          Enter Your Email
-        </Text>
+          <Text className="text-[20px] text-center font-unbounded">
+            Verify Code
+          </Text>
+        </View>
 
         <Text className="text-[14px] font-unbounded-light text-center mt-4">
-          We will send a verification code to your email
+          Please enter your code we just sent {"\n"} to email example@gmail.com
         </Text>
 
-        {/* Input Email */}
-        <View className="mt-8">
-          <Text className="text-[14px] font-unbounded-light mb-3">Email Address</Text>
-          <View className="flex-row items-center bg-[#DFF2EB] rounded-2xl px-4">
+        <View className="flex-row justify-center my-10 gap-4">
+          {otp.map((_, index) => (
             <TextInput
-              className="flex-1 font-unbounded-light py-4"
-              placeholder="Enter your email"
-              placeholderTextColor="#A9A9A9"
-              textAlignVertical="center"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
+              key={index}
+              ref={(el) => (inputRefs.current[index] = el)}
+              value={otp[index]}
+              onChangeText={(text) => handleInputChange(text, index)}
+              onKeyPress={(e) => handleKeyPress(e, index)}
+              keyboardType="number-pad"
+              maxLength={1}
+              className="size-16 bg-[#4A628A] rounded-[11px] text-center text-white font-unbounded-medium text-[36px]"
             />
-          </View>
+          ))}
         </View>
 
-        {/* Next Button */}
+        <Text className="font-unbounded text-[13px] text-center text-[#292D32]">
+          Didn't receive OTP?
+        </Text>
+
+        <TouchableOpacity
+          onPress={handleResendCode}
+          disabled={timer > 0} // Vô hiệu hóa khi đang đếm ngược
+        >
+          <Text
+            className={`font-unbounded-semiBold text-[13px] text-center underline mt-3 mb-8 ${
+              timer > 0
+                ? "font-unbounded-light text-[10px] text-gray-400"
+                : "text-[#292D32]"
+            }`}
+          >
+            {timer > 0 ? `Resend code in (${timer}s)` : "Resend code"}
+          </Text>
+        </TouchableOpacity>
+
+        {/* Verify button */}
         <Button
-          title="Next"
+          title="Verify"
           backgroundColor="bg-[#4A628A]"
-          onPress={handleNext}
+          onPress={() => router.push("/(root)/screens/reset-pass")}
         />
       </View>
     </ImageBackground>
   );
 };
 
-export default EmailInput;
+export default Verify;
