@@ -14,12 +14,14 @@ const EmailInput = () => {
       // Pass email as a parameter to the next screen (Verify)
       router.push({
         pathname: "/(root)/screens/verify",
-        params: { email: email },
+        params: { email: email },  // Sử dụng params thay vì query
       });
     } else {
       alert("Please enter a valid email address");
     }
   };
+  
+  
 
   return (
     <ImageBackground

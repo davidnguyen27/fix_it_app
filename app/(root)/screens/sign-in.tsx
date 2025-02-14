@@ -108,7 +108,7 @@ const SignIn = () => {
 
         {/* Forgot password link */}
         <Link
-          href="/(root)/screens/sign-up"
+          href="/(root)/screens/email-input"
           className="text-right text-[10px] underline font-unbounded-light mt-2 mr-4"
         >
           Forgot password?

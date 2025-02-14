@@ -31,3 +31,22 @@ export const refreshTokens = async (accessToken: string, refreshToken: string) =
     throw error;
   }
 };
+export const forgetPassword = async (email: string) => {
+  try {
+    const response = await defaultAxiosInstance.post("/api/authentications/password-forgetting", email);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Lỗi khi quên mật khẩu:", error);
+    throw error;
+  }
+};
+
+export const resetPassword = async (data: { Email: string; Token: string; Password: string; ConfirmPassword: string }) => {
+  try {
+    const response = await defaultAxiosInstance.put("/api/authentications/password-resetting", data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Lỗi khi đặt lại mật khẩu:", error);
+    throw error;
+  }
+};
