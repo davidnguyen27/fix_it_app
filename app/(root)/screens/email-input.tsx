@@ -1,21 +1,25 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
+import { View, Text, TextInput, ImageBackground } from "react-native";
 import { useRouter } from "expo-router";
 import Button from "@/components/Button"; // Assuming you have a Button component
 import icons from "@/constants/icons"; // Ensure you have the icons available in the project
 import ActionIcon from "@/components/ActionIcon";
+import { forgetPassword } from "@/services/auth.service"; // Import the API logic
 
 const EmailInput = () => {
   const [email, setEmail] = useState("");
   const router = useRouter();
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (email) {
-      // Pass email as a parameter to the next screen (Verify)
-      router.push({
-        pathname: "/(root)/screens/verify",
-        query: { email: email },
-      });
+      try {
+        console.log("Sending verification email to:", email);
+         await forgetPassword(email);
+
+        router.push(`/(root)/screens/verify?email=${email}`);
+      } catch (error) {
+        alert("There was an error sending the verification email. Please try again.");
+      }
     } else {
       alert("Please enter a valid email address");
     }

@@ -33,8 +33,8 @@ export const refreshTokens = async (accessToken: string, refreshToken: string) =
 };
 export const forgetPassword = async (email: string) => {
   try {
-    const response = await defaultAxiosInstance.post("/api/authentications/password-forgetting", email);
-    return response.data;
+    const response = await defaultAxiosInstance.post("/api/authentications/password-forgeting", email);
+    return response;
   } catch (error) {
     console.error("❌ Lỗi khi quên mật khẩu:", error);
     throw error;
@@ -43,7 +43,7 @@ export const forgetPassword = async (email: string) => {
 
 export const resetPassword = async (data: { Email: string; Token: string; Password: string; ConfirmPassword: string }) => {
   try {
-    const response = await defaultAxiosInstance.put("/api/authentications/password-resetting", data);
+    const response = await defaultAxiosInstance.put("/api/authentications/password-forgeting", data);
     return response.data;
   } catch (error) {
     console.error("❌ Lỗi khi đặt lại mật khẩu:", error);
