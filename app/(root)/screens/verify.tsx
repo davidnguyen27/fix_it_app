@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
   ImageBackground,
+  Image,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
 } from "react-native";
@@ -18,12 +19,15 @@ const Verify = () => {
   const router = useRouter();
 
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const inputRefs = useRef<Array<TextInput | null>>([]);
   const { timer, resetTimer } = useCoundownTimer(59);
 
   const handleResendCode = () => {
     if (timer === 0) {
-      resetTimer(); // Đặt lại thời gian chờ
+      resetTimer(); // Reset countdown timer
     }
   };
 
@@ -33,7 +37,7 @@ const Verify = () => {
     newOtp[index] = sanitizedText;
     setOtp(newOtp);
 
-    // Chuyển đến ô tiếp theo nếu có dữ liệu
+    // Move focus to the next input if text is entered
     if (sanitizedText && index < otp.length - 1) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -93,7 +97,7 @@ const Verify = () => {
 
         <TouchableOpacity
           onPress={handleResendCode}
-          disabled={timer > 0} // Vô hiệu hóa khi đang đếm ngược
+          disabled={timer > 0} // Disable resend if timer is counting down
         >
           <Text
             className={`font-unbounded-semiBold text-[13px] text-center underline mt-3 mb-8 ${
@@ -106,9 +110,61 @@ const Verify = () => {
           </Text>
         </TouchableOpacity>
 
-        {/* Verify button */}
+        {/* Input Password */}
+        <View className="mt-8">
+          <Text className="text-[14px] font-unbounded-light mb-3">Password</Text>
+          <View className="flex-row items-center bg-[#DFF2EB] rounded-2xl px-4">
+            <TextInput
+              className="flex-1 font-unbounded-light py-4"
+              placeholder="Enter your password"
+              placeholderTextColor="#A9A9A9"
+              textAlignVertical="center"
+              numberOfLines={1}
+              secureTextEntry={!passwordVisible}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity
+              onPress={() => setPasswordVisible(!passwordVisible)}
+              className="mr-2"
+            >
+              <Image
+                source={passwordVisible ? icons.eyeOff : icons.eyeOn}
+                style={{ width: 24, height: 24 }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Input Confirm Password */}
+        <View className="mt-8">
+          <Text className="text-[14px] font-unbounded-light mb-3">Confirm Password</Text>
+          <View className="flex-row items-center bg-[#DFF2EB] rounded-2xl px-4">
+            <TextInput
+              className="flex-1 font-unbounded-light py-4"
+              placeholder="Confirm your password"
+              placeholderTextColor="#A9A9A9"
+              textAlignVertical="center"
+              numberOfLines={1}
+              secureTextEntry={!passwordVisible}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
+            <TouchableOpacity
+              onPress={() => setPasswordVisible(!passwordVisible)}
+              className="mr-2"
+            >
+              <Image
+                source={passwordVisible ? icons.eyeOff : icons.eyeOn}
+                style={{ width: 24, height: 24 }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Change Password Button */}
         <Button
-          title="Verify"
+          title="Change Password"
           backgroundColor="bg-[#4A628A]"
           onPress={() => router.push("/(root)/screens/reset-pass")}
         />
