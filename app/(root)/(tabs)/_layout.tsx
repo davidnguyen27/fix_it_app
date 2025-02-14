@@ -32,6 +32,7 @@ const TabsLayout = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: "#4A628A",
+          position: "absolute",
           borderTopLeftRadius: 17,
           borderTopRightRadius: 17,
           paddingTop: 17,
@@ -50,9 +51,7 @@ const TabsLayout = () => {
         options={{
           title: "Home",
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.home} focused={focused} title="Home" />
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon icon={icons.home} focused={focused} title="Home" />,
         }}
       />
       <Tabs.Screen
