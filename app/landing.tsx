@@ -1,41 +1,63 @@
-import icons from "@/constants/icons";
-import { useRouter } from "expo-router";
-import {
-  View,
-  Text,
-  ImageBackground,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, ImageBackground } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { refreshTokens } from "../services/auth.service";  // Đảm bảo đường dẫn đúng
 
-const Landing = () => {
-  const router = useRouter();
+const LoadingScreen = () => {
+  useEffect(() => {
+    const getTokens = async () => {
+      try {
+        const accessToken = await AsyncStorage.getItem("AccessToken");
+        const refreshToken = await AsyncStorage.getItem("RefreshToken");
+      
+        if (accessToken && refreshToken) {
+          const response = await refreshTokens(accessToken, refreshToken); 
+       
+          await AsyncStorage.setItem("AccessToken", response.AccessToken);
+          await AsyncStorage.setItem("RefreshToken", response.RefreshToken);
+        }
+      } catch (error) {
+        console.error("❌ Lỗi khi refresh token:", error);
+      }
+    };
+
+    getTokens();
+  }, []);
 
   return (
     <ImageBackground
-      source={require("../assets/images/landing.png")}
-      resizeMode="cover"
-      className="flex flex-1"
+    source={require("../assets/images/landing.png")}
+    resizeMode="cover"
+    style={{ flex: 1 }} // Chắc chắn phần nền phủ hết màn hình
+  >
+    <View
+      style={{
+        position: "absolute",
+        bottom: 40,  // Tăng khoảng cách từ dưới
+        left: 16,    // Giảm khoảng cách từ trái
+        right: 16,   // Giảm khoảng cách từ phải
+        borderRadius: 24, // Tăng độ bo góc để nhìn mềm mại hơn
+        padding: 20, // Padding rộng hơn để các phần tử không quá sát nhau
+        backgroundColor: "rgba(74, 98, 138, 0.72)", // Giữ màu nền nhưng mờ hơn để dễ nhìn
+        justifyContent: "center", // Đảm bảo căn giữa
+        alignItems: "center", // Căn giữa nội dung
+      }}
     >
-      <View
-        className="absolute bottom-20 left-8 right-8 rounded-3xl px-8 pt-5 pb-9 flex-row items-center justify-between"
-        style={{ backgroundColor: "rgba(74, 98, 138, 0.72)" }}
+      <Text
+        style={{
+          color: "white",
+          fontSize: 24, // Tăng kích thước chữ để dễ nhìn hơn
+          fontFamily: "Unbounded-SemiBold", // Phông chữ nổi bật hơn
+          textAlign: "center", // Căn giữa
+          lineHeight: 32, // Tăng khoảng cách giữa các dòng
+          letterSpacing: 0.5, // Thêm khoảng cách giữa các chữ
+        }}
       >
-        <View className="flex-1">
-          <Text className="text-white text-[18px] font-unbounded leading-tight">
-            Convenient Repairs {"\n"} Dedicated Service
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          className="bg-[#B9E5E8] w-[66px] h-[57px] rounded-[22px] items-center justify-center"
-          onPress={() => router.push("/screens/sign-up")}
-        >
-          <Image source={icons.arrowRight} className="size-8" />
-        </TouchableOpacity>
-      </View>
-    </ImageBackground>
+        Convenient Repairs {"\n"} Dedicated Service
+      </Text>
+    </View>
+  </ImageBackground>
   );
 };
 
-export default Landing;
+export default LoadingScreen;

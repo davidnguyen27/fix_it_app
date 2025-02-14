@@ -6,10 +6,11 @@ const useAuth = () => {
   const router = useRouter();
   const login = async (username: string, password: string) => {
     try {
+      
       if (!username || !password) {
         throw new Error("Vui lòng nhập đầy đủ thông tin");
       }
-
+    
       await loginUser({ UserName: username, Password: password });
       router.push("/(root)/(tabs)");
     } catch (error) {

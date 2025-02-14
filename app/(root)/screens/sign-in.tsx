@@ -1,8 +1,8 @@
-import ActionIcon from "@/components/ActionIcon";
+
 import Button from "@/components/Button";
 import icons from "@/constants/icons";
-import useAuth from "@/hooks/useAuth";
-import { useLoading } from "@/hooks/useLoading";
+import ActionIcon from "@/components/ActionIcon";
+import { loginUser } from "../../../services/auth.service";  // Make sure the API path is correct
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -19,41 +19,54 @@ import {
 const SignIn = () => {
   const router = useRouter();
 
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [username, setUsername] = useState("");  // State for username
+  const [password, setPassword] = useState("");  // State for password
+  const [passwordVisible, setPasswordVisible] = useState(false);  // State for password visibility
+  const [isLoading, setIsLoading] = useState(false);  // State for loading indicator
 
-  // const { login } = useAuth();
-  // const isLoading = useLoading();
+  // Handle sign in logic
+  const handleSignIn = async () => {
+    if (isLoading) return;  // Prevent multiple sign-ins while loading
+    setIsLoading(true);  // Set loading to true while API call is in progress
 
-  // const handleSignIn = () => {
-  //   if (!isLoading) login(username, password);
-  // };
+    try {
+      const data = { UserName: username, Password: password };
+      const response = await loginUser(data);  // Call the login API
+
+      if (response) {
+        // Redirect after successful login
+        router.push("/(root)/(tabs)");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);  // Handle any login errors
+      setIsLoading(false);  // Stop loading on error
+    }
+  };
 
   return (
     <ImageBackground
       source={require("../../../assets/images/bg-signup.png")}
       resizeMode="cover"
-      className="flex-1"
+      className="flex-1 justify-center"  // Added flex and justify-center to center the content vertically
     >
       <ScrollView className="flex-1 px-6">
+        <View className="flex-1 justify-center items-center mt-8"></View>
         <View className="mt-8">
           <ActionIcon
             icon={icons.arrowLeft}
             backgroundColor="bg-[#4A628A]"
             tintColor="#DFF2EB"
-            onPress={() => router.back()}
+            onPress={() => router.push("/(root)/(tabs)")}  
           />
-
           <Text className="text-[20px] text-center font-unbounded">Sign In</Text>
         </View>
 
         <Text className="text-[14px] font-unbounded-light text-center mt-4">
-          Hi welcome back , you been missed
+          Hi welcome back, you've been missed
         </Text>
 
         {/* Input Username */}
-        <View className="mt-8">
+        <View className="mt-8 w-full">
           <Text className="text-[14px] font-unbounded-light mb-3">Username</Text>
           <TextInput
             className="bg-[#DFF2EB] rounded-2xl px-4 py-4 font-unbounded-light"
@@ -62,14 +75,14 @@ const SignIn = () => {
             maxLength={50}
             textAlignVertical="center"
             numberOfLines={1}
-            // value={username}
-            // onChangeText={setUsername}
-            // editable={!isLoading}
+            value={username}
+            onChangeText={setUsername}
+            editable={!isLoading}
           />
         </View>
 
         {/* Input Password */}
-        <View className="mt-8">
+        <View className="mt-8 w-full">
           <Text className="text-[14px] font-unbounded-light mb-3">Password</Text>
           <View className="flex-row items-center bg-[#DFF2EB] rounded-2xl px-4">
             <TextInput
@@ -78,23 +91,22 @@ const SignIn = () => {
               placeholderTextColor="#A9A9A9"
               textAlignVertical="center"
               numberOfLines={1}
-              // secureTextEntry={!passwordVisible}
-              // value={password}
-              // onChangeText={setPassword}
-              // editable={!isLoading}
+              secureTextEntry={!passwordVisible}
+              value={password}
+              onChangeText={setPassword}
+              editable={!isLoading}
             />
             <TouchableOpacity
               onPress={() => setPasswordVisible(!passwordVisible)}
               className="mr-2"
-              // disabled={isLoading}
+              disabled={isLoading}
             >
-              <Text className="text-[14px] font-unbounded-light">
-                <Image source={passwordVisible ? icons.eyeOff : icons.eyeOn} className="size-6" />
-              </Text>
+              <Image source={passwordVisible ? icons.eyeOff : icons.eyeOn} className="size-6" />
             </TouchableOpacity>
           </View>
         </View>
 
+        {/* Forgot password link */}
         <Link
           href="/(root)/screens/sign-up"
           className="text-right text-[10px] underline font-unbounded-light mt-2 mr-4"
@@ -104,22 +116,21 @@ const SignIn = () => {
 
         {/* Sign In button */}
         <View className="mt-8">
-          <Button
-            title="Sign In"
-            backgroundColor="bg-[#4A628A]"
-            onPress={() => router.push("/(root)/(tabs)")}
-          />
-          {/* {isLoading ? (
-            <ActivityIndicator size="large" color="FFFFFF" />
+          {isLoading ? (
+            <ActivityIndicator size="large" color="#FFFFFF" />
           ) : (
-            <Button title="Sign In" backgroundColor="bg-[#4A628A]" onPress={handleSignIn} />
-          )} */}
+            <Button
+              title="Sign In"
+              backgroundColor="bg-[#4A628A]"
+              onPress={handleSignIn}
+            />
+          )}
         </View>
 
         {/* Sign in by social media */}
         <View className="flex-row items-center mt-8">
           <View className="flex-1 h-px bg-black" />
-          <Text className="font-unbounded text-[13px] color-[#292D32] mx-3">Or sign in with</Text>
+          <Text className="font-unbounded text-[13px] text-[#292D32] mx-3">Or sign in with</Text>
           <View className="flex-1 h-px bg-black" />
         </View>
 
@@ -135,6 +146,7 @@ const SignIn = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Link to sign up page */}
         <Link
           href="/(root)/screens/sign-up"
           className="text-center font-unbounded-light text-[13px] text-[#292D32]"

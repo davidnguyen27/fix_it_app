@@ -1,9 +1,10 @@
 import { SplashScreen, Stack } from "expo-router";
 import "./global.css";
 import { useFonts } from "expo-font";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import GlobalProvider from "@/context/GlobalProvider";
+import LoadingScreen from "./landing";  // Import LoadingScreen component
 
 export default function AppLayout() {
   const [fontsLoaded] = useFonts({
@@ -14,13 +15,21 @@ export default function AppLayout() {
     "Unbounded-SemiBold": require("../assets/fonts/Unbounded-SemiBold.ttf"),
   });
 
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync();
+      // Set timeout to simulate a loading screen for 3 seconds
+      setTimeout(() => {
+        setIsLoading(false);
+        SplashScreen.hideAsync();
+      }, 3000);
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) return null;
+  if (isLoading) {
+    return <LoadingScreen />;  // Use the LoadingScreen component
+  }
 
   return (
     <GlobalProvider>

@@ -79,7 +79,7 @@ const createAxiosInstance = (enableLoading: boolean = true): AxiosInstance => {
 
       // Lấy token ngay lập tức từ AsyncStorage
       const token = await AsyncStorage.getItem("AccessToken");
-      console.log("✅ Axios Token:", token);
+      // console.log("✅ Axios Token:", token);
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -104,7 +104,7 @@ const createAxiosInstance = (enableLoading: boolean = true): AxiosInstance => {
         isLoading = false;
         setLoading(false);
       }
-      return response;
+      return response.data;
     },
     async (error: AxiosError<ErrorResponse>) => {
       if (enableLoading) {
@@ -125,16 +125,6 @@ const createAxiosInstance = (enableLoading: boolean = true): AxiosInstance => {
 const defaultAxiosInstance = createAxiosInstance(true);
 const axiosWithoutLoading = createAxiosInstance(false);
 
-// ✅ Cập nhật token cho Axios sau khi tạo instance
-export const updateAxiosToken = async () => {
-  const token = await AsyncStorage.getItem("AccessToken");
-  console.log("🔄 Cập nhật token cho Axios:", token);
 
-  if (token) {
-    defaultAxiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  } else {
-    delete defaultAxiosInstance.defaults.headers.common["Authorization"];
-  }
-};
 
 export { defaultAxiosInstance, axiosWithoutLoading };
