@@ -40,3 +40,8 @@ export const GetAllRepairServices = async (params: {
 
   return response.data;
 };
+export const GetRepairServiceById = async (serviceId: string) => {
+  const URL_API = `/api/repair-services/${serviceId}`;
+  const response = await defaultAxiosInstance.get(URL_API);
+  return response.data;
+};

@@ -3,8 +3,6 @@ import { useRouter } from "expo-router";
 import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import { useEffect, useState } from "react";
-
-// Import API function
 import { GetAllRepairServices } from "@/services/user.service"; // Cập nhật đúng đường dẫn đến API
 
 // Định nghĩa kiểu dữ liệu cho dịch vụ
@@ -19,10 +17,9 @@ interface Service {
 
 const ServiceDetails = () => {
   const router = useRouter();
-  const [services, setServices] = useState<Service[]>([]); // State lưu trữ dữ liệu dịch vụ
-  const [loading, setLoading] = useState(false); // State để kiểm tra trạng thái tải dữ liệu
-  const [searchQuery, setSearchQuery] = useState(""); // State để lưu trữ từ khóa tìm kiếm
-  const [filteredServices, setFilteredServices] = useState<Service[]>([]); // State lưu trữ danh sách dịch vụ đã lọc
+  const [loading, setLoading] = useState(false); 
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [filteredServices, setFilteredServices] = useState<Service[]>([]); 
 
   // Lấy danh sách dịch vụ khi trang được tải
   useEffect(() => {
@@ -33,35 +30,33 @@ const ServiceDetails = () => {
           PageNumber: 1,
           PageSize: 20,
         });
-        console.log("Services:", data.Data);
-        setServices(data.Data); // Lưu dữ liệu vào state
-        setFilteredServices(data.Data); // Lưu dữ liệu ban đầu vào danh sách đã lọc
+        setFilteredServices(data.Data); 
       } catch (error) {
         console.error("Error fetching services:", error);
       } finally {
-        setLoading(false); // Dừng trạng thái loading sau khi nhận dữ liệu
+        setLoading(false);
       }
     };
 
-    fetchServices(); // Gọi hàm lấy dữ liệu
+    fetchServices();
   }, []);
 
   // Hàm tìm kiếm dịch vụ từ API
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
-    setLoading(true); // Bắt đầu trạng thái loading khi tìm kiếm
+    setLoading(true); 
 
     try {
       const data = await GetAllRepairServices({
         PageNumber: 1,
         PageSize: 20,
-        SearchName: query, // Truyền tham số tìm kiếm vào API
+        SearchName: query, 
       });
-      setFilteredServices(data.Data); // Cập nhật danh sách dịch vụ sau khi tìm kiếm
+      setFilteredServices(data.Data); 
     } catch (error) {
       console.error("Error searching services:", error);
     } finally {
-      setLoading(false); // Dừng trạng thái loading khi tìm kiếm xong
+      setLoading(false); 
     }
   };
 
@@ -73,7 +68,7 @@ const ServiceDetails = () => {
           icon={icons.arrowLeft}
           backgroundColor="bg-[#4A628A]"
           tintColor="#DFF2EB"
-          onPress={() => router.push("/(root)/(tabs)")} // Điều hướng khi bấm nút quay lại
+          onPress={() => router.push("/(root)/(tabs)")}
         />
       </View>
 
