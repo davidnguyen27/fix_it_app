@@ -8,15 +8,57 @@ import {
   Image,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ActionIcon from "@/components/ActionIcon";
 import icons from "@/constants/icons";
 import Button from "@/components/Button";
+import * as ImagePicker from "expo-image-picker"; // Import ImagePicker
+import { getCurrentUser } from "@/services/auth.service"; // Import API to get current user
 
 const ProfileDetail = () => {
   const router = useRouter();
   const [selectedGender, setSelectedGender] = useState<string | undefined>("Select");
   const [isGenderPickerVisible, setIsGenderPickerVisible] = useState(false);
+  const [avatarUri, setAvatarUri] = useState<string | null>(null); // State để lưu URI ảnh avatar
+  const [userData, setUserData] = useState<any>(null); // State để lưu thông tin người dùng
+
+  // Hàm để lấy thông tin người dùng
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await getCurrentUser(); // Gọi API để lấy thông tin người dùng
+        setUserData(data); // Lưu dữ liệu vào state
+        setSelectedGender(data.Gender || "Select"); // Cập nhật giới tính
+        setAvatarUri(data.Avatar); // Cập nhật avatar
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  // Hàm để mở picker và chọn ảnh
+  const handleAvatarPress = async () => {
+    // Yêu cầu quyền truy cập ảnh (nếu chưa có quyền)
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted) {
+      // Mở picker để chọn ảnh
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        allowsEditing: true,
+        aspect: [1, 1], 
+        base64: true,
+      });
+
+      if (!result.canceled) {
+        setAvatarUri(result.assets[0].uri); // Lưu URI ảnh đã chọn
+      }
+    } else {
+      console.log("Permission to access media library is required!");
+    }
+  };
 
   return (
     <ImageBackground
@@ -39,9 +81,16 @@ const ProfileDetail = () => {
         {/* Avatar */}
         <View className="items-center mt-5 mb-6">
           <View className="relative">
-            <Image className="size-[150px] bg-[#B9E5E8] rounded-full" />
-            <TouchableOpacity className="absolute bottom-0 right-2 size-[35px] bg-[#4A628A] rounded-full border-2 border-[#97C9E3] flex items-center justify-center">
-              <Image source={icons.pencil} />
+            {/* Hiển thị ảnh đại diện nếu có, nếu không sẽ hiển thị ảnh mặc định */}
+            <Image
+              className="w-[150px] h-[150px] bg-[#B9E5E8] rounded-full"
+              source={avatarUri ? { uri: avatarUri } : { uri: userData?.Avatar }}
+            />
+            <TouchableOpacity
+              className="absolute bottom-0 right-2 w-[35px] h-[35px] bg-[#4A628A] rounded-full border-2 border-[#97C9E3] flex items-center justify-center"
+              onPress={handleAvatarPress} // Mở picker khi nhấn vào nút sửa avatar
+            >
+              <Image source={icons.pencil} className="w-4 h-4" />
             </TouchableOpacity>
           </View>
         </View>
@@ -56,7 +105,7 @@ const ProfileDetail = () => {
             maxLength={50}
             textAlignVertical="center"
             numberOfLines={1}
-            defaultValue="Esther Howard"
+            defaultValue={userData?.Fullname || "Esther Howard"}
           />
         </View>
 
@@ -69,7 +118,7 @@ const ProfileDetail = () => {
               placeholder="Enter your phone number"
               placeholderTextColor="#A9A9A9"
               keyboardType="phone-pad"
-              defaultValue="0123 456 7891"
+              defaultValue={userData?.PhoneNumber || "0123 456 7891"}
               numberOfLines={1}
             />
             <TouchableOpacity>
@@ -86,7 +135,18 @@ const ProfileDetail = () => {
             placeholder="Enter your email"
             placeholderTextColor="#A9A9A9"
             keyboardType="email-address"
-            defaultValue="Example@gmail.com"
+            defaultValue={userData?.UserName || "Example@gmail.com"}
+          />
+        </View>
+
+        {/* Address */}
+        <View className="mt-8">
+          <Text className="text-[14px] font-unbounded mb-3">Address</Text>
+          <TextInput
+            className="bg-[#DFF2EB] rounded-2xl px-4 py-4 font-unbounded-light"
+            placeholder="Enter your address"
+            placeholderTextColor="#A9A9A9"
+            defaultValue={userData?.Address || "123 Main St, City, Country"}
           />
         </View>
 
@@ -97,7 +157,7 @@ const ProfileDetail = () => {
             className="bg-[#DFF2EB] rounded-2xl px-4 py-4 flex-row justify-between items-center"
             onPress={() => setIsGenderPickerVisible(!isGenderPickerVisible)}
           >
-            <Text className="font-unbounded-light">{selectedGender}</Text>
+            <Text className="font-unbounded-light">{selectedGender || userData?.Gender}</Text>
             <Image source={icons.arrowDown} className="size-4" />
           </TouchableOpacity>
           {isGenderPickerVisible && (

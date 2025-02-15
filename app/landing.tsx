@@ -9,7 +9,7 @@ const LoadingScreen = () => {
       try {
         const accessToken = await AsyncStorage.getItem("AccessToken");
         const refreshToken = await AsyncStorage.getItem("RefreshToken");
-      
+        console.log("🔑 Access token:", accessToken);
         if (accessToken && refreshToken) {
           const response = await refreshTokens(accessToken, refreshToken); 
           await AsyncStorage.setItem("AccessToken", response.AccessToken);
