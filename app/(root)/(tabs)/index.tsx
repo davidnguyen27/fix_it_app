@@ -1,6 +1,7 @@
 import CategoryItem from "@/components/CategoryItem";
 import PopularServiceItem from "@/components/PopularServiceItem";
 import icons from "@/constants/icons";
+import {  useRouter } from "expo-router";
 import {
   Image,
   ImageBackground,
@@ -13,6 +14,10 @@ import {
 
 
 export default function Index() {
+const router = useRouter();
+  const handleServicePress = () => {
+    router.push("/(root)/screens/all-service");  
+  };
   return (
     <View className="flex-1">
      
@@ -103,8 +108,8 @@ export default function Index() {
           <Text className="font-unbounded text-[12px]">See all</Text>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row mt-2">
-          <PopularServiceItem />
-          <PopularServiceItem />
+          <PopularServiceItem onPress={handleServicePress} />
+          <PopularServiceItem onPress={handleServicePress} />
         </ScrollView>
       </View>
     </View>

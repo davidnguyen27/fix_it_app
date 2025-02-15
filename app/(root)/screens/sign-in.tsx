@@ -19,27 +19,24 @@ import {
 const SignIn = () => {
   const router = useRouter();
 
-  const [username, setUsername] = useState("");  // State for username
-  const [password, setPassword] = useState("");  // State for password
-  const [passwordVisible, setPasswordVisible] = useState(false);  // State for password visibility
-  const [isLoading, setIsLoading] = useState(false);  // State for loading indicator
-
+  const [username, setUsername] = useState("");  
+  const [password, setPassword] = useState("");  
+  const [passwordVisible, setPasswordVisible] = useState(false);  
+  const [isLoading, setIsLoading] = useState(false);  
   // Handle sign in logic
   const handleSignIn = async () => {
-    if (isLoading) return;  // Prevent multiple sign-ins while loading
-    setIsLoading(true);  // Set loading to true while API call is in progress
-
+    if (isLoading) return; 
+    setIsLoading(true); 
     try {
       const data = { UserName: username, Password: password };
-      const response = await loginUser(data);  // Call the login API
+      const response = await loginUser(data); 
 
       if (response) {
-        // Redirect after successful login
         router.push("/(root)/(tabs)");
       }
     } catch (error) {
-      console.error("Login failed:", error);  // Handle any login errors
-      setIsLoading(false);  // Stop loading on error
+      console.error("Login failed:", error);  
+      setIsLoading(false);  
     }
   };
 
@@ -47,7 +44,7 @@ const SignIn = () => {
     <ImageBackground
       source={require("../../../assets/images/bg-signup.png")}
       resizeMode="cover"
-      className="flex-1 justify-center"  // Added flex and justify-center to center the content vertically
+      className="flex-1 justify-center" 
     >
       <ScrollView className="flex-1 px-6">
         <View className="flex-1 justify-center items-center mt-8"></View>
@@ -146,7 +143,7 @@ const SignIn = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Link to sign up page */}
+          
         <Link
           href="/(root)/screens/sign-up"
           className="text-center font-unbounded-light text-[13px] text-[#292D32]"

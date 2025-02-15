@@ -1,7 +1,7 @@
 import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
 import icons from "@/constants/icons";
-import { useLoading } from "@/hooks/useLoading";
+
 import useUser from "@/hooks/useUser";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -29,10 +29,9 @@ const SignUp = () => {
   const [isChecked, setIsChecked] = useState(false);
 
   const { signUp, isModalVisible, handleModalClose } = useUser();  // Using modal state from useUser hook
-  const isLoading = useLoading();
 
   const handleRegister = () => {
-    if (!isLoading) signUp(username, email, password);
+    signUp(username, email, password);
   };
 
   return (
@@ -123,11 +122,7 @@ const SignUp = () => {
 
         {/* Sign Up button */}
         <View className="mt-8">
-          {isLoading ? (
-            <ActivityIndicator size="large" color="FFFFFF" />
-          ) : (
             <Button title="Sign Up" backgroundColor="bg-[#4A628A]" onPress={handleRegister} />
-          )}
         </View>
 
         {/* Modal when registration is successful */}

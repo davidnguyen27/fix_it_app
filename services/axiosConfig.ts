@@ -1,25 +1,16 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
+import { BASE_URL } from "@/constants/baseUrl";
 
 interface ErrorResponse {
   message?: string;
   errors?: { message?: string }[];
 }
 
-let setLoading: (loading: boolean) => void = () => {};
-
-export const setGlobalLoadingHandler = (
-  loadingHandler: (loading: boolean) => void
-) => {
-  setLoading = loadingHandler;
-};
-
-
-
 // Default Axios instance with loading effect
 const defaultAxiosInstance: AxiosInstance = axios.create({
-  baseURL: "https://fixitright.azurewebsites.net",
+  baseURL: BASE_URL,
   headers: {
     "content-type": "application/json",
   },
@@ -29,26 +20,26 @@ const defaultAxiosInstance: AxiosInstance = axios.create({
 
 defaultAxiosInstance.interceptors.request.use(
   async (config) => {
-    setLoading(true);
-    const token = await AsyncStorage.getItem("token");
+  
+    const token = await AsyncStorage.getItem("AccessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
-    setLoading(false);
+  
     return Promise.reject(error);
   }
 );
 
 defaultAxiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-    setLoading(false);
+    
     return response.data;
   },
   (err: AxiosError<ErrorResponse>) => {
-    setLoading(false);
+  
     const { response } = err;
     if (response) {
       handleErrorByNotification(err);
@@ -69,7 +60,7 @@ const axiosWithoutLoading: AxiosInstance = axios.create({
 
 axiosWithoutLoading.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem("token");
+    const token = await AsyncStorage.getItem("AccessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -88,12 +79,11 @@ axiosWithoutLoading.interceptors.response.use(
     return Promise.reject(err);
   }
 );
-
 // Error handler
 const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
   const data = errors.response?.data as ErrorResponse;
   const message: string  = data?.message || "An error occurred";
-  console.log("Error message: ", message);
+  console.error("Error:", message);
   if (message) {
     Toast.show({
       type: "error",
@@ -107,8 +97,5 @@ const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
   
   return data?.errors ?? { message };
 };
-
-
-
-
+// Create instances
 export { defaultAxiosInstance, axiosWithoutLoading };
