@@ -1,8 +1,7 @@
-
 import Button from "@/components/Button";
 import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
-import { loginUser } from "../../../services/auth.service";  // Make sure the API path is correct
+import { loginUser } from "../../../services/auth.service";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -19,27 +18,26 @@ import {
 const SignIn = () => {
   const router = useRouter();
 
-  const [username, setUsername] = useState("");  // State for username
-  const [password, setPassword] = useState("");  // State for password
-  const [passwordVisible, setPasswordVisible] = useState(false);  // State for password visibility
-  const [isLoading, setIsLoading] = useState(false);  // State for loading indicator
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Handle sign in logic
   const handleSignIn = async () => {
-    if (isLoading) return;  // Prevent multiple sign-ins while loading
-    setIsLoading(true);  // Set loading to true while API call is in progress
+    if (isLoading) return; // Prevent multiple sign-ins while loading
+    setIsLoading(true); // Set loading to true while API call is in progress
 
     try {
       const data = { UserName: username, Password: password };
-      const response = await loginUser(data);  // Call the login API
+      const response = await loginUser(data); // Call the login API
 
       if (response) {
         // Redirect after successful login
         router.push("/(root)/(tabs)");
       }
     } catch (error) {
-      console.error("Login failed:", error);  // Handle any login errors
-      setIsLoading(false);  // Stop loading on error
+      console.error("Login failed:", error); // Handle any login errors
+      setIsLoading(false); // Stop loading on error
     }
   };
 
@@ -47,7 +45,7 @@ const SignIn = () => {
     <ImageBackground
       source={require("../../../assets/images/bg-signup.png")}
       resizeMode="cover"
-      className="flex-1 justify-center"  // Added flex and justify-center to center the content vertically
+      className="flex-1 justify-center" // Added flex and justify-center to center the content vertically
     >
       <ScrollView className="flex-1 px-6">
         <View className="flex-1 justify-center items-center mt-8"></View>
@@ -56,7 +54,7 @@ const SignIn = () => {
             icon={icons.arrowLeft}
             backgroundColor="bg-[#4A628A]"
             tintColor="#DFF2EB"
-            onPress={() => router.push("/(root)/(tabs)")}  
+            onPress={() => router.push("/(root)/(tabs)")}
           />
           <Text className="text-[20px] text-center font-unbounded">Sign In</Text>
         </View>
@@ -119,11 +117,7 @@ const SignIn = () => {
           {isLoading ? (
             <ActivityIndicator size="large" color="#FFFFFF" />
           ) : (
-            <Button
-              title="Sign In"
-              backgroundColor="bg-[#4A628A]"
-              onPress={handleSignIn}
-            />
+            <Button title="Sign In" backgroundColor="bg-[#4A628A]" onPress={handleSignIn} />
           )}
         </View>
 

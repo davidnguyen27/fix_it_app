@@ -1,6 +1,8 @@
 import ActionIcon from "@/components/ActionIcon";
 import icons from "@/constants/icons";
+import { useRepairs } from "@/hooks/useRepair";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -13,6 +15,17 @@ import {
 
 const Explore = () => {
   const router = useRouter();
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const { repairs, loading, setParams } = useRepairs({
+    Active: true,
+    PageNumber: 1,
+    PageSize: 20,
+  });
+
+  const handleSearchSubmit = () => {
+    setParams((prev) => ({ ...prev, SearchName: searchTerm }));
+  };
 
   return (
     <ImageBackground
@@ -32,12 +45,17 @@ const Explore = () => {
         {/* Search Input with Icons */}
         <View className="flex-row items-center max-w-[225px] flex-1 ml-10 bg-white rounded-[21px] px-3.5 py-0.5">
           {/* Search Icon */}
-          <Image source={require("../../../assets/icons/search-normal.png")} className="mr-4" />
+          <TouchableOpacity>
+            <Image source={require("../../../assets/icons/search-normal.png")} className="mr-4" />
+          </TouchableOpacity>
 
           {/* Input Field */}
           <TextInput
-            placeholder="Electric Repair"
+            placeholder="Find somethings..."
             className="flex-1 text-[14px] font-unbounded-light"
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+            onSubmitEditing={handleSearchSubmit}
           />
         </View>
       </View>
@@ -47,28 +65,33 @@ const Explore = () => {
 
       {/* Result List */}
       <ScrollView>
-        <View className="relative flex-row p-4 bg-white rounded-[15px] mb-4 shadow items-center">
-          {/* Image */}
-          <Image source={require("../../../assets/images/tulanh.png")} className="mr-8" />
+        {repairs.map((repair) => (
+          <View
+            key={repair.Id}
+            className="relative flex-row p-4 bg-white rounded-[15px] mb-4 shadow items-center"
+          >
+            {/* Image */}
+            <Image source={{ uri: repair.Image }} className="mr-8" />
 
-          {/* Info */}
-          <View className="flex-1">
-            <Text className="text-[8px] font-unbounded mb-2 bg-[#B9E5E8] px-2 py-1 rounded-[4px] self-start">
-              Electric Repair
-            </Text>
-            <Text className="text-[15px] font-unbounded">Fridge Repair</Text>
-            <View className="flex-row items-center my-1">
-              <Image source={icons.user} className="size-5" tintColor="#4A628A" />
-              <Text className="text-[9px] font-unbounded ml-2">Worker Name</Text>
+            {/* Info */}
+            <View className="flex-1">
+              <Text className="text-[8px] font-unbounded mb-2 bg-[#B9E5E8] px-2 py-1 rounded-[4px] self-start">
+                {repair.Category.Name}
+              </Text>
+              <Text className="text-[15px] font-unbounded">{repair.Name}</Text>
+              <View className="flex-row items-center my-1">
+                <Image source={icons.user} className="size-5" tintColor="#4A628A" />
+                <Text className="text-[9px] font-unbounded ml-2">Worker</Text>
+              </View>
+              <Text className="text-[15px] font-unbounded">{repair.Price} VND</Text>
             </View>
-            <Text className="text-[15px] font-unbounded">200.000 VND</Text>
-          </View>
 
-          {/* Bookmark Icon */}
-          <TouchableOpacity className="absolute top-3 right-3">
-            <Image source={require("../../../assets/icons/archive-tick.png")} />
-          </TouchableOpacity>
-        </View>
+            {/* Bookmark Icon */}
+            <TouchableOpacity className="absolute top-3 right-3">
+              <Image source={require("../../../assets/icons/archive-tick.png")} />
+            </TouchableOpacity>
+          </View>
+        ))}
       </ScrollView>
     </ImageBackground>
   );
