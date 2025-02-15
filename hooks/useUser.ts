@@ -5,7 +5,6 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 
-
 const useUser = () => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
@@ -42,7 +41,7 @@ const useUser = () => {
 
   const fetchUser = async () => {
     const token = await AsyncStorage.getItem("AccessToken");
-    console.log("🔑 Token found:", token);
+    
     if (!token) {
       setUser(null);
       return;

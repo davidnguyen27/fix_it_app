@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { View, Text, ImageBackground } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { refreshTokens } from "../services/auth.service";  // Đảm bảo đường dẫn đúng
+import { refreshTokens } from "../services/auth.service"; 
 
 const LoadingScreen = () => {
   useEffect(() => {
@@ -12,7 +12,6 @@ const LoadingScreen = () => {
       
         if (accessToken && refreshToken) {
           const response = await refreshTokens(accessToken, refreshToken); 
-       
           await AsyncStorage.setItem("AccessToken", response.AccessToken);
           await AsyncStorage.setItem("RefreshToken", response.RefreshToken);
         }

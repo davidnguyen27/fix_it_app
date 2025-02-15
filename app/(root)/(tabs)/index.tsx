@@ -11,9 +11,11 @@ import {
   View,
 } from "react-native";
 
+
 export default function Index() {
   return (
     <View className="flex-1">
+     
       {/* Location and Search Bar */}
       <ImageBackground
         source={require("../../../assets/images/Rectangle 4.png")}
