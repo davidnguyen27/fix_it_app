@@ -48,37 +48,7 @@ defaultAxiosInstance.interceptors.response.use(
   }
 );
 
-// Separate Axios instance without loading effect for specific use cases
-const axiosWithoutLoading: AxiosInstance = axios.create({
-  baseURL: "https://fixitright.azurewebsites.net",
-  headers: {
-    "content-type": "multipart/form-data",
-  },
-  timeout: 300000,
-  timeoutErrorMessage: "Connection timeout exceeded",
-});
 
-axiosWithoutLoading.interceptors.request.use(
-  async (config) => {
-    const token = await AsyncStorage.getItem("AccessToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-axiosWithoutLoading.interceptors.response.use(
-  (response: AxiosResponse) => response.data,
-  (err: AxiosError<ErrorResponse>) => {
-    const { response } = err;
-    if (response) {
-      handleErrorByNotification(err);
-    }
-    return Promise.reject(err);
-  }
-);
 // Error handler
 const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
   const data = errors.response?.data as ErrorResponse;
@@ -98,4 +68,4 @@ const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
   return data?.errors ?? { message };
 };
 // Create instances
-export { defaultAxiosInstance, axiosWithoutLoading };
+export { defaultAxiosInstance };
