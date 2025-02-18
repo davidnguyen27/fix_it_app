@@ -5,7 +5,7 @@ export const loginUser = async (data: { UserName: string; Password: string }) =>
   try {
     const response = await defaultAxiosInstance.post("/api/authentications/login", data);
     await AsyncStorage.setItem("AccessToken", response.data.AccessToken);
-    await AsyncStorage.setItem("RefreshToken",  response.data.RefreshToken);
+    await AsyncStorage.setItem("RefreshToken", response.data.RefreshToken);
     return response;
   } catch (error) {
     console.error("❌ Lỗi đăng nhập:", error);
@@ -15,7 +15,7 @@ export const loginUser = async (data: { UserName: string; Password: string }) =>
 
 export const getCurrentUser = async () => {
   const response = await defaultAxiosInstance.get("/api/authentications/current-user");
-  return response.data;
+  return response?.data;
 };
 
 export const refreshTokens = async (accessToken: string, refreshToken: string) => {
@@ -24,8 +24,7 @@ export const refreshTokens = async (accessToken: string, refreshToken: string) =
       AccessToken: accessToken,
       RefreshToken: refreshToken,
     });
-    return response.data; 
-
+    return response.data;
   } catch (error) {
     console.error("❌ Lỗi khi refresh token:", error);
     throw error;
@@ -33,7 +32,10 @@ export const refreshTokens = async (accessToken: string, refreshToken: string) =
 };
 export const forgetPassword = async (email: string) => {
   try {
-    const response = await defaultAxiosInstance.post("/api/authentications/password-forgeting", email);
+    const response = await defaultAxiosInstance.post(
+      "/api/authentications/password-forgeting",
+      email
+    );
     return response;
   } catch (error) {
     console.error("❌ Lỗi khi quên mật khẩu:", error);
@@ -41,9 +43,17 @@ export const forgetPassword = async (email: string) => {
   }
 };
 
-export const resetPassword = async (data: { Email: string; Token: string; Password: string; ConfirmPassword: string }) => {
+export const resetPassword = async (data: {
+  Email: string;
+  Token: string;
+  Password: string;
+  ConfirmPassword: string;
+}) => {
   try {
-    const response = await defaultAxiosInstance.put("/api/authentications/password-forgeting", data);
+    const response = await defaultAxiosInstance.put(
+      "/api/authentications/password-forgeting",
+      data
+    );
     return response.data;
   } catch (error) {
     console.error("❌ Lỗi khi đặt lại mật khẩu:", error);

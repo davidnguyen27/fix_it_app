@@ -6,13 +6,12 @@ import MenuItem from "@/components/MenuItem";
 import { useLoading } from "@/hooks/useLoading";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";  // Import AsyncStorage
-import { getCurrentUser } from "../../../services/auth.service";  // Import the API function
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getCurrentUser } from "../../../services/auth.service";
 
-// Define the User type
 interface User {
-  fullName: string;
-  Avatar: string | null;  // Allow null if no avatar is available
+  Fullname: string;
+  Avatar: string | null;
 }
 
 const ProfileScreen = () => {
@@ -20,25 +19,24 @@ const ProfileScreen = () => {
   const { logout } = useGlobalContext();
   const isLoading = useLoading();
 
-  // State to store user data
-  const [user, setUser] = useState<User | null>(null);  // Use the User type here
-  const [isSignedIn, setIsSignedIn] = useState<boolean>(true);  // Track if user is signed in
+  const [user, setUser] = useState<User | null>(null);
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(true);
 
-  // Fetch current user data
   useEffect(() => {
     const checkTokenAndFetchUser = async () => {
       try {
         const accessToken = await AsyncStorage.getItem("AccessToken");
         if (!accessToken) {
-          setIsSignedIn(false);  // If no token, set signedIn as false
-          return;  // Don't fetch user if no token
+          setIsSignedIn(false);
+          return;
         }
-        
+
         const currentUser = await getCurrentUser();
-        setUser(currentUser); // Set the user data if token exists
+        console.log("UserData: ", currentUser);
+        setUser(currentUser);
       } catch (error) {
         console.error("Failed to fetch current user:", error);
-        setIsSignedIn(false);  // In case of error, set signedIn as false
+        setIsSignedIn(false);
       }
     };
 
@@ -47,10 +45,10 @@ const ProfileScreen = () => {
 
   const handleLogout = async () => {
     if (!isLoading) {
-      await AsyncStorage.removeItem("AccessToken");  // Remove token on logout
+      await AsyncStorage.removeItem("AccessToken");
       await AsyncStorage.removeItem("RefreshToken");
       logout();
-      router.push("/(root)/(tabs)");  // Navigate to SignIn after logout
+      router.push("/(root)/(tabs)");
     }
   };
 
@@ -58,9 +56,11 @@ const ProfileScreen = () => {
   if (!isSignedIn) {
     return (
       <View className="flex-1 justify-center items-center">
-        <Text className="text-lg font-unbounded text-[#292D32]">Please sign in to view your profile</Text>
+        <Text className="text-lg font-unbounded text-[#292D32]">
+          Please sign in to view your profile
+        </Text>
         <TouchableOpacity
-          onPress={() =>router.push("/(root)/screens/sign-in")}
+          onPress={() => router.push("/(root)/screens/sign-in")}
           className="mt-5 py-2 px-6 bg-[#4A628A] rounded-lg"
         >
           <Text className="text-white text-[16px]">Sign In</Text>
@@ -98,14 +98,18 @@ const ProfileScreen = () => {
           <View className="relative">
             <Image
               className="w-[120px] h-[120px] bg-[#B9E5E8] rounded-full"
-              source={user?.Avatar ? { uri: user.Avatar } : { uri: "https://img.icons8.com/material/344/user-male-circle--v1.png" }}  // Fallback to the provided URL if no avatar
+              source={
+                user?.Avatar
+                  ? { uri: user.Avatar }
+                  : { uri: "https://img.icons8.com/material/344/user-male-circle--v1.png" }
+              }
             />
             <TouchableOpacity className="absolute bottom-0 right-2 w-[30px] h-[30px] bg-[#4A628A] rounded-full border-2 border-[#97C9E3] flex items-center justify-center">
               <Image source={icons.pencil} />
             </TouchableOpacity>
           </View>
           <Text className="mt-5 font-unbounded-medium text-[16px]">
-            {isLoading ? "Loading..." : user?.fullName}  {/* Display the full name of the user */}
+            {isLoading ? "Loading..." : user?.Fullname}
           </Text>
         </View>
 
@@ -115,7 +119,7 @@ const ProfileScreen = () => {
             icon={icons.profileLight}
             title="Your Profile"
             mingcuteRight={icons.mingcuteRight}
-            onPress={() => router.push("/(root)/properties/profile-id")}
+            onPress={() => router.push("/properties/profile/[id]")}
           />
 
           <MenuItem

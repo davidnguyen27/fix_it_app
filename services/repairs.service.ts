@@ -1,6 +1,6 @@
 import { defaultAxiosInstance } from "./axiosConfig";
 
-export interface RepairParams {
+export interface SearchParams {
   Active: boolean;
   SearchName?: string;
   CategoryId?: string;
@@ -8,15 +8,15 @@ export interface RepairParams {
   PageSize?: number;
 }
 
-export const getRepairs = async (params: RepairParams) => {
-  try {
-    const response = await defaultAxiosInstance.post("/api/repair-services/get-services", {
-      params,
-    });
-    console.log(response?.data?.Data || []);
-    return response?.data?.Data || [];
-  } catch (error) {
-    console.error("Error fetching repairs:", error);
-    throw error;
-  }
+export const searchServices = async (params: SearchParams) => {
+  const response = await defaultAxiosInstance.post("/api/repair-services/get-services", {
+    params,
+  });
+  return response?.data?.Data || [];
+};
+
+export const getService = async (id: string) => {
+  const response = await defaultAxiosInstance.get(`/api/repair-services/${id}`);
+  console.log(response?.data);
+  return response?.data;
 };

@@ -1,17 +1,20 @@
 import { useState, useEffect } from "react";
-import { getRepairs, RepairParams } from "@/services/repairs.service";
+import { searchServices, SearchParams } from "@/services/repairs.service";
 import { RepairService } from "@/types/repair_service";
 
-export const useRepairs = (initialParams: RepairParams) => {
+export const useRepairs = (initialParams: SearchParams) => {
   const [repairs, setRepairs] = useState<RepairService[]>([]);
   const [loading, setLoading] = useState(false);
-  const [params, setParams] = useState<RepairParams>(initialParams);
+  const [params, setParams] = useState<SearchParams>(initialParams);
 
   const fetchRepairs = async () => {
     setLoading(true);
     try {
-      const data = await getRepairs(params);
-      setRepairs(data);
+      const data = await searchServices(params);
+      const filteredData = data.filter((repair: { Name: string }) =>
+        repair.Name.toLowerCase().includes(params.SearchName?.toLowerCase() || "")
+      );
+      setRepairs(filteredData); // Lọc theo SearchName
     } catch (error) {
       console.error("Error fetching repairs:", error);
     } finally {
