@@ -4,7 +4,7 @@ import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import GlobalProvider from "@/context/GlobalProvider";
-import LoadingScreen from "./landing";  // Import LoadingScreen component
+import LandingScreen from "./landing"; // Import LoadingScreen component
 
 export default function AppLayout() {
   const [fontsLoaded] = useFonts({
@@ -19,7 +19,6 @@ export default function AppLayout() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      // Set timeout to simulate a loading screen for 3 seconds
       setTimeout(() => {
         setIsLoading(false);
         SplashScreen.hideAsync();
@@ -28,7 +27,7 @@ export default function AppLayout() {
   }, [fontsLoaded]);
 
   if (isLoading) {
-    return <LoadingScreen />;  // Use the LoadingScreen component
+    return <LandingScreen />;
   }
 
   return (

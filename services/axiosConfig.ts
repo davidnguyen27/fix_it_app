@@ -8,123 +8,58 @@ interface ErrorResponse {
   errors?: { message?: string }[];
 }
 
-// Biến toàn cục để kiểm soát trạng thái loading
-let isLoading = false;
-let setLoading: (loading: boolean) => void = () => {};
+// Default Axios instance with loading effect
+const defaultAxiosInstance: AxiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    "content-type": "application/json",
+  },
+  timeout: 30000,
+  timeoutErrorMessage: "Connection timeout exceeded",
+});
 
-export const setGlobalLoadingHandler = (loadingHandler: (loading: boolean) => void) => {
-  setLoading = loadingHandler;
-};
+defaultAxiosInstance.interceptors.request.use(
+  async (config) => {
+    const token = await AsyncStorage.getItem("AccessToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
-// Xử lý lỗi 401 (Unauthorized)
-const handleUnauthorized = async (error: AxiosError<ErrorResponse>) => {
-  const errMessage = error.response?.data?.message || "Unauthorized";
+defaultAxiosInstance.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response.data;
+  },
+  (err: AxiosError<ErrorResponse>) => {
+    const { response } = err;
+    if (response) {
+      handleErrorByNotification(err);
+    }
+    return Promise.reject(err);
+  }
+);
 
-  if (error.config?.url?.includes("/api/authentications/login")) {
-    return handleErrorByNotification(error);
+// Error handler
+const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
+  const data = errors.response?.data as ErrorResponse;
+  const message: string = data?.message || "An error occurred";
+  console.error("Error:", message);
+  if (message) {
+    Toast.show({
+      type: "error",
+      text1: "Notification",
+      text2: message,
+      position: "top",
+      visibilityTime: 5000,
+    });
   }
 
-  await AsyncStorage.multiRemove(["AccessToken", "RefreshToken"]);
-  Toast.show({
-    type: "error",
-    text1: "Session Expired",
-    text2: "Please login again!",
-    position: "top",
-    visibilityTime: 4000,
-  });
-
-  return Promise.reject(new Error(errMessage));
+  return data?.errors ?? { message };
 };
 
-// Handle API error
-const handleErrorByNotification = (error: AxiosError<ErrorResponse>) => {
-  const message = error.response?.data?.message || "Something went wrong!";
-
-  Toast.show({
-    type: "error",
-    text1: "Notification",
-    text2: message,
-    position: "top",
-    visibilityTime: 4000,
-  });
-
-  return Promise.reject(error);
-};
-
-// Set Content-Type
-const autoSetContentType = (config: InternalAxiosRequestConfig) => {
-  if (!config.headers["Content-Type"]) {
-    config.headers["Content-Type"] = "application/json";
-  }
-};
-
-// Create an Axios instance
-const createAxiosInstance = (enableLoading: boolean = true): AxiosInstance => {
-  const instance = axios.create({
-    baseURL: BASE_URL,
-    timeout: 30000,
-    headers: {
-      Accept: "application/json",
-    },
-    validateStatus: (status) => status >= 200 && status <= 500,
-  });
-
-  // Request Interceptor
-  instance.interceptors.request.use(
-    async (config) => {
-      if (enableLoading) {
-        isLoading = true;
-        setLoading(true);
-      }
-
-      // Lấy token ngay lập tức từ AsyncStorage
-      const token = await AsyncStorage.getItem("AccessToken");
-      // console.log("✅ Axios Token:", token);
-
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-
-      autoSetContentType(config);
-      return config;
-    },
-    (error) => {
-      if (enableLoading) {
-        isLoading = false;
-        setLoading(false);
-      }
-      return Promise.reject(error);
-    }
-  );
-
-  // Response Interceptor
-  instance.interceptors.response.use(
-    async (response: AxiosResponse) => {
-      if (enableLoading) {
-        isLoading = false;
-        setLoading(false);
-      }
-      return response.data;
-    },
-    async (error: AxiosError<ErrorResponse>) => {
-      if (enableLoading) {
-        isLoading = false;
-        setLoading(false);
-      }
-      if (error.response?.status === 401) {
-        return handleUnauthorized(error);
-      }
-      return handleErrorByNotification(error);
-    }
-  );
-
-  return instance;
-};
-
-// Create instances
-const defaultAxiosInstance = createAxiosInstance(true);
-const axiosWithoutLoading = createAxiosInstance(false);
-
-
-
-export { defaultAxiosInstance, axiosWithoutLoading };
+export { defaultAxiosInstance };

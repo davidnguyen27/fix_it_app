@@ -41,6 +41,7 @@ const useUser = () => {
 
   const fetchUser = async () => {
     const token = await AsyncStorage.getItem("AccessToken");
+
     if (!token) {
       setUser(null);
       return;

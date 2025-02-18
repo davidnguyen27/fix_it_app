@@ -2,15 +2,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { defaultAxiosInstance } from "./axiosConfig";
 
 export const loginUser = async (data: { UserName: string; Password: string }) => {
-  try {
-    const response = await defaultAxiosInstance.post("/api/authentications/login", data);
-    await AsyncStorage.setItem("AccessToken", response.data.AccessToken);
-    await AsyncStorage.setItem("RefreshToken", response.data.RefreshToken);
-    return response;
-  } catch (error) {
-    console.error("❌ Lỗi đăng nhập:", error);
-    throw error;
-  }
+  const response = await defaultAxiosInstance.post("/api/authentications/login", data);
+  await AsyncStorage.setItem("AccessToken", response.data.AccessToken);
+  await AsyncStorage.setItem("RefreshToken", response.data.RefreshToken);
+  return response;
 };
 
 export const getCurrentUser = async () => {
@@ -30,6 +25,7 @@ export const refreshTokens = async (accessToken: string, refreshToken: string) =
     throw error;
   }
 };
+
 export const forgetPassword = async (email: string) => {
   try {
     const response = await defaultAxiosInstance.post(

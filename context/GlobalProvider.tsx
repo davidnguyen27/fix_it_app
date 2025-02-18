@@ -3,6 +3,7 @@ import useAuth from "@/hooks/useAuth";
 import { getCurrentUser } from "@/services/auth.service";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 interface GlobalContextType {
   isLoggedIn: boolean;
@@ -26,7 +27,7 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
     try {
       const token = await AsyncStorage.getItem("AccessToken");
       if (!token) {
-        console.log("🚫 No token found, user is not logged in.");
+   
         setUser(null);
         return;
       }
@@ -65,7 +66,9 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
   };
 
   return (
+
     <GlobalContext.Provider value={{ isLoggedIn: !!user, user, login, logout }}>
+          <Toast/>
       {children}
     </GlobalContext.Provider>
   );

@@ -1,7 +1,7 @@
 import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
 import icons from "@/constants/icons";
-import { useLoading } from "@/hooks/useLoading";
+
 import useUser from "@/hooks/useUser";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -16,6 +16,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 
+// Modal component to show after successful registration
+import { Modal, StyleSheet } from "react-native";
+
 const SignUp = () => {
   const router = useRouter();
 
@@ -25,11 +28,10 @@ const SignUp = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-  const { signUp } = useUser();
-  const isLoading = useLoading();
+  const { signUp, isModalVisible, handleModalClose } = useUser();  // Using modal state from useUser hook
 
   const handleRegister = () => {
-    if (!isLoading) signUp(username, email, password);
+    signUp(username, email, password);
   };
 
   return (
@@ -46,7 +48,6 @@ const SignUp = () => {
             tintColor="#DFF2EB"
             onPress={() => router.back()}
           />
-
           <Text className="text-[20px] text-center font-unbounded">Create Account</Text>
         </View>
 
@@ -110,9 +111,7 @@ const SignUp = () => {
         <View className="flex-row items-center mt-6 ml-4">
           <TouchableOpacity
             onPress={() => setIsChecked(!isChecked)}
-            className={`size-6 rounded-md border-2 ${
-              isChecked ? "border-[#4A628A]" : "border-[#4A628A]"
-            } items-center justify-center`}
+            className={`size-6 rounded-md border-2 ${isChecked ? "border-[#4A628A]" : "border-[#4A628A]"}`}
           >
             {isChecked && <Image source={icons.tickSquare} />}
           </TouchableOpacity>
@@ -123,44 +122,49 @@ const SignUp = () => {
 
         {/* Sign Up button */}
         <View className="mt-8">
-          {isLoading ? (
-            <ActivityIndicator size="large" color="FFFFFF" />
-          ) : (
             <Button title="Sign Up" backgroundColor="bg-[#4A628A]" onPress={handleRegister} />
-          )}
         </View>
 
-        {/* Sign in by social media */}
-        <View className="flex-row items-center mt-8">
-          <View className="flex-1 h-px bg-black" />
-          <Text className="font-unbounded text-[13px] color-[#292D32] mx-3">Or sign in with</Text>
-          <View className="flex-1 h-px bg-black" />
-        </View>
-
-        <View className="flex-row justify-center my-4">
-          <TouchableOpacity className="p-4 rounded-full bg-[#D9D9D9]">
-            <Image source={icons.apple} />
-          </TouchableOpacity>
-          <TouchableOpacity className="p-4 mx-5 rounded-full bg-[#D9D9D9]">
-            <Image source={icons.google} />
-          </TouchableOpacity>
-          <TouchableOpacity className="p-4 rounded-full bg-[#D9D9D9]">
-            <Image source={icons.facebook} />
-          </TouchableOpacity>
-        </View>
-
-        <Text className="text-center font-unbounded-light text-[13px] text-[#292D32]">
-          Already have an account?{" "}
-          <Text
-            onPress={() => router.push("/(root)/screens/sign-in")}
-            className="font-unbounded underline"
-          >
-            Sign In
-          </Text>
-        </Text>
+        {/* Modal when registration is successful */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={handleModalClose}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+                <Text style={styles.modalText}>
+                Check your email to activate your account.
+                </Text>
+              <Button title="Close" backgroundColor="bg-[#4A628A]" onPress={handleModalClose} />
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </ImageBackground>
   );
 };
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: 350,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    fontSize: 16,
+    textAlign: "center",
+  },
+});
 
 export default SignUp;

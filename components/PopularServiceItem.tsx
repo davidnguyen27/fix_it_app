@@ -1,8 +1,14 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 
-const PopularServiceItem = () => {
+import { GestureResponderEvent } from "react-native";
+
+interface PopularServiceItemProps {
+  onPress: (event: GestureResponderEvent) => void;
+}
+
+const PopularServiceItem = ({ onPress }: PopularServiceItemProps) => {
   return (
-    <TouchableOpacity className="mr-4 rounded-lg w-[274px] relative">
+    <TouchableOpacity onPress={onPress} className="mr-4 rounded-lg w-[274px] relative">
       <Image source={require("../assets/images/popular_service_1.png")} className="w-full" />
       <View className="absolute top-3 left-2 bg-[#B9E5E8] px-4 py-1 rounded-[20px] flex-row items-center">
         <Image source={require("../assets/icons/star.png")} className="mr-2" />
@@ -14,5 +20,6 @@ const PopularServiceItem = () => {
     </TouchableOpacity>
   );
 };
+
 
 export default PopularServiceItem;

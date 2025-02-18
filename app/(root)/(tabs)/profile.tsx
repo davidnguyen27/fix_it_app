@@ -3,7 +3,7 @@ import ActionIcon from "@/components/ActionIcon";
 import icons from "@/constants/icons";
 import { useRouter } from "expo-router";
 import MenuItem from "@/components/MenuItem";
-import { useLoading } from "@/hooks/useLoading";
+
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,7 +17,6 @@ interface User {
 const ProfileScreen = () => {
   const router = useRouter();
   const { logout } = useGlobalContext();
-  const isLoading = useLoading();
 
   const [user, setUser] = useState<User | null>(null);
   const [isSignedIn, setIsSignedIn] = useState<boolean>(true);
@@ -44,12 +43,10 @@ const ProfileScreen = () => {
   }, []);
 
   const handleLogout = async () => {
-    if (!isLoading) {
-      await AsyncStorage.removeItem("AccessToken");
-      await AsyncStorage.removeItem("RefreshToken");
-      logout();
-      router.push("/(root)/(tabs)");
-    }
+    await AsyncStorage.removeItem("AccessToken"); // Remove token on logout
+    await AsyncStorage.removeItem("RefreshToken");
+    logout();
+    router.push("/(root)/(tabs)"); // Navigate to SignIn after logout
   };
 
   // If the user is not signed in, show Sign In button
@@ -109,7 +106,7 @@ const ProfileScreen = () => {
             </TouchableOpacity>
           </View>
           <Text className="mt-5 font-unbounded-medium text-[16px]">
-            {isLoading ? "Loading..." : user?.Fullname}
+            {user?.Fullname} {/* Display the full name of the user */}
           </Text>
         </View>
 
