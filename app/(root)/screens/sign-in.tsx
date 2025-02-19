@@ -1,7 +1,6 @@
 import Button from "@/components/Button";
 import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
-import { loginUser } from "../../../services/auth.service";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -10,34 +9,22 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  ScrollView,
   ImageBackground,
   ActivityIndicator,
 } from "react-native";
+import useAuth from "@/hooks/useAuth";
 
 const SignIn = () => {
   const router = useRouter();
+  const { signIn, isLoading } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  // Handle sign in logic
   const handleSignIn = async () => {
-    if (isLoading) return;
-    setIsLoading(true);
-    try {
-      const data = { UserName: username, Password: password };
-      const response = await loginUser(data);
-
-      if (response) {
-        router.push("/(root)/(tabs)");
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-      setIsLoading(false);
-    }
+    const response = await signIn({ UserName: username, Password: password });
+    if (response) router.push("/(root)/(tabs)");
   };
 
   return (
@@ -46,8 +33,8 @@ const SignIn = () => {
       resizeMode="cover"
       className="flex-1 justify-center"
     >
-      <ScrollView className="flex-1 px-6">
-        <View className="flex-1 justify-center items-center mt-8"></View>
+      <View className="flex-1 px-6">
+        {/* Header */}
         <View className="mt-8">
           <ActionIcon
             icon={icons.arrowLeft}
@@ -145,7 +132,7 @@ const SignIn = () => {
         >
           Don’t have an account? <Text className="font-unbounded underline">Sign Up</Text>
         </Link>
-      </ScrollView>
+      </View>
     </ImageBackground>
   );
 };

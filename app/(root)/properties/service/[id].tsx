@@ -15,6 +15,7 @@ import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import { bookingService } from "@/services/bookings.service";
 import { getCurrentUser } from "@/services/auth.service";
+import { formatDateToYYYYMMDD, formatTimeToHHMMSS, generateDates } from "@/utils/DateFormat";
 
 interface ServiceDetail {
   Id: string;
@@ -59,7 +60,7 @@ const ServiceDetail = () => {
   }, [id]);
 
   useEffect(() => {
-    generateDates(); // Gọi hàm tạo danh sách ngày
+    setDates(generateDates()); // Gọi hàm tạo danh sách ngày
   }, []);
 
   const fetchServiceDetails = async () => {
@@ -73,87 +74,7 @@ const ServiceDetail = () => {
     }
   };
 
-  // Hàm định dạng ngày thành "Thứ, Ngày Tháng"
-  const formatDate = (date: Date): string => {
-    const today = new Date();
-    const isToday =
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear();
-
-    const months = [
-      "JAN",
-      "FEB",
-      "MAR",
-      "APR",
-      "MAY",
-      "JUN",
-      "JUL",
-      "AUG",
-      "SEP",
-      "OCT",
-      "NOV",
-      "DEC",
-    ];
-
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-
-    // Nếu là ngày hôm nay, thêm "Today" ở trên
-    return isToday ? `Today\n${day} ${month}` : `${day} ${month}`;
-  };
-
-  // Hàm tạo danh sách ngày 7 ngày tới
-  const generateDates = () => {
-    const today = new Date();
-    const generatedDates = [];
-    for (let i = 0; i < 7; i++) {
-      const date = new Date();
-      date.setDate(today.getDate() + i); // Tăng dần số ngày
-      generatedDates.push(formatDate(date));
-    }
-    setDates(generatedDates);
-  };
-
-  const formatDateToYYYYMMDD = (dateString: string): string => {
-    const today = new Date();
-    const months = {
-      JAN: "01",
-      FEB: "02",
-      MAR: "03",
-      APR: "04",
-      MAY: "05",
-      JUN: "06",
-      JUL: "07",
-      AUG: "08",
-      SEP: "09",
-      OCT: "10",
-      NOV: "11",
-      DEC: "12",
-    };
-
-    // Xử lý "Today" nếu có
-    let formattedDate = dateString.replace("Today\n", "");
-    const [day, month] = formattedDate.split(" ");
-
-    // Chuyển về yyyy-mm-dd
-    return `${today.getFullYear()}-${months[month]}-${day.padStart(2, "0")}`;
-  };
-
-  const formatTimeToHHMMSS = (timeString: string): string => {
-    let [time, period] = timeString.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-
-    if (period === "PM" && hours !== 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
-
-    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:00`;
-  };
-
-  const handleBooking = async () => {
-    console.log("🟢 selectedDate:", selectedDate);
-    console.log("🟢 selectedTime:", selectedTime);
-    console.log("🟢 address:", address);
+  const handleBooking = () => {
     if (!selectedDate || !selectedTime || !address) {
       alert("Vui lòng chọn ngày, giờ và nhập địa chỉ!");
       return;
@@ -170,14 +91,10 @@ const ServiceDetail = () => {
       WorkingTime: formattedTime,
     };
 
-    try {
-      const data = await bookingService(bookingData);
-      console.log("Data booking: ", data.data);
-      alert("✅ Đặt lịch thành công!");
-    } catch (error) {
-      console.error("❌ Lỗi khi đặt lịch:", error);
-      alert("Đặt lịch thất bại, vui lòng thử lại!");
-    }
+    router.push({
+      pathname: "/screens/payment-method",
+      params: bookingData, // Truyền dữ liệu booking qua màn hình PaymentMethod
+    });
   };
 
   if (loading) {
@@ -197,7 +114,7 @@ const ServiceDetail = () => {
   }
 
   return (
-    <View>
+    <ScrollView showsVerticalScrollIndicator={false}>
       {/* Header */}
       <View className="relative bg-[#5e99a9] pb-8">
         <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center p-4 z-10">
@@ -234,7 +151,7 @@ const ServiceDetail = () => {
       </View>
 
       {/* Content */}
-      <View className="bg-white h-full rounded-t-[46px] mt-[-20px] p-6">
+      <View className="bg-white h-full rounded-t-[46px] mt-[-50px] p-6">
         {/* Category */}
         <Text className="text-[14px] font-unbounded-light bg-[#B9E5E8] px-2 py-1 rounded-[9px] self-start mb-2 ml-4">
           {service.Category.Name}
@@ -249,21 +166,18 @@ const ServiceDetail = () => {
 
         {/* Date Selection */}
         <Text className="text-[40px] font-unbounded mb-2">Day</Text>
-        <View className="flex-row space-x-3 mb-4">
+        <View className="flex-row flex-wrap gap-2 mb-4">
           {dates.map((day, index) => (
             <TouchableOpacity
               key={index}
-              className={`px-4 py-2 rounded-[25px] h-auto ${
-                selectedDate === day ? "bg-[#4A628A]" : "bg-[#B9E5E8]"
-              }`}
+              className={`px-4 py-2 rounded-full bg-[#B9E5E8] min-w-[80px] items-center`}
               onPress={() => setSelectedDate(day)}
             >
-              <Text
-                className={`text-[15px] font-unbounded-medium text-center whitespace-pre ${
-                  selectedDate === day ? "text-white" : "text-black"
-                }`}
-              >
-                {day}
+              <Text className="text-[12px] text-center text-gray-700">
+                {index === 0 ? "Today" : day.split(" ")[0]}
+              </Text>
+              <Text className="text-[16px] font-bold text-center text-black">
+                {day.split(" ")[1]}
               </Text>
             </TouchableOpacity>
           ))}
@@ -271,28 +185,26 @@ const ServiceDetail = () => {
 
         {/* Time Selection */}
         <Text className="text-[40px] font-unbounded mb-2">Time</Text>
-        <View className="flex-row space-x-2 mb-4">
-          {["7:00 AM", "7:30 AM", "8:00 AM"].map((time, index) => (
-            <TouchableOpacity
-              key={index}
-              className={`px-4 py-2 rounded-lg ${
-                selectedTime === time ? "bg-[#4A628A]" : "bg-[#B9E5E8]"
-              }`}
-              onPress={() => setSelectedTime(time)}
-            >
-              <Text className={`${selectedTime === time ? "text-white" : "text-black"}`}>
-                {time}
-              </Text>
-            </TouchableOpacity>
-          ))}
+        <View className="flex-row flex-wrap gap-2 mb-4">
+          {["9:00 AM", "10:00 AM", "11:00 AM", "14:00 PM", "15:00 PM", "16:00 PM", "17:00 PM"].map(
+            (time, index) => (
+              <TouchableOpacity
+                key={index}
+                className={`px-4 py-2 rounded-full bg-[#B9E5E8] min-w-[80px] items-center`}
+                onPress={() => setSelectedTime(time)}
+              >
+                <Text className="text-[15px] font-unbounded-light">{time.split(" ")[0]}</Text>
+                <Text className="text-[15px] font-unbounded-medium">{time.split(" ")[1]}</Text>
+              </TouchableOpacity>
+            )
+          )}
         </View>
 
         {/* Address Input */}
         <Text className="text-[13px] font-unbounded mb-2">Your address</Text>
         <TextInput
           placeholder="Enter here"
-          className="border border-gray-300 bg-[#B9E5E8] rounded-[15px] h-[76px] p-2 mb-6"
-          multiline
+          className="bg-[#B9E5E8] rounded-[15px] p-4 mb-6"
           value={address} // Gán giá trị từ state
           onChangeText={(text) => setAddress(text)} // Cập nhật state khi nhập
         />
@@ -302,7 +214,7 @@ const ServiceDetail = () => {
           <Text className="text-white text-center text-lg font-bold">Continue</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

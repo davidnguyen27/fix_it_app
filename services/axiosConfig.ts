@@ -1,9 +1,12 @@
-import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosError, AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Toast from "react-native-toast-message";
 import { BASE_URL } from "@/constants/baseUrl";
+import Toast from "react-native-toast-message";
 
 interface ErrorResponse {
+  type?: string;
+  title?: string;
+  status: number;
   message?: string;
   errors?: { message?: string }[];
 }
@@ -47,19 +50,17 @@ defaultAxiosInstance.interceptors.response.use(
 // Error handler
 const handleErrorByNotification = (errors: AxiosError<ErrorResponse>) => {
   const data = errors.response?.data as ErrorResponse;
-  const message: string = data?.message || "An error occurred";
-  console.error("Error:", message);
-  if (message) {
-    Toast.show({
-      type: "error",
-      text1: "Notification",
-      text2: message,
-      position: "top",
-      visibilityTime: 5000,
-    });
-  }
+  const errorMessage = data?.message || data?.title;
 
-  return data?.errors ?? { message };
+  Toast.show({
+    type: "error",
+    text1: "Notification",
+    text2: errorMessage,
+    position: "top",
+    visibilityTime: 5000,
+  });
+
+  return errorMessage;
 };
 
 export { defaultAxiosInstance };

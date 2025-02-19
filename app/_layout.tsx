@@ -32,8 +32,8 @@ export default function AppLayout() {
 
   return (
     <GlobalProvider>
-      <Toast />
       <Stack screenOptions={{ headerShown: false }} />
+      <Toast />
     </GlobalProvider>
   );
 }

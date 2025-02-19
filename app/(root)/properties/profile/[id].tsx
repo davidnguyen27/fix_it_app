@@ -29,7 +29,6 @@ const ProfileDetail = () => {
     const updatedUser = {
       Fullname: user.Fullname,
       UserName: user.UserName,
-      PhoneNumber: user.PhoneNumber,
       Address: user.Address,
       Email: user.Email,
       Gender: user.Gender,
@@ -124,23 +123,6 @@ const ProfileDetail = () => {
           />
         </View>
 
-        {/* Input Phone */}
-        <View className="mt-8">
-          <Text className="text-[14px] font-unbounded mb-3">Phone Number</Text>
-          <TextInput
-            className="bg-[#DFF2EB] rounded-2xl px-4 py-4 font-unbounded-light"
-            placeholder="Enter your Phone Number"
-            placeholderTextColor="#A9A9A9"
-            maxLength={50}
-            textAlignVertical="center"
-            numberOfLines={1}
-            defaultValue={user?.PhoneNumber}
-            onChangeText={(text) =>
-              setUser((prev) => (prev ? { ...prev, PhoneNumber: text } : null))
-            }
-          />
-        </View>
-
         {/* Input Address */}
         <View className="mt-8">
           <Text className="text-[14px] font-unbounded mb-3">Address</Text>
@@ -206,7 +188,7 @@ const ProfileDetail = () => {
         </View>
 
         {/* Continue button */}
-        <View className="mt-4">
+        <View className="mt-2">
           <Button title="Update" backgroundColor="bg-[#4A628A]" onPress={handleUpdate} />
         </View>
       </ScrollView>
