@@ -1,56 +1,21 @@
 import { View, Text, Image, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
-import ActionIcon from "@/components/ActionIcon";
 import icons from "@/constants/icons";
-import { useRouter } from "expo-router";
+import ActionIcon from "@/components/ActionIcon";
 import MenuItem from "@/components/MenuItem";
-
-import { useGlobalContext } from "@/context/GlobalProvider";
-import { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getCurrentUser } from "../../../services/auth.service";
-
-interface User {
-  Fullname: string;
-  Avatar: string | null;
-}
+import { useRouter } from "expo-router";
+import useUser from "@/hooks/useUser";
+import useAuth from "@/hooks/useAuth";
 
 const ProfileScreen = () => {
   const router = useRouter();
-  const { logout } = useGlobalContext();
-
-  const [user, setUser] = useState<User | null>(null);
-  const [isSignedIn, setIsSignedIn] = useState<boolean>(true);
-
-  useEffect(() => {
-    const checkTokenAndFetchUser = async () => {
-      try {
-        const accessToken = await AsyncStorage.getItem("AccessToken");
-        if (!accessToken) {
-          setIsSignedIn(false);
-          return;
-        }
-
-        const currentUser = await getCurrentUser();
-        console.log("UserData: ", currentUser);
-        setUser(currentUser);
-      } catch (error) {
-        console.error("Failed to fetch current user:", error);
-        setIsSignedIn(false);
-      }
-    };
-
-    checkTokenAndFetchUser();
-  }, []);
+  const { user } = useUser();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("AccessToken"); // Remove token on logout
-    await AsyncStorage.removeItem("RefreshToken");
     logout();
-    router.push("/(root)/(tabs)"); // Navigate to SignIn after logout
   };
 
-  // If the user is not signed in, show Sign In button
-  if (!isSignedIn) {
+  if (!user) {
     return (
       <View className="flex-1 justify-center items-center">
         <Text className="text-lg font-unbounded text-[#292D32]">

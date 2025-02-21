@@ -1,53 +1,44 @@
-import { getCurrentUser } from "@/services/auth.service";
-import { registerUser } from "@/services/user.service";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { authService } from "@/services/auth.service";
+import { userService } from "@/services/user.service";
 import Toast from "react-native-toast-message";
 import useLoading from "./useLoading";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const useUser = () => {
-  const router = useRouter();
   const { loading, withLoading } = useLoading();
+  const { user, setUser } = useGlobalContext();
 
-  const [user, setUser] = useState<User | null>(null);
-
-  const signUp = async (username: string, email: string, password: string) => {
+  const refetchUser = async () => {
     withLoading(async () => {
-      await registerUser({
-        UserName: username,
-        Password: password,
-        Email: email,
-      });
-
-      Toast.show({
-        type: "success",
-        text1: "Notification",
-        text2: "Registration successful",
-      });
-      router.push("/screens/sign-in");
+      const currentUser = await authService.getCurrentUser();
+      setUser(currentUser);
     });
   };
 
-  const fetchUser = async () => {
-    const token = await AsyncStorage.getItem("AccessToken");
+  const update = async () => {
+    withLoading(async () => {
+      if (!user) return;
 
-    if (!token) {
-      setUser(null);
-      return;
-    }
+      const newUser = {
+        ...user,
+        Fullname: user.Fullname,
+        UserName: user.UserName,
+        Address: user.Address,
+        Email: user.Email,
+        Gender: user.Gender,
+      };
 
-    await getCurrentUser();
+      await userService.updateUser(user.Id, newUser);
+      setUser(newUser);
+      Toast.show({ type: "success", text1: "Success", text2: "Profile updated successfully!" });
+    });
   };
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
   return {
-    signUp,
     user,
-    refetch: fetchUser,
+    isSignedIn: !!user,
+    refetchUser,
+    update,
     isLoading: loading,
   };
 };

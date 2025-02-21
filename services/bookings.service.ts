@@ -10,6 +10,5 @@ interface DataRequest {
 
 export const bookingService = async (data: DataRequest) => {
   const response = await defaultAxiosInstance.post("/api/bookings", data);
-  console.log("Data: ", response.data);
-  return response.data;
+  return response?.data;
 };

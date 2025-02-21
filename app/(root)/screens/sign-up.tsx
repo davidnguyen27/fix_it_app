@@ -2,8 +2,8 @@ import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
 import icons from "@/constants/icons";
 import { Formik } from "formik";
-import useUser from "@/hooks/useUser";
 import { useRouter } from "expo-router";
+import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
 import {
   View,
@@ -22,7 +22,7 @@ const SignUp = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-  const { signUp, isLoading } = useUser();
+  const { signUp, isLoading } = useAuth();
 
   const handleRegister = (values: { username: string; email: string; password: string }) => {
     return signUp(values.username, values.email, values.password);

@@ -25,15 +25,14 @@ const Explore = () => {
   });
 
   // Debounce search term để giảm số lần gọi API
-  const debouncedSearchTerm = useDebounce(searchTerm, 500); // Chờ 500ms sau khi user ngừng gõ
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   useEffect(() => {
-    // Nếu searchTerm thay đổi, tự động fetch dữ liệu
     if (debouncedSearchTerm) {
       setParams((prev) => ({
         ...prev,
         SearchName: debouncedSearchTerm,
-        PageNumber: 1, // Reset lại page
+        PageNumber: 1,
       }));
     }
   }, [debouncedSearchTerm]);

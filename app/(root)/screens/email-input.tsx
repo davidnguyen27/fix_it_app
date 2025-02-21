@@ -1,27 +1,20 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, ImageBackground } from "react-native";
+import { useState } from "react";
+import { View, Text, TextInput, ImageBackground, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
-import Button from "@/components/Button"; // Assuming you have a Button component
-import icons from "@/constants/icons"; // Ensure you have the icons available in the project
+import Button from "@/components/Button";
+import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
-import { forgetPassword } from "@/services/auth.service"; // Import the API logic
+import useAuth from "@/hooks/useAuth";
 
 const EmailInput = () => {
-  const [email, setEmail] = useState("");
   const router = useRouter();
+  const { sendEmail, isLoading } = useAuth();
+  const [email, setEmail] = useState<string>("");
 
   const handleNext = async () => {
     if (email) {
-      try {
-        console.log("Sending verification email to:", email);
-         await forgetPassword(email);
-
-        router.push(`/(root)/screens/verify?email=${email}`);
-      } catch (error) {
-        alert("There was an error sending the verification email. Please try again.");
-      }
-    } else {
-      alert("Please enter a valid email address");
+      await sendEmail(email);
+      router.push(`/screens/verify?email=${email}`);
     }
   };
 
@@ -41,9 +34,7 @@ const EmailInput = () => {
           />
         </View>
 
-        <Text className="text-[20px] text-center font-unbounded mt-8">
-          Enter Your Email
-        </Text>
+        <Text className="text-[20px] text-center font-unbounded mt-8">Enter Your Email</Text>
 
         <Text className="text-[14px] font-unbounded-light text-center mt-4">
           We will send a verification code to your email
@@ -67,11 +58,11 @@ const EmailInput = () => {
         </View>
 
         {/* Next Button */}
-        <Button
-          title="Next"
-          backgroundColor="bg-[#4A628A]"
-          onPress={handleNext}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#4A628A" />
+        ) : (
+          <Button title="Next" backgroundColor="bg-[#4A628A]" onPress={handleNext} />
+        )}
       </View>
     </ImageBackground>
   );

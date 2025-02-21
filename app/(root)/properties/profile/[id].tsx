@@ -6,61 +6,32 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ActionIcon from "@/components/ActionIcon";
 import icons from "@/constants/icons";
 import Button from "@/components/Button";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getCurrentUser } from "@/services/auth.service";
-import { updateUser } from "@/services/user.service";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import useUser from "@/hooks/useUser";
 
 const ProfileDetail = () => {
   const router = useRouter();
-  const [selectedGender, setSelectedGender] = useState<string | undefined>("Select");
+  const { user, setUser } = useGlobalContext();
+  const { update, isLoading } = useUser();
+
   const [isGenderPickerVisible, setIsGenderPickerVisible] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-  const [isSignedIn, setIsSignedIn] = useState<boolean>(true);
 
-  const handleUpdate = async () => {
-    if (!user) return;
-
-    const updatedUser = {
-      Fullname: user.Fullname,
-      UserName: user.UserName,
-      Address: user.Address,
-      Email: user.Email,
-      Gender: user.Gender,
-    };
-
-    try {
-      const response = await updateUser(user.Id, updatedUser);
-      console.log("User updated successfully:", response);
-    } catch (error) {
-      console.error("Failed to update user:", error);
+  const handleInputChange = (field: keyof User, value: string) => {
+    if (user) {
+      setUser({ ...user, [field]: value });
     }
   };
 
-  useEffect(() => {
-    const checkTokenAndFetchUser = async () => {
-      try {
-        const accessToken = await AsyncStorage.getItem("AccessToken");
-        if (!accessToken) {
-          setIsSignedIn(false);
-          return;
-        }
-
-        const currentUser = await getCurrentUser();
-        setUser(currentUser);
-      } catch (error) {
-        console.error("Failed to fetch current user:", error);
-        setIsSignedIn(false);
-      }
-    };
-
-    checkTokenAndFetchUser();
-  }, []);
+  const handleUpdate = async () => {
+    update();
+  };
 
   return (
     <ImageBackground
@@ -104,7 +75,7 @@ const ProfileDetail = () => {
             textAlignVertical="center"
             numberOfLines={1}
             defaultValue={user?.Fullname}
-            onChangeText={(text) => setUser((prev) => (prev ? { ...prev, Fullname: text } : null))}
+            onChangeText={(text) => handleInputChange("Fullname", text)}
           />
         </View>
 
@@ -119,7 +90,7 @@ const ProfileDetail = () => {
             textAlignVertical="center"
             numberOfLines={1}
             defaultValue={user?.UserName}
-            onChangeText={(text) => setUser((prev) => (prev ? { ...prev, UserName: text } : null))}
+            onChangeText={(text) => handleInputChange("UserName", text)}
           />
         </View>
 
@@ -134,7 +105,7 @@ const ProfileDetail = () => {
             textAlignVertical="center"
             numberOfLines={1}
             defaultValue={user?.Address}
-            onChangeText={(text) => setUser((prev) => (prev ? { ...prev, Address: text } : null))}
+            onChangeText={(text) => handleInputChange("Address", text)}
           />
         </View>
 
@@ -147,7 +118,7 @@ const ProfileDetail = () => {
             placeholderTextColor="#A9A9A9"
             keyboardType="email-address"
             defaultValue={user?.Email}
-            onChangeText={(text) => setUser((prev) => (prev ? { ...prev, Email: text } : null))}
+            onChangeText={(text) => handleInputChange("Email", text)}
           />
         </View>
 
@@ -163,33 +134,29 @@ const ProfileDetail = () => {
           </TouchableOpacity>
           {isGenderPickerVisible && (
             <View className="absolute top-[80px] left-0 right-0 bg-[#DFF2EB] shadow-lg rounded-2xl z-10 border border-gray-300">
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedGender("Male");
-                  setUser((prev) => (prev ? { ...prev, Gender: "Male" } : null));
-                  setIsGenderPickerVisible(false);
-                }}
-                className="p-4 border-b border-gray-200"
-              >
-                <Text className="text-center">Male</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedGender("Female");
-                  setUser((prev) => (prev ? { ...prev, Gender: "Female" } : null));
-                  setIsGenderPickerVisible(false);
-                }}
-                className="p-4"
-              >
-                <Text className="text-center">Female</Text>
-              </TouchableOpacity>
+              {["Male", "Female", "Other"].map((gender) => (
+                <TouchableOpacity
+                  key={gender}
+                  onPress={() => {
+                    handleInputChange("Gender", gender);
+                    setIsGenderPickerVisible(false);
+                  }}
+                  className="p-4 border-b border-gray-200"
+                >
+                  <Text className="text-center">{gender}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
           )}
         </View>
 
         {/* Continue button */}
         <View className="mt-2">
-          <Button title="Update" backgroundColor="bg-[#4A628A]" onPress={handleUpdate} />
+          {isLoading ? (
+            <ActivityIndicator size="large" />
+          ) : (
+            <Button title="Update" backgroundColor="bg-[#4A628A]" onPress={handleUpdate} />
+          )}
         </View>
       </ScrollView>
     </ImageBackground>

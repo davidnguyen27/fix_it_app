@@ -18,8 +18,8 @@ const SignIn = () => {
   const router = useRouter();
   const { signIn, isLoading } = useAuth();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleSignIn = async () => {
