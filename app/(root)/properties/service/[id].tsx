@@ -13,8 +13,7 @@ import {
 } from "react-native";
 import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
-import { bookingService } from "@/services/bookings.service";
-import { getCurrentUser } from "@/services/auth.service";
+import { authService } from "@/services/auth.service";
 import { formatDateToYYYYMMDD, formatTimeToHHMMSS, generateDates } from "@/utils/DateFormat";
 
 interface ServiceDetail {
@@ -43,7 +42,7 @@ const ServiceDetail = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user = await getCurrentUser();
+        const user = await authService.getCurrentUser();
         console.log("CustomerId: ", user?.Id);
         setCustomerId(user?.Id); // Lưu CustomerId của user hiện tại
       } catch (error) {
