@@ -2,14 +2,25 @@ import Button from "@/components/Button";
 import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, TouchableOpacity, Image, ImageBackground, Linking } from "react-native";
+import { View, Text, TouchableOpacity, Image, ImageBackground, Linking, Modal } from "react-native";
 import { useState } from "react";
 import { bookingService } from "@/services/bookings.service";
+import { WebView } from "react-native-webview"; // Import WebView
 
 const PaymentMethod = () => {
   const router = useRouter();
   const params = useLocalSearchParams(); // Nhận bookingData từ màn hình trước
   const [selectedMethod, setSelectedMethod] = useState<string | null>("vnpay");
+  const [paymentUrl, setPaymentUrl] = useState<string | null>(null); // State để lưu URL thanh toán
+  const [showModal, setShowModal] = useState(false); // State để kiểm soát Modal
+
+  const handleUrlChange = ({ url }: { url: string }) => {
+    if (url.includes("vnp_TransactionStatus=00")) {
+      setShowModal(false);
+      router.push("/screens/payment-success"); 
+    
+    }
+  };
 
   const handleConfirmPayment = async () => {
     if (!selectedMethod) {
@@ -35,8 +46,9 @@ const PaymentMethod = () => {
 
       // Kiểm tra nếu API trả về URL thanh toán
       if (bookingResponse) {
-        console.log("🔗 Redirecting to:", bookingResponse);
-        Linking.openURL(bookingResponse);
+        console.log("🔗 Payment URL:", bookingResponse);
+        setPaymentUrl(bookingResponse); // Lưu URL thanh toán vào state
+        setShowModal(true); // Hiển thị Modal
       } else {
         alert("Lỗi khi lấy URL thanh toán!");
       }
@@ -64,10 +76,10 @@ const PaymentMethod = () => {
           <Text className="text-[20px] text-center font-unbounded">Payment Methods</Text>
         </View>
 
-        {/* Payment List */}
+        {/* VNPay Payment Option */}
         <View className="mt-6 space-y-2">
-          {/* Cash */}
-          <TouchableOpacity
+         {/* Cash */}
+         <TouchableOpacity
             className={`flex-row items-center justify-between p-4 rounded-lg border ${
               selectedMethod === "cash" ? "border-blue-500 bg-blue-100" : "border-gray-300 bg-white"
             }`}
@@ -199,6 +211,22 @@ const PaymentMethod = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Modal to display WebView */}
+      <Modal visible={showModal} animationType="slide" transparent={false}>
+        <View style={{ flex: 1 }}>
+          {paymentUrl ? (
+            <WebView
+              source={{ uri: paymentUrl }}
+              style={{ flex: 1 }}
+              onNavigationStateChange={handleUrlChange} // Gọi hàm handleUrlChange khi URL thay đổi
+              onError={() => alert("Lỗi khi tải trang thanh toán!")}
+            />
+          ) : (
+            <Text>Loading...</Text>
+          )}
+        </View>
+      </Modal>
     </ImageBackground>
   );
 };
