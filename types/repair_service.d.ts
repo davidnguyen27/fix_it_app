@@ -5,7 +5,7 @@ interface Category {
   Name: string;
 }
 
-interface RepairService {
+interface Service {
   Id: string;
   Image: string;
   Name: string;

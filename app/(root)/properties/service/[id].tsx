@@ -1,4 +1,4 @@
-import { getService } from "@/services/repairs.service";
+import { repairService } from "@/services/repairs.service";
 import { useRouter } from "expo-router";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
@@ -64,7 +64,7 @@ const ServiceDetail = () => {
 
   const fetchServiceDetails = async () => {
     try {
-      const serviceData = await getService(id as string);
+      const serviceData = await repairService.getService(id as string);
       setService(serviceData);
     } catch (error) {
       console.error("Failed to fetch service details:", error);

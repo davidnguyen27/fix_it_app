@@ -8,15 +8,17 @@ export interface SearchParams {
   PageSize?: number;
 }
 
-export const searchServices = async (params: SearchParams) => {
-  const response = await defaultAxiosInstance.post("/api/repair-services/get-services", {
-    params,
-  });
-  return response?.data?.Data || [];
-};
+export const repairService = {
+  searchServices: async (params: SearchParams) => {
+    const response = await defaultAxiosInstance.post("/api/repair-services/get-services", {
+      params,
+    });
+    return response?.data?.Data || [];
+  },
 
-export const getService = async (id: string) => {
-  const response = await defaultAxiosInstance.get(`/api/repair-services/${id}`);
-  console.log(response?.data);
-  return response?.data;
+  getService: async (id: string) => {
+    const response = await defaultAxiosInstance.get(`/api/repair-services/${id}`);
+    console.log(response?.data);
+    return response?.data;
+  },
 };
