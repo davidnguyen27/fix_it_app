@@ -1,10 +1,3 @@
-import { ImageSourcePropType } from "react-native";
-
-interface Category {
-  Id: string;
-  Name: string;
-}
-
 interface Service {
   Id: string;
   Image: string;

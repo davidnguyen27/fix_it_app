@@ -1,24 +1,27 @@
-import Button from "@/components/Button";
 import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, TouchableOpacity, Image, ImageBackground, Linking, Modal } from "react-native";
+import { View, Text, TouchableOpacity, Image, ImageBackground, Modal } from "react-native";
 import { useState } from "react";
-import { bookingService } from "@/services/bookings.service";
-import { WebView } from "react-native-webview"; // Import WebView
+import { WebView } from "react-native-webview";
+import { authService } from "@/services/auth.service";
+import useUser from "@/hooks/useUser";
+import Button from "@/components/Button";
 
 const PaymentMethod = () => {
   const router = useRouter();
-  const params = useLocalSearchParams(); // Nhận bookingData từ màn hình trước
-  const [selectedMethod, setSelectedMethod] = useState<string | null>("vnpay");
-  const [paymentUrl, setPaymentUrl] = useState<string | null>(null); // State để lưu URL thanh toán
-  const [showModal, setShowModal] = useState(false); // State để kiểm soát Modal
+  const params = useLocalSearchParams();
+  const [selectedMethod, setSelectedMethod] = useState<string | null>("payos");
+  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const { user } = useUser();
+
+  const amount = params.amount ? parseInt(params.amount as string, 10) : 0;
 
   const handleUrlChange = ({ url }: { url: string }) => {
     if (url.includes("vnp_TransactionStatus=00")) {
       setShowModal(false);
-      router.push("/screens/payment-success"); 
-    
+      router.push("/profile");
     }
   };
 
@@ -28,33 +31,17 @@ const PaymentMethod = () => {
       return;
     }
 
-    // Kiểm tra dữ liệu trước khi gửi API
-    const requestData = {
-      CustomerId: params.CustomerId as string,
-      ServiceId: params.ServiceId as string,
-      WorkingDate: params.WorkingDate as string,
-      Address: params.Address as string,
-      WorkingTime: params.WorkingTime as string,
-    };
-
-    console.log("📡 Sending booking request:", requestData);
-
     try {
-      // Gửi request tạo booking
-      const bookingResponse = await bookingService(requestData);
-      console.log("📌 API Response:", bookingResponse);
+      const response = await authService.getDeposit({ UserId: user?.Id || "", Amount: amount });
 
-      // Kiểm tra nếu API trả về URL thanh toán
-      if (bookingResponse) {
-        console.log("🔗 Payment URL:", bookingResponse);
-        setPaymentUrl(bookingResponse); // Lưu URL thanh toán vào state
-        setShowModal(true); // Hiển thị Modal
+      if (response) {
+        setPaymentUrl(response);
+        setShowModal(true);
       } else {
-        alert("Lỗi khi lấy URL thanh toán!");
+        alert("Không lấy được URL thanh toán!");
       }
-    } catch (error: any) {
-      console.error("❌ Lỗi khi xác nhận thanh toán:", error.response?.data || error.message);
-      alert("Thanh toán thất bại, vui lòng thử lại!");
+    } catch (error) {
+      alert("Lỗi khi nạp tiền!");
     }
   };
 
@@ -76,18 +63,18 @@ const PaymentMethod = () => {
           <Text className="text-[20px] text-center font-unbounded">Payment Methods</Text>
         </View>
 
-        {/* VNPay Payment Option */}
+        {/* Payment Option */}
         <View className="mt-6 space-y-2">
-         {/* Cash */}
-         <TouchableOpacity
-            className={`flex-row items-center justify-between p-4 rounded-lg border ${
-              selectedMethod === "cash" ? "border-blue-500 bg-blue-100" : "border-gray-300 bg-white"
+          {/* Cash */}
+          <TouchableOpacity
+            className={`flex-row items-center justify-between p-3 rounded-[15px] ${
+              selectedMethod === "cash" ? "border-blue-500 bg-blue-100" : "bg-[#DFF2EB]"
             }`}
             onPress={() => setSelectedMethod("cash")}
           >
-            <View className="flex-row items-center space-x-3">
-              <Image source={require("../../../assets/icons/money.png")} />
-              <Text className="text-base font-medium">Cash</Text>
+            <View className="flex-row items-center">
+              <Image source={require("../../../assets/icons/money.png")} resizeMode="contain" />
+              <Text className="text-[14px] font-unbounded-light ml-2">Cash</Text>
             </View>
             <View
               className={`w-5 h-5 rounded-full border-2 ${
@@ -97,53 +84,50 @@ const PaymentMethod = () => {
           </TouchableOpacity>
 
           {/* Wallet */}
+          <Text className="text-[15px] font-unbounded my-4">Wallet</Text>
           <TouchableOpacity
-            className={`flex-row items-center justify-between p-4 rounded-lg border ${
-              selectedMethod === "wallet"
-                ? "border-blue-500 bg-blue-100"
-                : "border-gray-300 bg-white"
+            className={`flex-row items-center justify-between p-3 rounded-[15px] ${
+              selectedMethod === "wallet" ? "border-blue-500 bg-blue-100" : "bg-[#DFF2EB]"
             }`}
             onPress={() => setSelectedMethod("wallet")}
           >
             <View className="flex-row items-center space-x-3">
-              <Image source={require("../../../assets/icons/wallet-remove.png")} />
-              <Text className="text-base font-medium">Wallet</Text>
+              <Image source={require("../../../assets/icons/wallet-remove.png")} resizeMode="contain" />
+              <Text className="text-[14px] font-unbounded-light ml-2">Wallet</Text>
             </View>
             <View
               className={`w-5 h-5 rounded-full border-2 ${
-                selectedMethod === "wallet" ? "border-blue-500 bg-blue-500" : "border-gray-300"
+                selectedMethod === "wallet" ? "border-blue-600 bg-blue-600" : "border-gray-300"
               }`}
             />
           </TouchableOpacity>
 
           {/* Credit & Debit Card */}
+          <Text className="text-[15px] font-unbounded my-4">Credit & Debit Card</Text>
           <TouchableOpacity
-            className={`flex-row items-center justify-between p-4 rounded-lg border ${
-              selectedMethod === "card" ? "border-blue-500 bg-blue-100" : "border-gray-300 bg-white"
+            className={`flex-row items-center justify-between p-3 rounded-[15px] ${
+              selectedMethod === "card" ? "border-blue-500 bg-blue-100" : "bg-[#DFF2EB]"
             }`}
             onPress={() => setSelectedMethod("card")}
           >
             <View className="flex-row items-center space-x-3">
               <Image source={require("../../../assets/icons/card-add.png")} />
-              <Text className="text-base font-medium">Add Card</Text>
+              <Text className="text-[14px] font-unbounded-light ml-2">Add Card</Text>
             </View>
             <Image source={icons.arrowRight} />
           </TouchableOpacity>
 
           {/* MoMo */}
+          <Text className="text-[15px] font-unbounded my-4">More Payment Options</Text>
           <TouchableOpacity
-            className={`flex-row items-center justify-between p-4 rounded-lg border ${
-              selectedMethod === "momo" ? "border-blue-500 bg-blue-100" : "border-gray-300 bg-white"
+            className={`flex-row items-center justify-between p-3.5 rounded-[15px] ${
+              selectedMethod === "momo" ? "border-blue-500 bg-blue-100" : "bg-[#DFF2EB]"
             }`}
             onPress={() => setSelectedMethod("momo")}
           >
             <View className="flex-row items-center space-x-3">
-              <Image
-                source={require("../../../assets/icons/momo.png")}
-                className="w-6 h-6"
-                resizeMode="contain"
-              />
-              <Text className="text-base font-medium">Momo</Text>
+              <Image source={require("../../../assets/icons/momo.png")} className="w-6 h-6" resizeMode="contain" />
+              <Text className="text-[14px] font-unbounded ml-2">Momo</Text>
             </View>
             <View
               className={`w-5 h-5 rounded-full border-2 ${
@@ -152,46 +136,34 @@ const PaymentMethod = () => {
             />
           </TouchableOpacity>
 
-          {/* VNPay */}
+          {/* Payos */}
           <TouchableOpacity
-            className={`flex-row items-center justify-between p-4 rounded-lg border ${
-              selectedMethod === "vnpay"
-                ? "border-blue-500 bg-blue-100"
-                : "border-gray-300 bg-white"
+            className={`flex-row items-center justify-between p-3.5 my-4 rounded-[15px] ${
+              selectedMethod === "payos" ? "border-blue-500 bg-blue-100" : "bg-[#DFF2EB]"
             }`}
-            onPress={() => setSelectedMethod("vnpay")}
+            onPress={() => setSelectedMethod("payos")}
           >
             <View className="flex-row items-center space-x-3">
-              <Image
-                source={require("../../../assets/icons/vnpay.png")}
-                className="w-6 h-6"
-                resizeMode="contain"
-              />
-              <Text className="text-base font-medium">VnPay</Text>
+              <Image source={require("../../../assets/icons/payos.png")} className="w-6 h-6" resizeMode="contain" />
+              <Text className="text-[14px] font-unbounded ml-2">Payos</Text>
             </View>
             <View
               className={`w-5 h-5 rounded-full border-2 ${
-                selectedMethod === "vnpay" ? "border-blue-500 bg-blue-500" : "border-gray-300"
+                selectedMethod === "payos" ? "border-blue-500 bg-blue-500" : "border-gray-300"
               }`}
             />
           </TouchableOpacity>
 
           {/* Apple Pay */}
           <TouchableOpacity
-            className={`flex-row items-center justify-between p-4 rounded-lg border ${
-              selectedMethod === "applepay"
-                ? "border-blue-500 bg-blue-100"
-                : "border-gray-300 bg-white"
+            className={`flex-row items-center justify-between p-3.5 rounded-[15px] ${
+              selectedMethod === "applepay" ? "border-blue-500 bg-blue-500" : "bg-[#DFF2EB]"
             }`}
             onPress={() => setSelectedMethod("applepay")}
           >
             <View className="flex-row items-center space-x-3">
-              <Image
-                source={require("../../../assets/icons/apple-pay.png")}
-                className="w-6 h-6"
-                resizeMode="contain"
-              />
-              <Text className="text-base font-medium">Apple Pay</Text>
+              <Image source={require("../../../assets/icons/apple-pay.png")} className="w-6 h-6" resizeMode="contain" />
+              <Text className="text-[14px] font-unbounded ml-2">Apple Pay</Text>
             </View>
             <View
               className={`w-5 h-5 rounded-full border-2 ${
@@ -202,13 +174,8 @@ const PaymentMethod = () => {
         </View>
 
         {/* Confirm button */}
-        <View className="mt-8">
-          <TouchableOpacity
-            onPress={handleConfirmPayment}
-            className="bg-[#4A628A] py-4 rounded-full"
-          >
-            <Text className="text-white text-center text-lg font-bold">Confirm Payment</Text>
-          </TouchableOpacity>
+        <View className="mt-4">
+          <Button title="Confirm Payment" backgroundColor="bg-[#48667A]" onPress={handleConfirmPayment} />
         </View>
       </View>
 
@@ -219,7 +186,7 @@ const PaymentMethod = () => {
             <WebView
               source={{ uri: paymentUrl }}
               style={{ flex: 1 }}
-              onNavigationStateChange={handleUrlChange} // Gọi hàm handleUrlChange khi URL thay đổi
+              onNavigationStateChange={handleUrlChange}
               onError={() => alert("Lỗi khi tải trang thanh toán!")}
             />
           ) : (

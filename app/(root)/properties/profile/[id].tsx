@@ -15,11 +15,14 @@ import icons from "@/constants/icons";
 import Button from "@/components/Button";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import useUser from "@/hooks/useUser";
+import * as ImagePicker from "expo-image-picker";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "@/config/firebase";
 
 const ProfileDetail = () => {
   const router = useRouter();
   const { user, setUser } = useGlobalContext();
-  const { update, isLoading } = useUser();
+  const { update, refetchUser, isLoading } = useUser();
 
   const [isGenderPickerVisible, setIsGenderPickerVisible] = useState(false);
 
@@ -29,16 +32,55 @@ const ProfileDetail = () => {
     }
   };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      handleInputChange("Avatar", result.assets[0].uri); // Hiển thị tạm thời ảnh chọn
+      await uploadImageToFirebase(result.assets[0].uri); // Upload lên Firebase
+    }
+  };
+
+  const uploadImageToFirebase = async (imageUri: string) => {
+    if (!imageUri) return;
+
+    const response = await fetch(imageUri);
+    const blob = await response.blob();
+    const filename = `avatars/${user?.Id}_${Date.now()}.jpg`;
+    const storageRef = ref(storage, filename);
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+
+    return new Promise<string>((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Có thể hiển thị progress nếu cần
+        },
+        (error) => {
+          console.error("Upload failed", error);
+          reject(error);
+        },
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          handleInputChange("Avatar", downloadURL); // Cập nhật URL vào user
+          resolve(downloadURL);
+        }
+      );
+    });
+  };
+
   const handleUpdate = async () => {
     update();
+    refetchUser();
   };
 
   return (
-    <ImageBackground
-      source={require("../../../../assets/images/bg-signup.png")}
-      resizeMode="cover"
-      className="flex-1"
-    >
+    <ImageBackground source={require("../../../../assets/images/bg-signup.png")} resizeMode="cover" className="flex-1">
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1 px-6">
         {/* Header */}
         <View className="mt-8">
@@ -54,11 +96,11 @@ const ProfileDetail = () => {
         {/* Avatar */}
         <View className="items-center mt-5 mb-6">
           <View className="relative">
-            <Image
-              source={{ uri: user?.Avatar }}
-              className="size-[150px] bg-[#B9E5E8] rounded-full"
-            />
-            <TouchableOpacity className="absolute bottom-0 right-2 size-[35px] bg-[#4A628A] rounded-full border-2 border-[#97C9E3] flex items-center justify-center">
+            <Image source={{ uri: user?.Avatar }} className="size-[150px] bg-[#B9E5E8] rounded-full" />
+            <TouchableOpacity
+              className="absolute bottom-0 right-2 size-[35px] bg-[#4A628A] rounded-full border-2 border-[#97C9E3] flex items-center justify-center"
+              onPress={pickImage}
+            >
               <Image source={icons.pencil} />
             </TouchableOpacity>
           </View>
