@@ -1,4 +1,3 @@
-import { getService } from "@/services/repairs.service";
 import { useRouter } from "expo-router";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
@@ -13,65 +12,30 @@ import {
 } from "react-native";
 import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
-import { authService } from "@/services/auth.service";
 import { formatDateToYYYYMMDD, formatTimeToHHMMSS, generateDates } from "@/utils/DateFormat";
-
-interface ServiceDetail {
-  Id: string;
-  Name: string;
-  Image: string;
-  Price: number;
-  Description: string;
-  Category: {
-    Name: string;
-  };
-}
+import useUser from "@/hooks/useUser";
+import useRepairService from "@/hooks/useService";
+import Button from "@/components/Button";
 
 const ServiceDetail = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [service, setService] = useState<ServiceDetail | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const router = useRouter();
+  const { user } = useUser();
+  const { service, getService, isLoading } = useRepairService();
+
   const [dates, setDates] = useState<string[]>([]);
   const [address, setAddress] = useState<string>("");
+  const [note, setNote] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [customerId, setCustomerId] = useState<string | null>(null);
-
-  const router = useRouter();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await authService.getCurrentUser();
-        console.log("CustomerId: ", user?.Id);
-        setCustomerId(user?.Id); // Lưu CustomerId của user hiện tại
-      } catch (error) {
-        console.error("❌ Lỗi lấy thông tin user:", error);
-      }
-    };
-    fetchUser();
-  }, []);
-
-  useEffect(() => {
-    if (id) {
-      fetchServiceDetails();
-    }
+    getService(id);
   }, [id]);
 
   useEffect(() => {
     setDates(generateDates()); // Gọi hàm tạo danh sách ngày
   }, []);
-
-  const fetchServiceDetails = async () => {
-    try {
-      const serviceData = await getService(id as string);
-      setService(serviceData);
-    } catch (error) {
-      console.error("Failed to fetch service details:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleBooking = () => {
     if (!selectedDate || !selectedTime || !address) {
@@ -83,20 +47,22 @@ const ServiceDetail = () => {
     const formattedTime = formatTimeToHHMMSS(selectedTime);
 
     const bookingData = {
-      CustomerId: customerId,
+      CustomerId: user?.Id,
       ServiceId: service?.Id,
+      ServiceName: service?.Name,
       WorkingDate: formattedDate,
       Address: address,
       WorkingTime: formattedTime,
+      Note: note,
     };
 
     router.push({
-      pathname: "/screens/payment-method",
-      params: bookingData, // Truyền dữ liệu booking qua màn hình PaymentMethod
+      pathname: "/screens/confirm-booking",
+      params: bookingData,
     });
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <View className="flex-1 justify-center items-center">
         <ActivityIndicator size="large" color="#4A628A" />
@@ -169,13 +135,23 @@ const ServiceDetail = () => {
           {dates.map((day, index) => (
             <TouchableOpacity
               key={index}
-              className={`px-4 py-2 rounded-full bg-[#B9E5E8] min-w-[80px] items-center`}
+              className={`px-4 py-2 rounded-full min-w-[80px] items-center ${
+                selectedDate === day ? "bg-[#4A628A]" : "bg-[#B9E5E8]"
+              }`}
               onPress={() => setSelectedDate(day)}
             >
-              <Text className="text-[12px] text-center text-gray-700">
+              <Text
+                className={`text-[12px] text-center ${
+                  selectedDate === day ? "text-white" : "text-gray-700"
+                }`}
+              >
                 {index === 0 ? "Today" : day.split(" ")[0]}
               </Text>
-              <Text className="text-[16px] font-bold text-center text-black">
+              <Text
+                className={`text-[16px] font-bold text-center ${
+                  selectedDate === day ? "text-white" : "text-black"
+                }`}
+              >
                 {day.split(" ")[1]}
               </Text>
             </TouchableOpacity>
@@ -189,11 +165,25 @@ const ServiceDetail = () => {
             (time, index) => (
               <TouchableOpacity
                 key={index}
-                className={`px-4 py-2 rounded-full bg-[#B9E5E8] min-w-[80px] items-center`}
+                className={`px-4 py-2 rounded-full min-w-[80px] items-center ${
+                  selectedTime === time ? "bg-[#4A628A]" : "bg-[#B9E5E8]"
+                }`}
                 onPress={() => setSelectedTime(time)}
               >
-                <Text className="text-[15px] font-unbounded-light">{time.split(" ")[0]}</Text>
-                <Text className="text-[15px] font-unbounded-medium">{time.split(" ")[1]}</Text>
+                <Text
+                  className={`text-[15px] font-unbounded-light ${
+                    selectedTime === time ? "text-white" : "text-black"
+                  }`}
+                >
+                  {time.split(" ")[0]}
+                </Text>
+                <Text
+                  className={`text-[15px] font-unbounded-medium ${
+                    selectedTime === time ? "text-white" : "text-black"
+                  }`}
+                >
+                  {time.split(" ")[1]}
+                </Text>
               </TouchableOpacity>
             )
           )}
@@ -204,14 +194,21 @@ const ServiceDetail = () => {
         <TextInput
           placeholder="Enter here"
           className="bg-[#B9E5E8] rounded-[15px] p-4 mb-6"
-          value={address} // Gán giá trị từ state
-          onChangeText={(text) => setAddress(text)} // Cập nhật state khi nhập
+          value={address}
+          onChangeText={(text) => setAddress(text)}
         />
 
-        {/* Continue Button */}
-        <TouchableOpacity onPress={handleBooking} className="bg-[#4A628A] py-4 rounded-full">
-          <Text className="text-white text-center text-lg font-bold">Continue</Text>
-        </TouchableOpacity>
+        {/* Note Input */}
+        <Text className="text-[13px] font-unbounded mb-2">Note</Text>
+        <TextInput
+          placeholder="Enter here"
+          className="bg-[#B9E5E8] rounded-[15px] p-4 mb-6"
+          value={note}
+          onChangeText={(text) => setNote(text)}
+        />
+
+        {/* Booking Button */}
+        <Button title="Booking" backgroundColor="bg-[#4A628A]" onPress={handleBooking} />
       </View>
     </ScrollView>
   );

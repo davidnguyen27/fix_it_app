@@ -50,4 +50,9 @@ export const authService = {
     );
     return response.data;
   },
+
+  getDeposit: async (data: { UserId: string; Amount: number }) => {
+    const response = await defaultAxiosInstance.put("/api/users/deposit", data);
+    return response?.data;
+  },
 };

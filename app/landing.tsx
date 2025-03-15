@@ -1,21 +1,17 @@
 import { useEffect } from "react";
 import { View, Text, ImageBackground } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { refreshTokens } from "../services/auth.service";
+import { authService } from "../services/auth.service";
 
 const LoadingScreen = () => {
   useEffect(() => {
     const getTokens = async () => {
-      try {
-        const accessToken = await AsyncStorage.getItem("AccessToken");
-        const refreshToken = await AsyncStorage.getItem("RefreshToken");
-        if (accessToken && refreshToken) {
-          const response = await refreshTokens(accessToken, refreshToken);
-          await AsyncStorage.setItem("AccessToken", response.AccessToken);
-          await AsyncStorage.setItem("RefreshToken", response.RefreshToken);
-        }
-      } catch (error) {
-        console.error("❌ Lỗi khi refresh token:", error);
+      const accessToken = await AsyncStorage.getItem("AccessToken");
+      const refreshToken = await AsyncStorage.getItem("RefreshToken");
+      if (accessToken && refreshToken) {
+        const response = await authService.refreshTokens(accessToken, refreshToken);
+        await AsyncStorage.setItem("AccessToken", response.AccessToken);
+        await AsyncStorage.setItem("RefreshToken", response.RefreshToken);
       }
     };
 

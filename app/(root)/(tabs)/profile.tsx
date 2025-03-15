@@ -67,12 +67,12 @@ const ProfileScreen = () => {
               }
             />
             <TouchableOpacity className="absolute bottom-0 right-2 w-[30px] h-[30px] bg-[#4A628A] rounded-full border-2 border-[#97C9E3] flex items-center justify-center">
-              <Image source={icons.pencil} />
+              <Image source={icons.pencil} resizeMode="contain" />
             </TouchableOpacity>
           </View>
-          <Text className="mt-5 font-unbounded-medium text-[16px]">
-            {user?.Fullname} {/* Display the full name of the user */}
-          </Text>
+
+          {/* Full Name of User */}
+          <Text className="mt-5 font-unbounded-medium text-[16px]">{user?.Fullname}</Text>
         </View>
 
         {/* List menu */}
@@ -102,21 +102,21 @@ const ProfileScreen = () => {
             icon={icons.calendar}
             title="My Bookings"
             mingcuteRight={icons.mingcuteRight}
-            onPress={() => console.log("My Bookings!")}
+            onPress={() => router.push("/screens/my-booking")}
           />
 
           <MenuItem
             icon={icons.wallet}
             title="My Wallet"
             mingcuteRight={icons.mingcuteRight}
-            onPress={() => console.log("My Wallet!")}
+            onPress={() => router.push("/screens/my-wallet")}
           />
 
           <MenuItem
             icon={icons.setting}
             title="Settings"
             mingcuteRight={icons.mingcuteRight}
-            onPress={() => console.log("Settings")}
+            onPress={() => router.push("/screens/payment-success")}
           />
 
           <MenuItem

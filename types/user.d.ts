@@ -15,6 +15,7 @@ interface User {
   Birthday?: string;
   UserName: string;
   Email: string;
+  Balance: number;
   Password: string;
   PhoneNumber?: string;
   Roles: UserRole;

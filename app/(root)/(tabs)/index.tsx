@@ -32,11 +32,15 @@ export default function Index() {
             <Image source={require("../../../assets/icons/triangle.png")} />
           </View>
           <TouchableOpacity className="bg-[#4A628A] p-1.5 rounded-full mt-2">
-            <Image source={icons.notification} />
+            <Image source={icons.notification} resizeMode="contain" />
           </TouchableOpacity>
         </View>
         <View className="flex-row items-center mt-3">
-          <Image className="mr-2" source={require("../../../assets/icons/location-small.png")} />
+          <Image
+            className="mr-2"
+            source={require("../../../assets/icons/location-small.png")}
+            resizeMode="contain"
+          />
           <Text className="font-unbounded text-[15px]">HCM, Viet Nam</Text>
         </View>
         <View className="flex-row items-center mt-4 bg-white rounded-full px-4 py-2 shadow-md">
