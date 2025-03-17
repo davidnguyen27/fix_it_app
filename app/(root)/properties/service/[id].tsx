@@ -1,21 +1,14 @@
 import { useRouter } from "expo-router";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  ActivityIndicator,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import icons from "@/constants/icons";
+import { View, Text, Image, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import ActionIcon from "@/components/ActionIcon";
 import { formatDateToYYYYMMDD, formatTimeToHHMMSS, generateDates } from "@/utils/DateFormat";
 import useUser from "@/hooks/useUser";
 import useRepairService from "@/hooks/useService";
 import Button from "@/components/Button";
+import { ArrowLeft, Heart } from "iconsax-react-native";
+import Entypo from "@expo/vector-icons/Entypo";
 
 const ServiceDetail = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -84,22 +77,19 @@ const ServiceDetail = () => {
       <View className="relative bg-[#5e99a9] pb-8">
         <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center p-4 z-10">
           <ActionIcon
-            icon={icons.arrowLeft}
+            icon={<ArrowLeft size="24" color="#4A628A" variant="Outline" />}
             backgroundColor="bg-[#DFF2EB]"
-            tintColor="#4A628A"
             onPress={() => router.push("/explore")}
           />
           <View className="flex-row gap-4">
             <ActionIcon
-              icon={require("../../../../assets/icons/share.png")}
+              icon={<Entypo name="share" size={24} color="#4A628A" />}
               backgroundColor="bg-[#DFF2EB]"
-              tintColor="#4A628A"
               onPress={() => console.log("Share")}
             />
             <ActionIcon
-              icon={require("../../../../assets/icons/heart.png")}
+              icon={<Heart size="24" color="#4a628a" variant="Bold" />}
               backgroundColor="bg-[#DFF2EB]"
-              tintColor="#4A628A"
               onPress={() => console.log("Heart")}
             />
           </View>
@@ -140,17 +130,11 @@ const ServiceDetail = () => {
               }`}
               onPress={() => setSelectedDate(day)}
             >
-              <Text
-                className={`text-[12px] text-center ${
-                  selectedDate === day ? "text-white" : "text-gray-700"
-                }`}
-              >
+              <Text className={`text-[12px] text-center ${selectedDate === day ? "text-white" : "text-gray-700"}`}>
                 {index === 0 ? "Today" : day.split(" ")[0]}
               </Text>
               <Text
-                className={`text-[16px] font-bold text-center ${
-                  selectedDate === day ? "text-white" : "text-black"
-                }`}
+                className={`text-[16px] font-bold text-center ${selectedDate === day ? "text-white" : "text-black"}`}
               >
                 {day.split(" ")[1]}
               </Text>
@@ -161,32 +145,26 @@ const ServiceDetail = () => {
         {/* Time Selection */}
         <Text className="text-[40px] font-unbounded mb-2">Time</Text>
         <View className="flex-row flex-wrap gap-2 mb-4">
-          {["9:00 AM", "10:00 AM", "11:00 AM", "14:00 PM", "15:00 PM", "16:00 PM", "17:00 PM"].map(
-            (time, index) => (
-              <TouchableOpacity
-                key={index}
-                className={`px-4 py-2 rounded-full min-w-[80px] items-center ${
-                  selectedTime === time ? "bg-[#4A628A]" : "bg-[#B9E5E8]"
-                }`}
-                onPress={() => setSelectedTime(time)}
+          {["9:00 AM", "10:00 AM", "11:00 AM", "14:00 PM", "15:00 PM", "16:00 PM", "17:00 PM"].map((time, index) => (
+            <TouchableOpacity
+              key={index}
+              className={`px-4 py-2 rounded-full min-w-[80px] items-center ${
+                selectedTime === time ? "bg-[#4A628A]" : "bg-[#B9E5E8]"
+              }`}
+              onPress={() => setSelectedTime(time)}
+            >
+              <Text
+                className={`text-[15px] font-unbounded-light ${selectedTime === time ? "text-white" : "text-black"}`}
               >
-                <Text
-                  className={`text-[15px] font-unbounded-light ${
-                    selectedTime === time ? "text-white" : "text-black"
-                  }`}
-                >
-                  {time.split(" ")[0]}
-                </Text>
-                <Text
-                  className={`text-[15px] font-unbounded-medium ${
-                    selectedTime === time ? "text-white" : "text-black"
-                  }`}
-                >
-                  {time.split(" ")[1]}
-                </Text>
-              </TouchableOpacity>
-            )
-          )}
+                {time.split(" ")[0]}
+              </Text>
+              <Text
+                className={`text-[15px] font-unbounded-medium ${selectedTime === time ? "text-white" : "text-black"}`}
+              >
+                {time.split(" ")[1]}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
         {/* Address Input */}

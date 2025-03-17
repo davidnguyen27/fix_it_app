@@ -1,10 +1,9 @@
 import ActionIcon from "@/components/ActionIcon";
-import icons from "@/constants/icons";
-import useRepairService from "@/hooks/useService";
+import { repairService } from "@/services/repairs.service";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import { useRouter } from "expo-router";
-import { ArrowLeft, SearchNormal } from "iconsax-react-native";
-import { useState } from "react";
+import { ArchiveTick, ArrowLeft, SearchNormal, User } from "iconsax-react-native";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,23 +12,45 @@ import {
   TouchableOpacity,
   ImageBackground,
   FlatList,
-  ActivityIndicator,
   ListRenderItem,
 } from "react-native";
 
 const Explore = () => {
   const router = useRouter();
-
+  const [originData, setOriginData] = useState([]);
+  const [dataService, setDataService] = useState([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { services, isLoading, loadMore, metaData } = useRepairService({
-    Active: true,
-    PageNumber: 1,
-    PageSize: 50,
-  });
+
+  const asyncData = async () => {
+    try {
+      const res = await repairService.testService();
+      setOriginData(res);
+      setDataService(res);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    asyncData();
+  }, []);
 
   const handleSearch = (text: string) => {
     setSearchTerm(text);
   };
+
+  const handleSearchData = () => {
+    if (!searchTerm) {
+      setDataService(originData);
+      return;
+    }
+    const dataFilter = originData.filter((item) => item?.Name.toLowerCase().includes(searchTerm?.toLowerCase()));
+    setDataService(dataFilter);
+  };
+
+  useEffect(() => {
+    handleSearchData();
+  }, [searchTerm]);
 
   const renderItem: ListRenderItem<Service> = ({ item }) => (
     <TouchableOpacity
@@ -44,14 +65,14 @@ const Explore = () => {
         </Text>
         <Text className="text-[15px] font-unbounded">{item.Name}</Text>
         <View className="flex-row items-center my-1">
-          <Image source={icons.user} className="size-5" tintColor="#4A628A" resizeMode="contain" />
+          <User size="20" color="#4a628a" variant="Bold" />
           <Text className="text-[9px] font-unbounded ml-2">Worker</Text>
         </View>
         <Text className="text-[15px] font-unbounded">{formatCurrencyVND(item.Price)} VND</Text>
       </View>
 
       <TouchableOpacity className="absolute top-3 right-3">
-        <Image source={require("../../../assets/icons/archive-tick.png")} resizeMode="contain" />
+        <ArchiveTick size="24" color="#4a628a" variant="Bold" />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -72,16 +93,16 @@ const Explore = () => {
         />
 
         {/* Search Input with Icons */}
-        <View className="flex-row items-center max-w-[225px] flex-1 ml-10 bg-white rounded-[21px] px-3.5 py-0.5">
+        <View className="flex-row items-center max-w-[225px] flex-1 ml-10 bg-white rounded-[21px] px-4 py-0.5">
           {/* Search Icon */}
           <TouchableOpacity>
-            <SearchNormal size="24" color="#292d32" />
+            <SearchNormal size="24" color="#292d32" variant="Outline" />
           </TouchableOpacity>
 
           {/* Input Field */}
           <TextInput
             placeholder="Find somethings..."
-            className="flex-1 text-[14px] font-unbounded-light ml-3.5"
+            className="flex-1 text-[14px] font-unbounded-light ml-3"
             value={searchTerm}
             onChangeText={handleSearch}
           />
@@ -89,18 +110,20 @@ const Explore = () => {
       </View>
 
       {/* Results Count */}
-      <Text className="text-[15px] font-unbounded mb-6">{metaData?.TotalCount ?? 0} Results Found</Text>
+      <Text className="text-[15px] font-unbounded mb-6">{dataService.length ?? 0} Results Found</Text>
 
       {/* Result List */}
       <FlatList
-        data={services}
+        data={dataService}
         keyExtractor={(item) => item.Id}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 72 }}
-        onEndReached={loadMore}
+        // onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={isLoading ? <ActivityIndicator size="large" color="#4A628A" /> : null}
+        // ListFooterComponent={
+        //   isLoading ? <ActivityIndicator size="large" color="#4A628A" /> : null
+        // }
       />
     </ImageBackground>
   );

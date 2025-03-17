@@ -1,4 +1,3 @@
-import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { View, Text, TouchableOpacity, Image, ImageBackground, Modal } from "react-native";
@@ -7,6 +6,7 @@ import { WebView } from "react-native-webview";
 import { authService } from "@/services/auth.service";
 import useUser from "@/hooks/useUser";
 import Button from "@/components/Button";
+import { ArrowLeft, ArrowRight, CardAdd, EmptyWalletRemove, Money4 } from "iconsax-react-native";
 
 const PaymentMethod = () => {
   const router = useRouter();
@@ -55,9 +55,8 @@ const PaymentMethod = () => {
         {/* Header */}
         <View className="mt-8">
           <ActionIcon
-            icon={icons.arrowLeft}
+            icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
             backgroundColor="bg-[#4A628A]"
-            tintColor="#DFF2EB"
             onPress={() => router.back()}
           />
           <Text className="text-[20px] text-center font-unbounded">Payment Methods</Text>
@@ -73,7 +72,7 @@ const PaymentMethod = () => {
             onPress={() => setSelectedMethod("cash")}
           >
             <View className="flex-row items-center">
-              <Image source={require("../../../assets/icons/money.png")} resizeMode="contain" />
+              <Money4 size="28" color="#4a628a" variant="Bold" />
               <Text className="text-[14px] font-unbounded-light ml-2">Cash</Text>
             </View>
             <View
@@ -92,7 +91,7 @@ const PaymentMethod = () => {
             onPress={() => setSelectedMethod("wallet")}
           >
             <View className="flex-row items-center space-x-3">
-              <Image source={require("../../../assets/icons/wallet-remove.png")} resizeMode="contain" />
+              <EmptyWalletRemove size="28" color="#4a628a" variant="Bold" />
               <Text className="text-[14px] font-unbounded-light ml-2">Wallet</Text>
             </View>
             <View
@@ -111,10 +110,10 @@ const PaymentMethod = () => {
             onPress={() => setSelectedMethod("card")}
           >
             <View className="flex-row items-center space-x-3">
-              <Image source={require("../../../assets/icons/card-add.png")} />
+              <CardAdd size="28" color="#4a628a" variant="Bold" />
               <Text className="text-[14px] font-unbounded-light ml-2">Add Card</Text>
             </View>
-            <Image source={icons.arrowRight} />
+            <ArrowRight size="24" color="#4a628a" variant="Outline" />
           </TouchableOpacity>
 
           {/* MoMo */}

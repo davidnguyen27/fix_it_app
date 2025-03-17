@@ -10,14 +10,9 @@ export interface SearchServiceParams {
 
 export const repairService = {
   searchServices: async (params: SearchServiceParams) => {
-    console.log("Params: ", params);
     const response = await defaultAxiosInstance.post(
-      `/api/repair-services/get-services?Active=${params.Active}&PageNumber=${params.PageNumber}&PageSize=${params.PageSize}`,
-      {
-        params,
-      }
+      `/api/repair-services/get-services?Active=true&PageNumber=1&PageSize=10`
     );
-    console.log("Data response: ", response?.data?.Data);
     return {
       data: response?.data?.Data ?? [],
       metaData: response?.data?.MetaData ?? {
@@ -32,7 +27,15 @@ export const repairService = {
   },
 
   getService: async (id: string) => {
-    const response = await defaultAxiosInstance.get(`/api/repair-services/${id}`);
+    const response = await defaultAxiosInstance.get(
+      `/api/repair-services/${id}`
+    );
     return response?.data;
+  },
+  testService: async () => {
+    const response = await defaultAxiosInstance.post(
+      `/api/repair-services/get-services?Active=true&PageNumber=1&PageSize=10`
+    );
+    return response.data.Data;
   },
 };
