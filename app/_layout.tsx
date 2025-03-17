@@ -10,6 +10,7 @@ export default function AppLayout() {
   const [fontsLoaded] = useFonts({
     "Unbounded-Bold": require("../assets/fonts/Unbounded-Bold.ttf"),
     "Unbounded-Light": require("../assets/fonts/Unbounded-Light.ttf"),
+    "Unbounded-Extra-Light": require("../assets/fonts/Unbounded-ExtraLight.ttf"),
     "Unbounded-Medium": require("../assets/fonts/Unbounded-Medium.ttf"),
     "Unbounded-Regular": require("../assets/fonts/Unbounded-Regular.ttf"),
     "Unbounded-SemiBold": require("../assets/fonts/Unbounded-SemiBold.ttf"),

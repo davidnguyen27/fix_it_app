@@ -8,6 +8,7 @@ module.exports = {
       fontFamily: {
         unbounded: ["Unbounded-Regular", "sans-serif"],
         "unbounded-light": ["Unbounded-Light", "sans-serif"],
+        "unbounded-extra-light": ["Unbounded-Extra-Light", "sans-serif"],
         "unbounded-medium": ["Unbounded-Medium", "sans-serif"],
         "unbounded-semiBold": ["Unbounded-SemiBold", "sans-serif"],
         "unbounded-bold": ["Unbounded-Bold", "sans-serif"],

@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
-import { useRouter } from "expo-router";
 import ActionIcon from "@/components/ActionIcon";
-import icons from "@/constants/icons";
+import { ArrowLeft } from "iconsax-react-native";
+import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
+import { useState } from "react";
+import { useRouter } from "expo-router";
 
 const EnterAmount = () => {
   const router = useRouter();
@@ -22,17 +22,13 @@ const EnterAmount = () => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/bg-signup.png")}
-      className="flex-1 justify-center"
-    >
+    <ImageBackground source={require("../../../assets/images/bg-signup.png")} className="flex-1 justify-center">
       <View className="px-6">
         {/* Header */}
         <View className="mt-8">
           <ActionIcon
-            icon={icons.arrowLeft}
+            icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
             backgroundColor="bg-[#4A628A]"
-            tintColor="#DFF2EB"
             onPress={() => router.back()}
           />
           <Text className="text-[20px] text-center font-unbounded">Enter Amount</Text>

@@ -1,7 +1,8 @@
 import axios, { AxiosInstance, AxiosError, AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL } from "@/constants/baseUrl";
 import Toast from "react-native-toast-message";
+import { BASE_URL } from "@/constants/baseUrl";
+// import { BASE_URL } from "@env";
 
 interface ErrorResponse {
   type?: string;
