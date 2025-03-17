@@ -1,7 +1,8 @@
+import { ReactNode } from "react";
 import { View, Text, Image, ImageSourcePropType, TouchableOpacity } from "react-native";
 
 interface CategoryItemProps {
-  icon: ImageSourcePropType;
+  icon: ReactNode;
   title: string;
   onPress: () => void;
 }
@@ -9,9 +10,7 @@ interface CategoryItemProps {
 const CategoryItem = ({ icon, title, onPress }: CategoryItemProps) => {
   return (
     <TouchableOpacity className="items-center" onPress={onPress}>
-      <View className="size-[53px] bg-[#4A628A] rounded-full flex items-center justify-center">
-        <Image source={icon} />
-      </View>
+      <View className="size-[53px] bg-[#4A628A] rounded-full flex items-center justify-center">{icon}</View>
       <Text className="mt-1.5 font-unbounded text-[8px]">{title}</Text>
     </TouchableOpacity>
   );

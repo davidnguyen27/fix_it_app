@@ -1,12 +1,12 @@
+import ActionIcon from "@/components/ActionIcon";
+import useUser from "@/hooks/useUser";
+import useTransaction from "@/hooks/useTransaction";
 import { View, Text, TouchableOpacity, FlatList, ImageBackground, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
-import ActionIcon from "@/components/ActionIcon";
-import icons from "@/constants/icons";
-import useUser from "@/hooks/useUser";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
-import useTransaction from "@/hooks/useTransaction";
 import { getTransactionCode } from "@/utils/TransactionCodeFormat";
 import { useEffect } from "react";
+import { ArrowLeft } from "iconsax-react-native";
 
 const MyWallet = () => {
   const router = useRouter();
@@ -31,9 +31,8 @@ const MyWallet = () => {
     >
       {/* Back Button */}
       <ActionIcon
-        icon={icons.arrowLeft}
+        icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
         backgroundColor="bg-[#4A628A]"
-        tintColor="#DFF2EB"
         onPress={() => router.back()}
       />
 

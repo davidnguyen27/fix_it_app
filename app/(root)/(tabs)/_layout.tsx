@@ -1,20 +1,16 @@
-import icons from "@/constants/icons";
 import { Tabs } from "expo-router";
-import { Image, Text, View, ImageSourcePropType } from "react-native";
+import { Bag2, Home2, MessageNotif, SearchNormal1, User } from "iconsax-react-native";
+import { ReactNode } from "react";
+import { Text, View } from "react-native";
 
 interface TabIconProps {
-  focused: boolean;
-  icon: ImageSourcePropType;
+  icon: ReactNode;
   title: string;
 }
 
-const TabIcon = ({ focused, icon, title }: TabIconProps) => (
+const TabIcon = ({ icon, title }: TabIconProps) => (
   <View className="flex items-center justify-center space-y-1">
-    <Image
-      source={icon}
-      className={`${focused ? "tint-white" : "tint-gray-400"}`}
-      resizeMode="contain"
-    />
+    {icon}
     <Text
       className="font-unbounded-light text-[10px] text-white w-full text-center"
       numberOfLines={1}
@@ -51,7 +47,7 @@ const TabsLayout = () => {
         options={{
           title: "Home",
           headerShown: false,
-          tabBarIcon: ({ focused }) => <TabIcon icon={icons.home} focused={focused} title="Home" />,
+          tabBarIcon: () => <TabIcon icon={<Home2 size="32" color="#dff2eb" variant="Bold" />} title="Home" />,
         }}
       />
       <Tabs.Screen
@@ -59,9 +55,7 @@ const TabsLayout = () => {
         options={{
           title: "Bookmark",
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.bag} focused={focused} title="Bookmark" />
-          ),
+          tabBarIcon: () => <TabIcon icon={<Bag2 size="32" color="#dff2eb" variant="Bold" />} title="Bookmark" />,
         }}
       />
       <Tabs.Screen
@@ -69,8 +63,8 @@ const TabsLayout = () => {
         options={{
           title: "Explore",
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.search} focused={focused} title="Explore" />
+          tabBarIcon: () => (
+            <TabIcon icon={<SearchNormal1 size="32" color="#dff2eb" variant="Bold" />} title="Explore" />
           ),
         }}
       />
@@ -79,9 +73,7 @@ const TabsLayout = () => {
         options={{
           title: "Chat",
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.message} focused={focused} title="Chat" />
-          ),
+          tabBarIcon: () => <TabIcon icon={<MessageNotif size="32" color="#dff2eb" variant="Bold" />} title="Chat" />,
         }}
       />
       <Tabs.Screen
@@ -89,9 +81,7 @@ const TabsLayout = () => {
         options={{
           title: "Profile",
           headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon icon={icons.user} focused={focused} title="Profile" />
-          ),
+          tabBarIcon: () => <TabIcon icon={<User size="32" color="#dff2eb" variant="Bold" />} title="Profile" />,
         }}
       />
     </Tabs>

@@ -11,13 +11,13 @@ import {
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import ActionIcon from "@/components/ActionIcon";
-import icons from "@/constants/icons";
 import Button from "@/components/Button";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import useUser from "@/hooks/useUser";
 import * as ImagePicker from "expo-image-picker";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/config/firebase";
+import { ArrowDown2, ArrowLeft, Edit2 } from "iconsax-react-native";
 
 const ProfileDetail = () => {
   const router = useRouter();
@@ -85,9 +85,8 @@ const ProfileDetail = () => {
         {/* Header */}
         <View className="mt-8">
           <ActionIcon
-            icon={icons.arrowLeft}
+            icon={<ArrowLeft size="28" color="#dff2eb" variant="Outline" />}
             backgroundColor="bg-[#4A628A]"
-            tintColor="#DFF2EB"
             onPress={() => router.push("/(root)/(tabs)/profile")}
           />
           <Text className="text-[20px] text-center font-unbounded">Your profile</Text>
@@ -101,7 +100,7 @@ const ProfileDetail = () => {
               className="absolute bottom-0 right-2 size-[35px] bg-[#4A628A] rounded-full border-2 border-[#97C9E3] flex items-center justify-center"
               onPress={pickImage}
             >
-              <Image source={icons.pencil} />
+              <Edit2 size="16" color="#dff2eb" />
             </TouchableOpacity>
           </View>
         </View>
@@ -172,7 +171,7 @@ const ProfileDetail = () => {
             onPress={() => setIsGenderPickerVisible(!isGenderPickerVisible)}
           >
             <Text className="font-unbounded-light">{user?.Gender || "Select"} </Text>
-            <Image source={icons.arrowDown} className="size-4" />
+            <ArrowDown2 size="16" color="#000000" />
           </TouchableOpacity>
           {isGenderPickerVisible && (
             <View className="absolute top-[80px] left-0 right-0 bg-[#DFF2EB] shadow-lg rounded-2xl z-10 border border-gray-300">

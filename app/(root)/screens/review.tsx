@@ -1,15 +1,20 @@
 import ActionIcon from "@/components/ActionIcon";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import Button from "@/components/Button";
+import Entypo from "@expo/vector-icons/Entypo";
 import useBooking from "@/hooks/useBooking";
+import useLoading from "@/hooks/useLoading";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, Text, ImageBackground, TextInput, TouchableOpacity } from "react-native";
-import { Star1, Camera, ArrowLeft, Heart, Share } from "iconsax-react-native";
+import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
+import { Star1, ArrowLeft, Heart, Share } from "iconsax-react-native";
+import { ratingService } from "@/services/rating.service";
 
 const Review = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams() as { id: string };
   const { bookingDetail, fetchBookingDetail } = useBooking();
+  const { loading, withLoading } = useLoading();
   const [rating, setRating] = useState<number>(0);
   const [reviewText, setReviewText] = useState<string>("");
 
@@ -18,78 +23,84 @@ const Review = () => {
   }, [id]);
 
   const handleSubmit = () => {
-    console.log("Submit review:", { id, rating, reviewText });
+    withLoading(async () => {
+      await ratingService.getRating({
+        BookingId: id,
+        Score: rating,
+        Comment: reviewText,
+      });
+      setRating(0);
+      setReviewText("");
+    });
   };
 
   const renderStars = () => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <TouchableOpacity key={i} onPress={() => setRating(i + 1)}>
-        <Star1 size={40} color={i < rating ? "#FFD700" : "#D3D3D3"} variant="Bold" />
-      </TouchableOpacity>
-    ));
+    return (
+      <View className="flex-row justify-between my-6 border-b-hairline border-[#5A5A5A] pb-6">
+        {Array.from({ length: 5 }, (_, i) => (
+          <TouchableOpacity key={i} onPress={() => setRating(i + 1)}>
+            <AntDesign name="star" size={73} color={i < rating ? "#FBFF00" : "#D3D3D3"} />
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
   };
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/background2.png")}
-      resizeMode="cover"
-      className="flex-1 px-6 py-6"
-    >
-      {/* Header */}
-      <View className="flex-row justify-between items-center mb-6">
+    <ImageBackground source={require("../../../assets/images/background2.png")} className="flex-1">
+      {/* Action Icons */}
+      <View className="absolute top-6 left-4 flex-row gap-4 z-10">
         <ActionIcon
-          icon={<ArrowLeft size="28" color="#dff2eb" />}
+          icon={<ArrowLeft size={24} color="#DFF2EB" />}
           backgroundColor="bg-[#4A628A]"
           onPress={() => router.back()}
         />
-        <View className="flex-row gap-2">
-          <ActionIcon
-            icon={<Share size="28" color="#dff2eb" variant="Bold" />}
-            backgroundColor="bg-[#4A628A]"
-            onPress={() => console.log("Share pressed")}
-          />
-          <ActionIcon
-            icon={<Heart size="28" color="#dff2eb" variant="Bold" />}
-            backgroundColor="bg-[#4A628A]"
-            onPress={() => console.log("Favorite pressed")}
-          />
-        </View>
+      </View>
+      <View className="absolute top-6 right-4 flex-row gap-4 z-10">
+        <ActionIcon
+          icon={<Entypo name="share" size={24} color="#DFF2EB" />}
+          backgroundColor="bg-[#4A628A]"
+          onPress={() => console.log("Share pressed")}
+        />
+        <ActionIcon
+          icon={<Heart size={24} color="#DFF2EB" variant="Bold" />}
+          backgroundColor="bg-[#4A628A]"
+          onPress={() => console.log("Favorite pressed")}
+        />
       </View>
 
       {/* Service Info */}
-      <View className="bg-white p-4 rounded-2xl shadow-lg mb-4">
-        <View className="flex-row items-center mb-2">
-          <Text className="text-sm font-medium text-[#4A628A] bg-blue-200 px-3 py-1 rounded-xl">Electric Repair</Text>
-          <Text className="text-yellow-400 ml-2">★ 4.5 (365 reviews)</Text>
+      <View className="absolute bottom-0 w-full h-[659px] bg-white rounded-t-[30px] p-6 shadow-lg">
+        <View className="mb-6">
+          <View className="flex-row items-center mb-4 mx-4">
+            <Text className="text-[13px] font-unbounded-light text-[#193572] bg-[#7AB2D3] px-6 py-1 rounded-xl">
+              Electric Repair
+            </Text>
+            <Text className="text-yellow-400 ml-2">★ 4.5 (365 reviews)</Text>
+          </View>
+          <Text className="text-[24px] font-unbounded-medium border-b-hairline border-[#5A5A5A] pb-2">
+            {bookingDetail?.Service.Name}
+          </Text>
         </View>
-        <Text className="text-2xl font-bold border-b border-gray-300 pb-2">{bookingDetail?.Service.Name}</Text>
-      </View>
 
-      {/* Rating Section */}
-      <View className="bg-white p-6 rounded-2xl shadow-lg mb-4 items-center">
-        <Text className="text-lg font-medium text-gray-500 mb-3">Your overall rating of this project</Text>
-        <View className="flex-row space-x-2">{renderStars()}</View>
-      </View>
+        {/* Rating Section */}
+        <Text className="text-[14px] font-unbounded-light my-4 text-center">Your overall rating of this project</Text>
+        <View className="items-center my-8">{renderStars()}</View>
 
-      {/* Review Input */}
-      <View className="bg-white p-6 rounded-2xl shadow-lg mb-4">
-        <Text className="text-lg font-medium text-gray-500 mb-2">Add detailed review</Text>
+        {/* Review Input */}
+        <Text className="text-[13px] font-unbounded-medium mb-6">Add detailed review</Text>
         <TextInput
-          className="border border-gray-300 p-3 rounded-xl text-gray-500"
+          className="p-3 rounded-[7px] font-unbounded-extra-light mb-6 h-36 bg-[#F3F3F3] text-start"
           placeholder="Enter here"
           value={reviewText}
           onChangeText={setReviewText}
+          numberOfLines={6}
           multiline
-          numberOfLines={4}
         />
-        <TouchableOpacity className="flex-row items-center mt-4">
-          <Camera size={24} color="#4A628A" className="mr-2" />
-          <Text className="text-[#4A628A] text-sm">add photo</Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* Submit Button */}
-      <Button backgroundColor="bg-[#3E547D]" onPress={handleSubmit} title="Submit" />
+        {/* Submit Button */}
+        <Button backgroundColor="bg-[#0A296D]" onPress={handleSubmit} title="Submit" />
+      </View>
     </ImageBackground>
   );
 };

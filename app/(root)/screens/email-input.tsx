@@ -2,9 +2,9 @@ import { useState } from "react";
 import { View, Text, TextInput, ImageBackground, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import Button from "@/components/Button";
-import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import useAuth from "@/hooks/useAuth";
+import { ArrowLeft } from "iconsax-react-native";
 
 const EmailInput = () => {
   const router = useRouter();
@@ -19,17 +19,12 @@ const EmailInput = () => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/bg-signup.png")}
-      resizeMode="cover"
-      className="flex-1"
-    >
+    <ImageBackground source={require("../../../assets/images/bg-signup.png")} resizeMode="cover" className="flex-1">
       <View className="flex-1 px-6">
         <View className="mt-8">
           <ActionIcon
-            icon={icons.arrowLeft}
+            icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
             backgroundColor="bg-[#4A628A]"
-            tintColor="#DFF2EB"
             onPress={() => router.back()}
           />
         </View>

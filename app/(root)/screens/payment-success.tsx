@@ -1,18 +1,16 @@
 import Button from "@/components/Button";
 import { useRouter } from "expo-router";
-import { View, Text, Image, ImageBackground } from "react-native";
+import { TickCircle } from "iconsax-react-native";
+import { View, Text, ImageBackground } from "react-native";
 
 const PaymentSuccess = () => {
   const router = useRouter();
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/bg-signup.png")}
-      className="flex-1 items-center px-4"
-    >
+    <ImageBackground source={require("../../../assets/images/bg-signup.png")} className="flex-1 items-center px-4">
       {/* Icon Check */}
-      <View className="bg-[#4A628A] rounded-full w-[272px] h-[272px] flex items-center justify-center mb-10 mt-12">
-        <Image source={require("../../../assets/icons/apple-logo.png")} />
+      <View className="mt-6">
+        <TickCircle size="272" color="#4a628a" variant="Bold" />
       </View>
 
       {/* Tiêu đề */}
@@ -22,21 +20,13 @@ const PaymentSuccess = () => {
         You can check your booking on the menu profile.
       </Text>
 
-      <Button
-        title="View E-Receipt"
-        backgroundColor="bg-[#395061]"
-        onPress={() => console.log("Button")}
-      />
+      <Button title="View E-Receipt" backgroundColor="bg-[#131A24]" onPress={() => console.log("Button")} />
       <Button
         title="View My Booking"
-        backgroundColor="bg-[#395061]"
+        backgroundColor="bg-[#131A24]"
         onPress={() => router.push("/screens/my-booking")}
       />
-      <Button
-        title="Continue"
-        backgroundColor="bg-[#395061]"
-        onPress={() => router.push("/profile")}
-      />
+      <Button title="Continue" backgroundColor="bg-[#131A24]" onPress={() => router.push("/profile")} />
     </ImageBackground>
   );
 };

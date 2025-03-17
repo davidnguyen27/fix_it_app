@@ -1,10 +1,22 @@
-import { View, Text, Image, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
-import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import MenuItem from "@/components/MenuItem";
-import { useRouter } from "expo-router";
 import useUser from "@/hooks/useUser";
 import useAuth from "@/hooks/useAuth";
+import { View, Text, Image, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
+import { useRouter } from "expo-router";
+import {
+  ArrowLeft,
+  ArrowRight2,
+  Calendar1,
+  Card,
+  Edit2,
+  EmptyWallet,
+  Location,
+  Logout,
+  Profile,
+  SecuritySafe,
+  Setting2,
+} from "iconsax-react-native";
 
 const ProfileScreen = () => {
   const router = useRouter();
@@ -18,9 +30,7 @@ const ProfileScreen = () => {
   if (!user) {
     return (
       <View className="flex-1 justify-center items-center">
-        <Text className="text-lg font-unbounded text-[#292D32]">
-          Please sign in to view your profile
-        </Text>
+        <Text className="text-lg font-unbounded text-[#292D32]">Please sign in to view your profile</Text>
         <TouchableOpacity
           onPress={() => router.push("/(root)/screens/sign-in")}
           className="mt-5 py-2 px-6 bg-[#4A628A] rounded-lg"
@@ -34,22 +44,16 @@ const ProfileScreen = () => {
   return (
     <View className="flex-1">
       {/* Header */}
-      <ImageBackground
-        source={require("../../../assets/images/bg-profile.png")}
-        className="h-56 overflow-hidden"
-      >
+      <ImageBackground source={require("../../../assets/images/bg-profile.png")} className="h-56 overflow-hidden">
         <View className="mt-5">
           <View className="ml-4">
             <ActionIcon
-              icon={icons.arrowLeft}
+              icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
               backgroundColor="bg-[#4A628A]"
-              tintColor="#DFF2EB"
               onPress={() => router.back()}
             />
           </View>
-          <Text className="text-[#292D32] text-[20px] font-unbounded-semiBold text-center">
-            Profile
-          </Text>
+          <Text className="text-[#292D32] text-[20px] font-unbounded-semiBold text-center">Profile</Text>
         </View>
       </ImageBackground>
 
@@ -67,7 +71,7 @@ const ProfileScreen = () => {
               }
             />
             <TouchableOpacity className="absolute bottom-0 right-2 w-[30px] h-[30px] bg-[#4A628A] rounded-full border-2 border-[#97C9E3] flex items-center justify-center">
-              <Image source={icons.pencil} resizeMode="contain" />
+              <Edit2 size="14" color="#dff2eb" />
             </TouchableOpacity>
           </View>
 
@@ -78,58 +82,58 @@ const ProfileScreen = () => {
         {/* List menu */}
         <ScrollView className="mt-6">
           <MenuItem
-            icon={icons.profileLight}
+            icon={<Profile size="24" color="#000000" variant="Outline" />}
             title="Your Profile"
-            mingcuteRight={icons.mingcuteRight}
+            mingcuteRight={<ArrowRight2 size="16" color="#000000" variant="Outline" />}
             onPress={() => router.push("/properties/profile/[id]")}
           />
 
           <MenuItem
-            icon={icons.locationLight}
+            icon={<Location size="24" color="#000000" variant="Outline" />}
             title="Manage Address"
-            mingcuteRight={icons.mingcuteRight}
+            mingcuteRight={<ArrowRight2 size="16" color="#000000" variant="Outline" />}
             onPress={() => console.log("Manage address!")}
           />
 
           <MenuItem
-            icon={icons.fluentPayment}
+            icon={<Card size="24" color="#000000" variant="Outline" />}
             title="Payment Methods"
-            mingcuteRight={icons.mingcuteRight}
+            mingcuteRight={<ArrowRight2 size="16" color="#000000" variant="Outline" />}
             onPress={() => console.log("Payment Methods!")}
           />
 
           <MenuItem
-            icon={icons.calendar}
+            icon={<Calendar1 size="24" color="#000000" variant="Outline" />}
             title="My Bookings"
-            mingcuteRight={icons.mingcuteRight}
+            mingcuteRight={<ArrowRight2 size="16" color="#000000" variant="Outline" />}
             onPress={() => router.push("/screens/my-booking")}
           />
 
           <MenuItem
-            icon={icons.wallet}
+            icon={<EmptyWallet size="24" color="#000000" variant="Outline" />}
             title="My Wallet"
-            mingcuteRight={icons.mingcuteRight}
+            mingcuteRight={<ArrowRight2 size="16" color="#000000" variant="Outline" />}
             onPress={() => router.push("/screens/my-wallet")}
           />
 
           <MenuItem
-            icon={icons.setting}
+            icon={<Setting2 size="24" color="#000000" variant="Outline" />}
             title="Settings"
-            mingcuteRight={icons.mingcuteRight}
+            mingcuteRight={<ArrowRight2 size="16" color="#000000" variant="Outline" />}
             onPress={() => router.push("/screens/payment-success")}
           />
 
           <MenuItem
-            icon={icons.policy}
+            icon={<SecuritySafe size="24" color="#000000" variant="Outline" />}
             title="Privacy Policy"
-            mingcuteRight={icons.mingcuteRight}
+            mingcuteRight={<ArrowRight2 size="16" color="#000000" variant="Outline" />}
             onPress={() => console.log("Privacy Policy!")}
           />
 
           <TouchableOpacity onPress={handleLogout} className="py-4">
             <View className="flex-row items-center">
-              <Image className="mr-4" source={icons.logout} />
-              <Text className="font-unbounded text-[16px]">Logout</Text>
+              <Logout size="24" color="#000000" variant="Outline" />
+              <Text className="font-unbounded text-[16px] ml-4">Logout</Text>
             </View>
           </TouchableOpacity>
         </ScrollView>

@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, Image, ImageSourcePropType } from "react-native";
+import { ReactNode } from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 
 interface MenuItemProps {
-  icon: ImageSourcePropType;
+  icon: ReactNode;
   title: string;
-  mingcuteRight: ImageSourcePropType;
+  mingcuteRight: ReactNode;
   onPress: () => void;
 }
 
@@ -14,10 +15,10 @@ const MenuItem = ({ icon, title, mingcuteRight, onPress }: MenuItemProps) => {
       className="flex-row items-center justify-between py-4 border-b border-[#C5C5C5]"
     >
       <View className="flex-row items-center">
-        <Image className="mr-4" source={icon} resizeMode="contain" />
-        <Text className="font-unbounded text-[16px]">{title}</Text>
+        {icon}
+        <Text className="font-unbounded text-[16px] ml-4">{title}</Text>
       </View>
-      <Image source={mingcuteRight} resizeMode="contain" />
+      {mingcuteRight}
     </TouchableOpacity>
   );
 };

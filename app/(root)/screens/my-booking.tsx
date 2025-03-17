@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, ImageBackground, FlatList, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import ActionIcon from "@/components/ActionIcon";
-import icons from "@/constants/icons";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import useUser from "@/hooks/useUser";
 import useBooking from "@/hooks/useBooking";
+import { ArrowLeft, SearchNormal, User } from "iconsax-react-native";
 
 const tabs = ["Pending", "Accepted", "Completed", "Cancelled"];
 
@@ -57,7 +57,7 @@ const MyBooking = () => {
           </Text>
           <Text className="text-[14px] font-unbounded-medium">{item.Service?.Name}</Text>
           <View className="flex-row items-center mt-1">
-            <Image source={icons.user} className="size-5" tintColor="#000000" />
+            <User size="20" color="#000000" variant="Bold" />
             <Text className="text-[11px] font-unbounded-light ml-1">Worker</Text>
           </View>
           <Text className="text-[13px] font-unbounded-semiBold mt-1">{formatCurrencyVND(item.Service.Price)} VND</Text>
@@ -120,15 +120,13 @@ const MyBooking = () => {
       <View className="mb-8">
         <View className="flex-row justify-between items-center ">
           <ActionIcon
-            icon={icons.arrowLeft}
+            icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
             backgroundColor="bg-[#4A628A]"
-            tintColor="#DFF2EB"
             onPress={() => router.back()}
           />
           <ActionIcon
-            icon={require("../../../assets/icons/search-normal.png")}
+            icon={<SearchNormal size="24" color="#dff2eb" />}
             backgroundColor="bg-[#4A628A]"
-            tintColor="#DFF2EB"
             onPress={() => console.log("Search")}
           />
         </View>

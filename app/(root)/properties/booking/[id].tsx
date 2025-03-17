@@ -1,12 +1,12 @@
 import ActionIcon from "@/components/ActionIcon";
-import icons from "@/constants/icons";
+import Button from "@/components/Button";
+import useUser from "@/hooks/useUser";
+import useBooking from "@/hooks/useBooking";
+import { ArrowLeft, User } from "iconsax-react-native";
+import { View, Text, Image, ImageBackground } from "react-native";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { View, Text, Image, ImageBackground } from "react-native";
-import useUser from "@/hooks/useUser";
-import Button from "@/components/Button";
-import useBooking from "@/hooks/useBooking";
 
 const BookingDetail = () => {
   const router = useRouter();
@@ -33,9 +33,8 @@ const BookingDetail = () => {
       {/* Header */}
       <View className="flex-row justify-between items-center mb-6">
         <ActionIcon
-          icon={icons.arrowLeft}
+          icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
           backgroundColor="bg-[#4A628A]"
-          tintColor="#DFF2EB"
           onPress={() => router.back()}
         />
         <Text className="text-[20px] font-unbounded-bold text-center flex-1">Review Summary</Text>
@@ -52,8 +51,8 @@ const BookingDetail = () => {
           </Text>
           <Text className="text-[16px] font-unbounded-bold">{bookingDetail?.Service.Name}</Text>
           <View className="flex-row items-center mt-1">
-            <Image source={icons.user} className="w-5 h-5 mr-1" tintColor="#4A628A" />
-            <Text className="text-[14px] font-unbounded-medium">Worker Name</Text>
+            <User size="20" color="#4a628a" variant="Bold" />
+            <Text className="text-[14px] font-unbounded-medium ml-1">Worker Name</Text>
           </View>
           <Text className="text-[16px] font-unbounded-bold mt-1">
             {formatCurrencyVND(bookingDetail?.Service.Price)} VND

@@ -1,54 +1,34 @@
+import AntDesign from "@expo/vector-icons/AntDesign";
 import CategoryItem from "@/components/CategoryItem";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import Octicons from "@expo/vector-icons/Octicons";
 import PopularServiceItem from "@/components/PopularServiceItem";
-import icons from "@/constants/icons";
-import { useRouter } from "expo-router";
-import {
-  Image,
-  ImageBackground,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ElementEqual, Location, Notification, SearchNormal } from "iconsax-react-native";
+import { Alert, Image, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export default function Index() {
-  const router = useRouter();
-
-  const handleServicePress = () => {
-    router.push("/(root)/screens/all-service");
-  };
-
   return (
     <View className="flex-1">
       {/* Location and Search Bar */}
-      <ImageBackground
-        source={require("../../../assets/images/Rectangle 4.png")}
-        className="px-4 pt-2 pb-4"
-      >
+      <ImageBackground source={require("../../../assets/images/Rectangle 4.png")} className="px-4 pt-2 pb-4">
         <View className="flex-row justify-between">
           <View className="flex-row items-center">
             <Text className="font-unbounded text-[18px] mr-1.5">Location</Text>
-            <Image source={require("../../../assets/icons/triangle.png")} />
+            <AntDesign name="caretdown" size={12} color="#4535C1" />
           </View>
           <TouchableOpacity className="bg-[#4A628A] p-1.5 rounded-full mt-2">
-            <Image source={icons.notification} resizeMode="contain" />
+            <Notification size="24" color="#dff2eb" variant="Bold" />
           </TouchableOpacity>
         </View>
         <View className="flex-row items-center mt-3">
-          <Image
-            className="mr-2"
-            source={require("../../../assets/icons/location-small.png")}
-            resizeMode="contain"
-          />
+          <Location size="18" color="#4a628a" variant="Bold" />
           <Text className="font-unbounded text-[15px]">HCM, Viet Nam</Text>
         </View>
         <View className="flex-row items-center mt-4 bg-white rounded-full px-4 py-2 shadow-md">
-          <Image source={require("../../../assets/icons/search-normal.png")} />
-          <TextInput
-            placeholder="Search Service"
-            className="ml-2 flex-1 font-unbounded-light text-black text-[14px]"
-          />
+          <SearchNormal size="24" color="#292d32" variant="Outline" />
+          <TextInput placeholder="Search Service" className="ml-2 flex-1 font-unbounded-light text-black text-[14px]" />
         </View>
       </ImageBackground>
 
@@ -70,35 +50,35 @@ export default function Index() {
         <View className="flex-row mt-3 justify-between">
           {/* Home */}
           <CategoryItem
-            icon={require("../../../assets/icons/house.png")}
+            icon={<Octicons name="home" size={28} color="#ffffff" />}
             title="House"
             onPress={() => console.log("house")}
           />
 
           {/* Electricity */}
           <CategoryItem
-            icon={require("../../../assets/icons/electricity.png")}
+            icon={<MaterialIcons name="electric-bolt" size={28} color="#ffffff" />}
             title="Electricity"
             onPress={() => console.log("Electricity")}
           />
 
           {/* Plumber */}
           <CategoryItem
-            icon={require("../../../assets/icons/plumber.png")}
+            icon={<FontAwesome6 name="faucet-drip" size={28} color="#ffffff" />}
             title="Plumber"
             onPress={() => console.log("Plumber")}
           />
 
           {/* Handcraft */}
           <CategoryItem
-            icon={require("../../../assets/icons/hammer.png")}
+            icon={<Ionicons name="hammer-outline" size={28} color="#ffffff" />}
             title="Handcraft"
             onPress={() => console.log("Handcraft")}
           />
 
           {/* More */}
           <CategoryItem
-            icon={require("../../../assets/icons/more.png")}
+            icon={<ElementEqual size="28" color="#ffffff" variant="Outline" />}
             title="More"
             onPress={() => console.log("More")}
           />
@@ -112,8 +92,8 @@ export default function Index() {
           <Text className="font-unbounded text-[12px]">See all</Text>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row mt-2">
-          <PopularServiceItem onPress={handleServicePress} />
-          <PopularServiceItem onPress={handleServicePress} />
+          <PopularServiceItem onPress={() => Alert.alert("Function not supported yet!")} />
+          <PopularServiceItem onPress={() => Alert.alert("Function not supported yet!")} />
         </ScrollView>
       </View>
     </View>

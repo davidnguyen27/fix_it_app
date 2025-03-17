@@ -3,6 +3,7 @@ import icons from "@/constants/icons";
 import useRepairService from "@/hooks/useService";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import { useRouter } from "expo-router";
+import { ArrowLeft, SearchNormal } from "iconsax-react-native";
 import { useState } from "react";
 import {
   View,
@@ -25,8 +26,6 @@ const Explore = () => {
     PageNumber: 1,
     PageSize: 50,
   });
-
-  // console.log("Data: ", services);
 
   const handleSearch = (text: string) => {
     setSearchTerm(text);
@@ -67,9 +66,8 @@ const Explore = () => {
       <View className="flex-row items-center mt-4 mb-8">
         {/* Back Icon */}
         <ActionIcon
-          icon={icons.arrowLeft}
+          icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
           backgroundColor="bg-[#4A628A]"
-          tintColor="#DFF2EB"
           onPress={() => router.back()}
         />
 
@@ -77,13 +75,13 @@ const Explore = () => {
         <View className="flex-row items-center max-w-[225px] flex-1 ml-10 bg-white rounded-[21px] px-3.5 py-0.5">
           {/* Search Icon */}
           <TouchableOpacity>
-            <Image source={require("../../../assets/icons/search-normal.png")} className="mr-4" resizeMode="contain" />
+            <SearchNormal size="24" color="#292d32" />
           </TouchableOpacity>
 
           {/* Input Field */}
           <TextInput
             placeholder="Find somethings..."
-            className="flex-1 text-[14px] font-unbounded-light"
+            className="flex-1 text-[14px] font-unbounded-light ml-3.5"
             value={searchTerm}
             onChangeText={handleSearch}
           />

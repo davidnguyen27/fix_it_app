@@ -12,7 +12,6 @@ import help from "@/assets/icons/help.png";
 import home from "@/assets/icons/home.png";
 import calendar from "@/assets/icons/jam_calendar-alt.png";
 import locationLight from "@/assets/icons/location-light.png";
-// import location from "@/assets/icons/location.png";
 import logout from "@/assets/icons/logout.png";
 import message from "@/assets/icons/message_notif.png";
 import mingcuteRight from "@/assets/icons/mingcute_right-line.png";
