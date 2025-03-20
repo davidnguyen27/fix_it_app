@@ -1,6 +1,5 @@
 import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
-import icons from "@/constants/icons";
 import useCoundownTimer from "@/hooks/useCountdownTimer";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
@@ -10,13 +9,13 @@ import {
   TextInput,
   TouchableOpacity,
   ImageBackground,
-  Image,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   ActivityIndicator,
 } from "react-native";
 import { authService } from "@/services/auth.service";
 import useAuth from "@/hooks/useAuth";
+import { ArrowLeft, Eye, EyeSlash } from "iconsax-react-native";
 
 const Verify = () => {
   const router = useRouter();
@@ -75,17 +74,12 @@ const Verify = () => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/bg-signup.png")}
-      resizeMode="cover"
-      className="flex-1"
-    >
+    <ImageBackground source={require("../../../assets/images/bg-signup.png")} resizeMode="cover" className="flex-1">
       <View className="flex-1 px-6">
         <View className="mt-8">
           <ActionIcon
-            icon={icons.arrowLeft}
+            icon={<ArrowLeft size="24" color="#DFF2EB" variant="Outline" />}
             backgroundColor="bg-[#4A628A]"
-            tintColor="#DFF2EB"
             onPress={() => router.back()}
           />
 
@@ -112,9 +106,7 @@ const Verify = () => {
           ))}
         </View>
 
-        <Text className="font-unbounded text-[13px] text-center text-[#292D32]">
-          Didn't receive OTP?
-        </Text>
+        <Text className="font-unbounded text-[13px] text-center text-[#292D32]">Didn't receive OTP?</Text>
 
         <TouchableOpacity
           onPress={handleResendCode}
@@ -144,10 +136,11 @@ const Verify = () => {
               onChangeText={setPassword}
             />
             <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)} className="mr-2">
-              <Image
-                source={passwordVisible ? icons.eyeOff : icons.eyeOn}
-                style={{ width: 24, height: 24 }}
-              />
+              {passwordVisible ? (
+                <EyeSlash size="20" color="#000000" variant="Bold" />
+              ) : (
+                <Eye size="20" color="#000000" variant="Bold" />
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -167,10 +160,11 @@ const Verify = () => {
               onChangeText={setConfirmPassword}
             />
             <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)} className="mr-2">
-              <Image
-                source={passwordVisible ? icons.eyeOff : icons.eyeOn}
-                style={{ width: 24, height: 24 }}
-              />
+              {passwordVisible ? (
+                <EyeSlash size="20" color="#000000" variant="Bold" />
+              ) : (
+                <Eye size="20" color="#000000" variant="Bold" />
+              )}
             </TouchableOpacity>
           </View>
         </View>
@@ -179,11 +173,7 @@ const Verify = () => {
         {isLoading ? (
           <ActivityIndicator size="large" color="#4A628A" />
         ) : (
-          <Button
-            title="Change Password"
-            backgroundColor="bg-[#4A628A]"
-            onPress={handleChangePassword}
-          />
+          <Button title="Change Password" backgroundColor="bg-[#4A628A]" onPress={handleChangePassword} />
         )}
       </View>
     </ImageBackground>

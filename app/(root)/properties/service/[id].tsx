@@ -2,13 +2,14 @@ import { useRouter } from "expo-router";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { useEffect, useState } from "react";
 import { View, Text, Image, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
-import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import { formatDateToYYYYMMDD, formatTimeToHHMMSS, generateDates } from "@/utils/DateFormat";
 import { isTimeDisabled, timeSlots } from "@/utils/TimeUtil"; // Import từ file util
 import useUser from "@/hooks/useUser";
 import useRepairService from "@/hooks/useService";
 import Button from "@/components/Button";
+import { ArrowLeft, Heart } from "iconsax-react-native";
+import Entypo from "@expo/vector-icons/Entypo";
 
 const ServiceDetail = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -79,22 +80,19 @@ const ServiceDetail = () => {
       <View className="relative bg-[#5e99a9] pb-8">
         <View className="absolute top-0 left-0 right-0 flex-row justify-between items-center p-4 z-10">
           <ActionIcon
-            icon={icons.arrowLeft}
+            icon={<ArrowLeft size="24" color="#4A628A" variant="Outline" />}
             backgroundColor="bg-[#DFF2EB]"
-            tintColor="#4A628A"
             onPress={() => router.push("/explore")}
           />
           <View className="flex-row gap-4">
             <ActionIcon
-              icon={require("../../../../assets/icons/share.png")}
+              icon={<Entypo name="share" size={24} color="#4A628A" />}
               backgroundColor="bg-[#DFF2EB]"
-              tintColor="#4A628A"
               onPress={() => console.log("Share")}
             />
             <ActionIcon
-              icon={require("../../../../assets/icons/heart.png")}
+              icon={<Heart size="24" color="#4a628a" variant="Bold" />}
               backgroundColor="bg-[#DFF2EB]"
-              tintColor="#4A628A"
               onPress={() => console.log("Heart")}
             />
           </View>

@@ -1,5 +1,4 @@
 import Button from "@/components/Button";
-import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { View, Text, TextInput, ImageBackground, ScrollView, ActivityIndicator } from "react-native";
@@ -7,6 +6,7 @@ import useUser from "@/hooks/useUser";
 import useBooking from "@/hooks/useBooking";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import Toast from "react-native-toast-message";
+import { ArrowLeft } from "iconsax-react-native";
 
 const ConfirmBooking = () => {
   const router = useRouter();
@@ -50,9 +50,8 @@ const ConfirmBooking = () => {
         {/* Header */}
         <View className="mt-8">
           <ActionIcon
-            icon={icons.arrowLeft}
+            icon={<ArrowLeft size="24" color="#DFF2EB" variant="Outline" />}
             backgroundColor="bg-[#4A628A]"
-            tintColor="#DFF2EB"
             onPress={() => router.push("/(root)/(tabs)")}
           />
           <Text className="text-[20px] text-center font-unbounded">Confirm Booking</Text>

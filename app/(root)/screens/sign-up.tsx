@@ -7,7 +7,10 @@ import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground, ActivityIndicator } from "react-native";
 import { SignUpSchema } from "@/utils/ValidationInput";
 import { ArrowLeft, Eye, EyeSlash } from "iconsax-react-native";
+<<<<<<< HEAD
 import icons from "@/constants/icons";
+=======
+>>>>>>> theanh
 
 const SignUp = () => {
   const router = useRouter();
@@ -118,7 +121,7 @@ const SignUp = () => {
                   onPress={() => setIsChecked(!isChecked)}
                   className={`size-6 rounded-md border-2 ${isChecked ? "border-[#4A628A]" : "border-[#4A628A]"}`}
                 >
-                  {isChecked && <Image source={icons.tickSquare} />}
+                  {isChecked && <Image source={require("../../../assets/icons/tick-square.png")} />}
                 </TouchableOpacity>
                 <Text className="ml-3 font-unbounded text-[13px]">
                   Agree with <Text className="font-unbounded-light underline">Term & Condition</Text>

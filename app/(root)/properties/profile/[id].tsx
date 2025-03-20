@@ -130,6 +130,7 @@ const ProfileDetail = () => {
             maxLength={50}
             textAlignVertical="center"
             numberOfLines={1}
+            editable={false}
             defaultValue={user?.UserName}
             onChangeText={(text) => handleInputChange("UserName", text)}
           />
@@ -158,6 +159,7 @@ const ProfileDetail = () => {
             placeholder="Enter your email"
             placeholderTextColor="#A9A9A9"
             keyboardType="email-address"
+            editable={false}
             defaultValue={user?.Email}
             onChangeText={(text) => handleInputChange("Email", text)}
           />

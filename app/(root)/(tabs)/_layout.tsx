@@ -28,7 +28,7 @@ const TabsLayout = () => {
 
   return (
     <Tabs
-      screenOptions={{
+      screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: "#4A628A",
@@ -45,7 +45,7 @@ const TabsLayout = () => {
           elevation: 6,
           display: shouldHideTabBar ? "none" : "flex",
         },
-      }}
+      })}
     >
       <Tabs.Screen
         name="index"
@@ -79,6 +79,7 @@ const TabsLayout = () => {
           title: "Chat",
           headerShown: false,
           tabBarIcon: () => <TabIcon icon={<MessageNotif size="32" color="#dff2eb" variant="Bold" />} title="Chat" />,
+          tabBarStyle: { display: "none" },
         }}
       />
       <Tabs.Screen

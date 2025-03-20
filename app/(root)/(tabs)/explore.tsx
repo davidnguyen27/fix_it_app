@@ -2,7 +2,7 @@ import ActionIcon from "@/components/ActionIcon";
 import useRepairService from "@/hooks/useService";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import { useRouter } from "expo-router";
-import { ArrowLeft, SearchNormal, User } from "iconsax-react-native";
+import { ArchiveTick, ArrowLeft, SearchNormal, User } from "iconsax-react-native";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -63,7 +63,7 @@ const Explore = () => {
       </View>
 
       <TouchableOpacity className="absolute top-3 right-3">
-        <Image source={require("../../../assets/icons/archive-tick.png")} resizeMode="contain" />
+        <ArchiveTick size="24" color="#4a628a" variant="Bold" />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -84,16 +84,16 @@ const Explore = () => {
         />
 
         {/* Search Input with Icons */}
-        <View className="flex-row items-center max-w-[225px] flex-1 ml-10 bg-white rounded-[21px] px-3.5 py-0.5">
+        <View className="flex-row items-center max-w-[225px] flex-1 ml-10 bg-white rounded-[21px] px-4 py-0.5">
           {/* Search Icon */}
           <TouchableOpacity>
-            <SearchNormal size="24" color="#292d32" />
+            <SearchNormal size="24" color="#292d32" variant="Outline" />
           </TouchableOpacity>
 
           {/* Input Field */}
           <TextInput
             placeholder="Find somethings..."
-            className="flex-1 text-[14px] font-unbounded-light ml-3.5"
+            className="flex-1 text-[14px] font-unbounded-light ml-3"
             value={searchTerm}
             onChangeText={setSearchTerm}
           />

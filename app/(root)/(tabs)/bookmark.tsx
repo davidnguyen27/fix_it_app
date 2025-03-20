@@ -43,7 +43,7 @@ const Bookmark = () => {
             {/* Service Badge */}
             <View className="flex-row items-center bg-[#7AB2D3] px-3 py-1 rounded-lg self-end">
               <TickCircle size="16" color="black" variant="Bold" />
-              <Text className="text-white text-[11px] font-unbounded-light ml-2">Proffesional Services</Text>
+              <Text className="text-white text-[11px] font-unbounded-light ml-2">Professional Services</Text>
             </View>
 
             {/* Service Info */}

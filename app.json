@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Fixit Right",
-    "slug": "Fixit Right",
+    "slug": "fixit-right",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon1.png",
@@ -48,6 +48,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6fde0d13-7aa1-4509-b52c-e9e19371c064"
+      }
     }
   }
 }

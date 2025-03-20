@@ -6,7 +6,10 @@ import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground, ActivityIndicator } from "react-native";
 import useAuth from "@/hooks/useAuth";
 import { Apple, ArrowLeft, Eye, EyeSlash } from "iconsax-react-native";
+<<<<<<< HEAD
 import icons from "@/constants/icons";
+=======
+>>>>>>> theanh
 
 const SignIn = () => {
   const router = useRouter();
@@ -114,7 +117,7 @@ const SignIn = () => {
             <Apple size="36" color="#000000" variant="Bold" />
           </TouchableOpacity>
           <TouchableOpacity className="p-4 mx-5 rounded-full bg-[#D9D9D9]">
-            <Image source={icons.google} />
+            <Image source={require("../../../assets/icons/google-logo.png")} />
           </TouchableOpacity>
           <TouchableOpacity className="p-4 rounded-full bg-[#D9D9D9]">
             <EvilIcons name="sc-facebook" size={36} color="black" />
