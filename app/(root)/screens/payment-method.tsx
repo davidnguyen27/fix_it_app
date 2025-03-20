@@ -2,11 +2,16 @@ import icons from "@/constants/icons";
 import ActionIcon from "@/components/ActionIcon";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { View, Text, TouchableOpacity, Image, ImageBackground, Modal } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { WebView } from "react-native-webview";
 import { authService } from "@/services/auth.service";
 import useUser from "@/hooks/useUser";
 import Button from "@/components/Button";
+<<<<<<< HEAD
+=======
+import { ArrowLeft, ArrowRight, CardAdd, EmptyWalletRemove, Money4 } from "iconsax-react-native";
+import * as Linking from "expo-linking";
+>>>>>>> 40a3624 (Testing project)
 
 const PaymentMethod = () => {
   const router = useRouter();
@@ -19,11 +24,37 @@ const PaymentMethod = () => {
   const amount = params.amount ? parseInt(params.amount as string, 10) : 0;
 
   const handleUrlChange = ({ url }: { url: string }) => {
-    if (url.includes("vnp_TransactionStatus=00")) {
+    if (url.includes("vnp_TransactionStatus=00") || url.includes("Success")) {
       setShowModal(false);
-      router.push("/profile");
+      router.push("/screens/payment-success");
     }
   };
+
+  useEffect(() => {
+    const handleDeepLink = (event: { url: string }) => {
+      const { path } = Linking.parse(event.url);
+      if (path === "payment-success") {
+        router.push("/screens/payment-success");
+      }
+    };
+
+    // Lắng nghe sự kiện deep link khi ứng dụng đang chạy
+    const subscription = Linking.addEventListener("url", handleDeepLink);
+
+    // Kiểm tra deep link khi ứng dụng mở từ trạng thái đóng
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        const { path } = Linking.parse(url);
+        if (path === "payment-success") {
+          router.push("/screens/payment-success");
+        }
+      }
+    });
+
+    return () => {
+      subscription.remove(); // Dọn dẹp listener
+    };
+  }, [router]);
 
   const handleConfirmPayment = async () => {
     if (!selectedMethod) {

@@ -1,8 +1,6 @@
 import axios, { AxiosInstance, AxiosError, AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
-import { BASE_URL } from "@/constants/baseUrl";
-// import { BASE_URL } from "@env";
 
 interface ErrorResponse {
   type?: string;
@@ -14,7 +12,7 @@ interface ErrorResponse {
 
 // Default Axios instance with loading effect
 const defaultAxiosInstance: AxiosInstance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
   headers: {
     "content-type": "application/json",
   },

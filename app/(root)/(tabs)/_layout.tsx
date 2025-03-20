@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Tabs, usePathname } from "expo-router";
 import { Bag2, Home2, MessageNotif, SearchNormal1, User } from "iconsax-react-native";
 import { ReactNode } from "react";
 import { Text, View } from "react-native";
@@ -22,6 +22,10 @@ const TabIcon = ({ icon, title }: TabIconProps) => (
 );
 
 const TabsLayout = () => {
+  const pathname = usePathname();
+
+  const shouldHideTabBar = pathname.includes("/chat");
+
   return (
     <Tabs
       screenOptions={{
@@ -39,6 +43,7 @@ const TabsLayout = () => {
           shadowOpacity: 0.25,
           shadowRadius: 4,
           elevation: 6,
+          display: shouldHideTabBar ? "none" : "flex",
         },
       }}
     >

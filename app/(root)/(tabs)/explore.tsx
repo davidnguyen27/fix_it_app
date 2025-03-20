@@ -1,8 +1,8 @@
 import ActionIcon from "@/components/ActionIcon";
-import icons from "@/constants/icons";
+import useRepairService from "@/hooks/useService";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import { useRouter } from "expo-router";
-import { ArrowLeft, SearchNormal } from "iconsax-react-native";
+import { ArrowLeft, SearchNormal, User } from "iconsax-react-native";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -13,30 +13,35 @@ import {
   ImageBackground,
   FlatList,
   ListRenderItem,
+  ActivityIndicator,
 } from "react-native";
 
 const Explore = () => {
   const router = useRouter();
-  const [originData, setOriginData] = useState([]);
-  const [dataService, setDataService] = useState([]);
+  const { services, isLoading, loadMore, setSearchParams } = useRepairService({
+    Active: true,
+    PageNumber: 1,
+    PageSize: 20,
+  });
   const [searchTerm, setSearchTerm] = useState<string>("");
-
-  const handleSearch = (text: string) => {
-    setSearchTerm(text);
-  };
-
-  const handleSearchData = () => {
-    if (!searchTerm) {
-      setDataService(originData);
-      return;
-    }
-    const dataFilter = originData.filter((item) => item?.Name?.toLowerCase().includes(searchTerm?.toLowerCase()));
-    setDataService(dataFilter);
-  };
+  const [filteredServices, setFilteredServices] = useState<Service[]>(services);
 
   useEffect(() => {
-    handleSearchData();
-  }, [searchTerm]);
+    setSearchParams((prev) => ({
+      ...prev,
+      SearchName: "",
+      PageNumber: 1,
+    }));
+  }, [setSearchParams]);
+
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilteredServices(services);
+    } else {
+      const filtered = services.filter((item) => item.Name.toLowerCase().includes(searchTerm.trim().toLowerCase()));
+      setFilteredServices(filtered);
+    }
+  }, [searchTerm, services]);
 
   const renderItem: ListRenderItem<Service> = ({ item }) => (
     <TouchableOpacity
@@ -51,7 +56,7 @@ const Explore = () => {
         </Text>
         <Text className="text-[15px] font-unbounded">{item.Name}</Text>
         <View className="flex-row items-center my-1">
-          <Image source={icons.user} className="size-5" tintColor="#4A628A" resizeMode="contain" />
+          <User size="20" color="#4a628a" variant="Bold" />
           <Text className="text-[9px] font-unbounded ml-2">Worker</Text>
         </View>
         <Text className="text-[15px] font-unbounded">{formatCurrencyVND(item.Price)} VND</Text>
@@ -90,26 +95,25 @@ const Explore = () => {
             placeholder="Find somethings..."
             className="flex-1 text-[14px] font-unbounded-light ml-3.5"
             value={searchTerm}
-            onChangeText={handleSearch}
+            onChangeText={setSearchTerm}
           />
         </View>
       </View>
 
       {/* Results Count */}
-      <Text className="text-[15px] font-unbounded mb-6">{dataService.length ?? 0} Results Found</Text>
+      <Text className="text-[15px] font-unbounded mb-6">{services.length ?? 0} Results Found</Text>
 
       {/* Result List */}
       <FlatList
-        data={dataService}
+        data={filteredServices}
         keyExtractor={(item) => item.Id}
+        extraData={filteredServices}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 72 }}
-        // onEndReached={loadMore}
+        onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-        // ListFooterComponent={
-        //   isLoading ? <ActivityIndicator size="large" color="#4A628A" /> : null
-        // }
+        ListFooterComponent={isLoading ? <ActivityIndicator size="large" color="#4A628A" /> : null}
       />
     </ImageBackground>
   );

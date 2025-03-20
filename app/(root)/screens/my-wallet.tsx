@@ -10,7 +10,7 @@ import { ArrowLeft } from "iconsax-react-native";
 
 const MyWallet = () => {
   const router = useRouter();
-  const { user } = useUser();
+  const { user, refetchUser } = useUser();
   const { transactions, isLoading, loadMore, refresh } = useTransaction({
     userId: user?.Id ?? "",
     PageNumber: 1,
@@ -20,6 +20,7 @@ const MyWallet = () => {
   const walletBalance = user?.Balance;
 
   useEffect(() => {
+    refetchUser();
     refresh();
   }, []);
 
