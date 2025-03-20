@@ -6,16 +6,8 @@ import { WebView } from "react-native-webview";
 import { authService } from "@/services/auth.service";
 import useUser from "@/hooks/useUser";
 import Button from "@/components/Button";
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import { ArrowLeft, ArrowRight, CardAdd, EmptyWalletRemove, Money4 } from "iconsax-react-native";
 import * as Linking from "expo-linking";
->>>>>>> 40a3624 (Testing project)
-=======
-import { ArrowLeft, ArrowRight, CardAdd, EmptyWalletRemove, Money4 } from "iconsax-react-native";
-import * as Linking from "expo-linking";
->>>>>>> theanh
 
 const PaymentMethod = () => {
   const router = useRouter();
