@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { View, Text, Image, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import ActionIcon from "@/components/ActionIcon";
 import { formatDateToYYYYMMDD, formatTimeToHHMMSS, generateDates } from "@/utils/DateFormat";
+import { isTimeDisabled, timeSlots } from "@/utils/TimeUtil"; // Import từ file util
 import useUser from "@/hooks/useUser";
 import useRepairService from "@/hooks/useService";
 import Button from "@/components/Button";
@@ -27,7 +28,7 @@ const ServiceDetail = () => {
   }, [id]);
 
   useEffect(() => {
-    setDates(generateDates()); // Gọi hàm tạo danh sách ngày
+    setDates(generateDates());
   }, []);
 
   const handleBooking = () => {
@@ -71,6 +72,8 @@ const ServiceDetail = () => {
     );
   }
 
+  const isTodaySelected = selectedDate === dates[0];
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       {/* Header */}
@@ -95,7 +98,6 @@ const ServiceDetail = () => {
           </View>
         </View>
 
-        {/* Service Image */}
         <View className="w-full items-center mt-16">
           <Image
             source={{ uri: service.Image }}
@@ -107,16 +109,13 @@ const ServiceDetail = () => {
 
       {/* Content */}
       <View className="bg-white h-full rounded-t-[46px] mt-[-50px] p-6">
-        {/* Category */}
         <Text className="text-[14px] font-unbounded-light bg-[#B9E5E8] px-2 py-1 rounded-[9px] self-start mb-2 ml-4">
           {service.Category.Name}
         </Text>
 
-        {/* Service Name */}
         <Text className="text-[24px] font-unbounded mb-2">{service.Name}</Text>
         <Text className="text-[14px] font-unbounded-light mb-4">HCM, Viet Nam</Text>
 
-        {/* Booking Section */}
         <Text className="text-[15px] font-unbounded mb-2">BOOK APPOINTMENT</Text>
 
         {/* Date Selection */}
@@ -128,7 +127,10 @@ const ServiceDetail = () => {
               className={`px-4 py-2 rounded-full min-w-[80px] items-center ${
                 selectedDate === day ? "bg-[#4A628A]" : "bg-[#B9E5E8]"
               }`}
-              onPress={() => setSelectedDate(day)}
+              onPress={() => {
+                setSelectedDate(day);
+                setSelectedTime(null); // Reset time khi đổi ngày
+              }}
             >
               <Text className={`text-[12px] text-center ${selectedDate === day ? "text-white" : "text-gray-700"}`}>
                 {index === 0 ? "Today" : day.split(" ")[0]}
@@ -145,26 +147,34 @@ const ServiceDetail = () => {
         {/* Time Selection */}
         <Text className="text-[40px] font-unbounded mb-2">Time</Text>
         <View className="flex-row flex-wrap gap-2 mb-4">
-          {["9:00 AM", "10:00 AM", "11:00 AM", "14:00 PM", "15:00 PM", "16:00 PM", "17:00 PM"].map((time, index) => (
-            <TouchableOpacity
-              key={index}
-              className={`px-4 py-2 rounded-full min-w-[80px] items-center ${
-                selectedTime === time ? "bg-[#4A628A]" : "bg-[#B9E5E8]"
-              }`}
-              onPress={() => setSelectedTime(time)}
-            >
-              <Text
-                className={`text-[15px] font-unbounded-light ${selectedTime === time ? "text-white" : "text-black"}`}
+          {timeSlots.map((time, index) => {
+            const disabled = isTimeDisabled(time, isTodaySelected);
+            return (
+              <TouchableOpacity
+                key={index}
+                className={`px-4 py-2 rounded-full min-w-[80px] items-center ${
+                  disabled ? "bg-gray-300" : selectedTime === time ? "bg-[#4A628A]" : "bg-[#B9E5E8]"
+                }`}
+                onPress={() => !disabled && setSelectedTime(time)}
+                disabled={disabled}
               >
-                {time.split(" ")[0]}
-              </Text>
-              <Text
-                className={`text-[15px] font-unbounded-medium ${selectedTime === time ? "text-white" : "text-black"}`}
-              >
-                {time.split(" ")[1]}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  className={`text-[15px] font-unbounded-light ${
+                    disabled ? "text-gray-500" : selectedTime === time ? "text-white" : "text-black"
+                  }`}
+                >
+                  {time.split(" ")[0]}
+                </Text>
+                <Text
+                  className={`text-[15px] font-unbounded-medium ${
+                    disabled ? "text-gray-500" : selectedTime === time ? "text-white" : "text-black"
+                  }`}
+                >
+                  {time.split(" ")[1]}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* Address Input */}
@@ -185,7 +195,6 @@ const ServiceDetail = () => {
           onChangeText={(text) => setNote(text)}
         />
 
-        {/* Booking Button */}
         <Button title="Booking" backgroundColor="bg-[#4A628A]" onPress={handleBooking} />
       </View>
     </ScrollView>
