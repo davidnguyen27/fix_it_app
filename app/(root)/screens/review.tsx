@@ -7,7 +7,7 @@ import useLoading from "@/hooks/useLoading";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
-import { Star1, ArrowLeft, Heart, Share } from "iconsax-react-native";
+import { ArrowLeft, Heart } from "iconsax-react-native";
 import { ratingService } from "@/services/rating.service";
 
 const Review = () => {
