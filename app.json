@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#4A628A"
-      }
+      },
+      "package": "com.theanhngujen.fixitright"
     },
     "web": {
       "bundler": "metro",
@@ -44,6 +45,14 @@
             "./assets/fonts/Unbounded-SemiBold.ttf",
             "./assets/fonts/Unbounded-Bold.ttf"
           ]
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.25"
+          }
         }
       ]
     ],
