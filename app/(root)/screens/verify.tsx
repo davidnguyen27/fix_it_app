@@ -8,7 +8,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  ImageBackground,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
   ActivityIndicator,
@@ -16,6 +15,7 @@ import {
 import { authService } from "@/services/auth.service";
 import useAuth from "@/hooks/useAuth";
 import { ArrowLeft, Eye, EyeSlash } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Verify = () => {
   const router = useRouter();
@@ -74,7 +74,7 @@ const Verify = () => {
   };
 
   return (
-    <ImageBackground source={require("../../../assets/images/bg-signup.png")} resizeMode="cover" className="flex-1">
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1">
       <View className="flex-1 px-6">
         <View className="mt-8">
           <ActionIcon
@@ -176,7 +176,7 @@ const Verify = () => {
           <Button title="Change Password" backgroundColor="bg-[#4A628A]" onPress={handleChangePassword} />
         )}
       </View>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

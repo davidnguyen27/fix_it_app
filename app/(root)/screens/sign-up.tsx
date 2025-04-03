@@ -4,9 +4,10 @@ import { Formik } from "formik";
 import { useRouter } from "expo-router";
 import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
 import { SignUpSchema } from "@/utils/ValidationInput";
-import { ArrowLeft, Eye, EyeSlash } from "iconsax-react-native";
+import { ArrowLeft, Eye, EyeSlash, TickSquare } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const SignUp = () => {
   const router = useRouter();
@@ -17,11 +18,15 @@ const SignUp = () => {
   const { signUp, isLoading } = useAuth();
 
   const handleRegister = (values: { username: string; email: string; password: string }) => {
+    if (!isChecked) {
+      alert("Please agree to the terms and conditions");
+      return;
+    }
     return signUp(values.username, values.email, values.password);
   };
 
   return (
-    <ImageBackground source={require("../../../assets/images/bg-signup.png")} resizeMode="cover" className="flex-1">
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 justify-center">
       <View className="flex-1 px-6">
         <View className="mt-8">
           <ActionIcon
@@ -115,10 +120,9 @@ const SignUp = () => {
               <View className="flex-row items-center mt-6 ml-4">
                 <TouchableOpacity
                   onPress={() => setIsChecked(!isChecked)}
-                  className={`size-6 rounded-md border-2 ${isChecked ? "border-[#4A628A]" : "border-[#4A628A]"}`}
+                  className="size-6 border-2 border-[#4A628A] rounded-md items-center justify-center"
                 >
-                  {isChecked && <Image source={require("../../../assets/icons/tick-square.png")} />}
-                  {isChecked && <Image source={require("../../../assets/icons/tick-square.png")} />}
+                  {isChecked && <TickSquare size="24" color="#4a628a" variant="Bold" />}
                 </TouchableOpacity>
                 <Text className="ml-3 font-unbounded text-[13px]">
                   Agree with <Text className="font-unbounded-light underline">Term & Condition</Text>
@@ -137,7 +141,7 @@ const SignUp = () => {
           )}
         </Formik>
       </View>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

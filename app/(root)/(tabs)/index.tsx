@@ -6,13 +6,15 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import Octicons from "@expo/vector-icons/Octicons";
 import PopularServiceItem from "@/components/PopularServiceItem";
 import { ElementEqual, Location, Notification, SearchNormal } from "iconsax-react-native";
-import { Alert, Image, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { images } from "@/constants/images";
 
 export default function Index() {
   return (
     <View className="flex-1">
       {/* Location and Search Bar */}
-      <ImageBackground source={require("../../../assets/images/Rectangle 4.png")} className="px-4 pt-2 pb-4">
+      <LinearGradient colors={["#DFF2EB87", "#7AB2D387"]} locations={[0.0, 1.0]} className="px-4 pt-2 pb-4">
         <View className="flex-row justify-between">
           <View className="flex-row items-center">
             <Text className="font-unbounded text-[18px] mr-1.5">Location</Text>
@@ -30,7 +32,7 @@ export default function Index() {
           <SearchNormal size="24" color="#292d32" variant="Outline" />
           <TextInput placeholder="Search Service" className="ml-2 flex-1 font-unbounded-light text-black text-[14px]" />
         </View>
-      </ImageBackground>
+      </LinearGradient>
 
       {/* Special For You */}
       <View className="px-5 mt-2">
@@ -38,10 +40,7 @@ export default function Index() {
           <Text className="font-unbounded text-[15px]">#SpecialForYou</Text>
           <Text className="font-unbounded text-[12px]">See all</Text>
         </View>
-        <Image
-          source={require("../../../assets/images/tho_sua_may_lanh.png")}
-          className="w-full rounded-[28px] mt-4 mx-auto"
-        />
+        <Image source={images.AirConditioner} className="w-full rounded-[28px] mt-4 mx-auto" />
       </View>
 
       {/* Category Section */}
@@ -92,8 +91,14 @@ export default function Index() {
           <Text className="font-unbounded text-[12px]">See all</Text>
         </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row mt-2">
-          <PopularServiceItem onPress={() => Alert.alert("Function not supported yet!")} />
-          <PopularServiceItem onPress={() => Alert.alert("Function not supported yet!")} />
+          <PopularServiceItem
+            image={images.PopularService1}
+            onPress={() => Alert.alert("Function not supported yet!")}
+          />
+          <PopularServiceItem
+            image={images.PopularService2}
+            onPress={() => Alert.alert("Function not supported yet!")}
+          />
         </ScrollView>
       </View>
     </View>

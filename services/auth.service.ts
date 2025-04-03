@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { defaultAxiosInstance } from "./axiosConfig";
+import { defaultAxiosInstance } from "../config/axios.config";
 
 export const authService = {
   registerUser: async (data: { UserName: string; Email: string; Password: string }) => {
@@ -31,23 +31,12 @@ export const authService = {
   },
 
   forgetPassword: async (email: string) => {
-    const response = await defaultAxiosInstance.post(
-      "/api/authentications/password-forgeting",
-      email
-    );
+    const response = await defaultAxiosInstance.post("/api/authentications/password-forgeting", email);
     return response;
   },
 
-  resetPassword: async (data: {
-    Email: string;
-    Token: string;
-    Password: string;
-    ConfirmPassword: string;
-  }) => {
-    const response = await defaultAxiosInstance.put(
-      "/api/authentications/password-forgeting",
-      data
-    );
+  resetPassword: async (data: { Email: string; Token: string; Password: string; ConfirmPassword: string }) => {
+    const response = await defaultAxiosInstance.put("/api/authentications/password-forgeting", data);
     return response.data;
   },
 

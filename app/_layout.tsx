@@ -1,12 +1,13 @@
-import { SplashScreen, Stack } from "expo-router";
 import "./global.css";
+import { useEffect } from "react";
+import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
-import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import GlobalProvider from "@/context/GlobalProvider";
-import LandingScreen from "./landing"; // Import LoadingScreen component
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-export default function AppLayout() {
+export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     "Unbounded-Bold": require("../assets/fonts/Unbounded-Bold.ttf"),
     "Unbounded-Light": require("../assets/fonts/Unbounded-Light.ttf"),
@@ -16,25 +17,21 @@ export default function AppLayout() {
     "Unbounded-SemiBold": require("../assets/fonts/Unbounded-SemiBold.ttf"),
   });
 
-  const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     if (fontsLoaded) {
-      setTimeout(() => {
-        setIsLoading(false);
-        SplashScreen.hideAsync();
-      }, 3000);
+      SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
 
-  if (isLoading) {
-    return <LandingScreen />;
-  }
+  if (!fontsLoaded) return null;
 
   return (
     <GlobalProvider>
-      <Stack screenOptions={{ headerShown: false }} />
-      <Toast />
+      <SafeAreaProvider>
+        <StatusBar style="dark" backgroundColor="transparent" translucent />
+        <Stack screenOptions={{ headerShown: false }} />
+        <Toast />
+      </SafeAreaProvider>
     </GlobalProvider>
   );
 }

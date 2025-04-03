@@ -29,7 +29,6 @@ const usePagination = <T, TParams>(
     async (params: TParams, isLoadMore = false) => {
       if (loading) return;
       await withLoading(async () => {
-        console.log("Fetching data with params in usePagination:", params);
         const response = await fetchFunction(params);
         setData((prev) => (isLoadMore ? [...prev, ...response.data] : response.data));
         setMetaData(response.metaData);

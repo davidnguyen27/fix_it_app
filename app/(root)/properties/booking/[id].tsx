@@ -1,12 +1,13 @@
 import ActionIcon from "@/components/ActionIcon";
-import Button from "@/components/Button";
+import ButtonGradient from "@/components/ButtonGradient";
 import useUser from "@/hooks/useUser";
 import useBooking from "@/hooks/useBooking";
 import { ArrowLeft, User } from "iconsax-react-native";
-import { View, Text, Image, ImageBackground } from "react-native";
+import { View, Text, Image } from "react-native";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect } from "react";
+import { LinearGradient } from "expo-linear-gradient";
 
 const BookingDetail = () => {
   const router = useRouter();
@@ -14,33 +15,25 @@ const BookingDetail = () => {
   const { user } = useUser() as { user: User | null };
   const { bookingDetail, fetchBookingDetail } = useBooking();
 
-  // Gọi API để lấy thông tin chi tiết booking
   useEffect(() => {
     if (id) fetchBookingDetail(id);
   }, [id]);
 
   const handleContinue = () => {
-    console.log("Continue pressed for booking:", id);
     router.push(`/screens/review?id=${id}`);
   };
 
   return (
-    <ImageBackground
-      source={require("../../../../assets/images/background2.png")}
-      resizeMode="cover"
-      className="flex-1 px-6 py-6"
-    >
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 px-6 py-6">
       {/* Header */}
-      <View className="flex-row justify-between items-center mb-6">
+      <View className="flex-row justify-between items-center">
         <ActionIcon
           icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
           backgroundColor="bg-[#4A628A]"
           onPress={() => router.back()}
         />
-        <Text className="text-[20px] font-unbounded-bold text-center flex-1">Review Summary</Text>
       </View>
-
-      <View className="size-10" />
+      <Text className="text-[20px] font-unbounded-bold text-center mb-6">Review Summary</Text>
 
       {/* Service Info */}
       <View className="flex-row items-center mb-4 bg-white p-4 rounded-[15px] shadow-lg">
@@ -90,8 +83,8 @@ const BookingDetail = () => {
       </View>
 
       {/* Rating Button */}
-      <Button backgroundColor="bg-[#3E586A]" onPress={handleContinue} title="Continue" />
-    </ImageBackground>
+      <ButtonGradient colors={["#3E586A", "#131A24"]} onPress={handleContinue} title="Continue" />
+    </LinearGradient>
   );
 };
 

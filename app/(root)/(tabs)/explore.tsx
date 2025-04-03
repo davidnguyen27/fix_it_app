@@ -1,6 +1,7 @@
 import ActionIcon from "@/components/ActionIcon";
 import useRepairService from "@/hooks/useService";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { ArchiveTick, ArrowLeft, SearchNormal, User } from "iconsax-react-native";
 import { useEffect, useState } from "react";
@@ -10,7 +11,6 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  ImageBackground,
   FlatList,
   ListRenderItem,
   ActivityIndicator,
@@ -69,11 +69,7 @@ const Explore = () => {
   );
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/background2.png")}
-      className="flex-1 px-6 py-2"
-      resizeMode="cover"
-    >
+    <LinearGradient colors={["#B9E5E887", "#4A628A87"]} locations={[0.0, 0.92]} className="flex-1 px-6 py-2">
       {/* Header */}
       <View className="flex-row items-center mt-4 mb-8">
         {/* Back Icon */}
@@ -115,7 +111,7 @@ const Explore = () => {
         onEndReachedThreshold={0.5}
         ListFooterComponent={isLoading ? <ActivityIndicator size="large" color="#4A628A" /> : null}
       />
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

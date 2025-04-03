@@ -1,6 +1,6 @@
 import ActionIcon from "@/components/ActionIcon";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, TouchableOpacity, Image, ImageBackground, Modal } from "react-native";
+import { View, Text, TouchableOpacity, Image, Modal } from "react-native";
 import { useEffect, useState } from "react";
 import { WebView } from "react-native-webview";
 import { authService } from "@/services/auth.service";
@@ -8,6 +8,8 @@ import useUser from "@/hooks/useUser";
 import Button from "@/components/Button";
 import { ArrowLeft, ArrowRight, CardAdd, EmptyWalletRemove, Money4 } from "iconsax-react-native";
 import * as Linking from "expo-linking";
+import { LinearGradient } from "expo-linear-gradient";
+import { icons } from "@/constants/icons";
 
 const PaymentMethod = () => {
   const router = useRouter();
@@ -73,11 +75,7 @@ const PaymentMethod = () => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/bg-signup.png")}
-      resizeMode="cover"
-      className="flex-1 justify-center"
-    >
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 justify-center">
       <View className="flex-1 px-6">
         {/* Header */}
         <View className="mt-8">
@@ -152,7 +150,7 @@ const PaymentMethod = () => {
             onPress={() => setSelectedMethod("momo")}
           >
             <View className="flex-row items-center space-x-3">
-              <Image source={require("../../../assets/icons/momo.png")} className="w-6 h-6" resizeMode="contain" />
+              <Image source={icons.Momo} className="w-6 h-6" resizeMode="contain" />
               <Text className="text-[14px] font-unbounded ml-2">Momo</Text>
             </View>
             <View
@@ -170,7 +168,7 @@ const PaymentMethod = () => {
             onPress={() => setSelectedMethod("payos")}
           >
             <View className="flex-row items-center space-x-3">
-              <Image source={require("../../../assets/icons/payos.png")} className="w-6 h-6" resizeMode="contain" />
+              <Image source={icons.Payos} className="w-6 h-6" resizeMode="contain" />
               <Text className="text-[14px] font-unbounded ml-2">Payos</Text>
             </View>
             <View
@@ -188,7 +186,7 @@ const PaymentMethod = () => {
             onPress={() => setSelectedMethod("applepay")}
           >
             <View className="flex-row items-center space-x-3">
-              <Image source={require("../../../assets/icons/apple-pay.png")} className="w-6 h-6" resizeMode="contain" />
+              <Image source={icons.ApplePay} className="w-6 h-6" resizeMode="contain" />
               <Text className="text-[14px] font-unbounded ml-2">Apple Pay</Text>
             </View>
             <View
@@ -220,7 +218,7 @@ const PaymentMethod = () => {
           )}
         </View>
       </Modal>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

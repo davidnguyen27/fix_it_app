@@ -1,9 +1,10 @@
 import { ArrowLeft, Send2, AttachSquare } from "iconsax-react-native";
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image, ImageBackground } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image } from "react-native";
 import ActionIcon from "@/components/ActionIcon";
 import Feather from "@expo/vector-icons/Feather";
 import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface Message {
   id: string;
@@ -60,7 +61,7 @@ const Chat = () => {
   );
 
   return (
-    <ImageBackground source={require("../../../assets/images/background2.png")} resizeMode="cover" className="flex-1">
+    <LinearGradient colors={["#E9F3F1", "#4A628A"]} locations={[0.0, 1.0]} className="flex-1">
       {/* Header */}
       <View className="flex-row items-center justify-between px-5 mt-8">
         <ActionIcon
@@ -108,7 +109,7 @@ const Chat = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

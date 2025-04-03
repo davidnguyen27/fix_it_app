@@ -1,4 +1,4 @@
-import { defaultAxiosInstance } from "./axiosConfig";
+import { defaultAxiosInstance } from "../config/axios.config";
 
 export const ratingService = {
   getRating: async (data: Rating) => {

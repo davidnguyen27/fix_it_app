@@ -1,13 +1,14 @@
-import Button from "@/components/Button";
+import ButtonGradient from "@/components/ButtonGradient";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { TickCircle } from "iconsax-react-native";
-import { View, Text, ImageBackground } from "react-native";
+import { View, Text } from "react-native";
 
 const PaymentSuccess = () => {
   const router = useRouter();
 
   return (
-    <ImageBackground source={require("../../../assets/images/bg-signup.png")} className="flex-1 items-center px-4">
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 items-center px-4">
       {/* Icon Check */}
       <View className="mt-6">
         <TickCircle size="272" color="#4a628a" variant="Bold" />
@@ -20,14 +21,14 @@ const PaymentSuccess = () => {
         You can check your booking on the menu profile.
       </Text>
 
-      <Button title="View E-Receipt" backgroundColor="bg-[#131A24]" onPress={() => console.log("Button")} />
-      <Button
+      <ButtonGradient title="View E-Receipt" colors={["#3E586A", "#131A24"]} onPress={() => console.log("Button")} />
+      <ButtonGradient
         title="View My Booking"
-        backgroundColor="bg-[#131A24]"
+        colors={["#3E586A", "#131A24"]}
         onPress={() => router.push("/screens/my-booking")}
       />
-      <Button title="Continue" backgroundColor="bg-[#131A24]" onPress={() => router.push("/profile")} />
-    </ImageBackground>
+      <ButtonGradient title="Continue" colors={["#3E586A", "#131A24"]} onPress={() => router.push("/profile")} />
+    </LinearGradient>
   );
 };
 

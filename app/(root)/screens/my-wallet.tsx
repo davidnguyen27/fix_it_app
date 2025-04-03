@@ -1,16 +1,17 @@
 import ActionIcon from "@/components/ActionIcon";
 import useUser from "@/hooks/useUser";
 import useTransaction from "@/hooks/useTransaction";
-import { View, Text, TouchableOpacity, FlatList, ImageBackground, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import { getTransactionCode } from "@/utils/TransactionCodeFormat";
 import { useEffect } from "react";
 import { ArrowLeft } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const MyWallet = () => {
   const router = useRouter();
-  const { user, refetchUser } = useUser();
+  const { user } = useUser();
   const { transactions, isLoading, loadMore, refresh } = useTransaction({
     userId: user?.Id ?? "",
     PageNumber: 1,
@@ -20,16 +21,11 @@ const MyWallet = () => {
   const walletBalance = user?.Balance;
 
   useEffect(() => {
-    refetchUser();
     refresh();
   }, []);
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/background2.png")}
-      className="flex-1 p-6"
-      resizeMode="cover"
-    >
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 p-6">
       {/* Back Button */}
       <ActionIcon
         icon={<ArrowLeft size="24" color="#dff2eb" variant="Outline" />}
@@ -93,7 +89,7 @@ const MyWallet = () => {
         onEndReachedThreshold={0.5}
         ListFooterComponent={isLoading ? <ActivityIndicator size="large" color="#4A628A" /> : null}
       />
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

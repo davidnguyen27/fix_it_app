@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, ImageBackground, FlatList, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, Image, FlatList, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import ActionIcon from "@/components/ActionIcon";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import useUser from "@/hooks/useUser";
 import useBooking from "@/hooks/useBooking";
 import { ArrowLeft, SearchNormal, User } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const tabs = ["Pending", "Accepted", "Completed", "Cancelled"];
 
@@ -92,9 +93,7 @@ const MyBooking = () => {
             {selectedTab === "Completed" && (
               <TouchableOpacity
                 className="px-8 py-3 bg-[#131A24] rounded-[15px]"
-                onPress={() => {
-                  router.push(`/properties/booking/${item.Id}`), console.log("BookingId: ", item.Id);
-                }}
+                onPress={() => router.push(`/properties/booking/${item.Id}`)}
               >
                 <Text className="text-[11px] font-unbounded-medium text-white">E-Receipt</Text>
               </TouchableOpacity>
@@ -115,7 +114,7 @@ const MyBooking = () => {
   );
 
   return (
-    <ImageBackground source={require("../../../assets/images/bg-signup.png")} className="flex-1 px-6 py-6">
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 px-6 py-6">
       {/* Header */}
       <View className="mb-8">
         <View className="flex-row justify-between items-center ">
@@ -159,7 +158,7 @@ const MyBooking = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 64 }}
       />
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

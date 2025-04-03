@@ -6,9 +6,11 @@ import useBooking from "@/hooks/useBooking";
 import useLoading from "@/hooks/useLoading";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { ArrowLeft, Heart } from "iconsax-react-native";
 import { ratingService } from "@/services/rating.service";
+import { LinearGradient } from "expo-linear-gradient";
+import Toast from "react-native-toast-message";
 
 const Review = () => {
   const router = useRouter();
@@ -29,8 +31,13 @@ const Review = () => {
         Score: rating,
         Comment: reviewText,
       });
+      Toast.show({
+        type: "success",
+        text1: "Your review has been submitted successfully.",
+      });
       setRating(0);
       setReviewText("");
+      router.push("/(root)/(tabs)");
     });
   };
 
@@ -47,8 +54,7 @@ const Review = () => {
   };
 
   return (
-    <ImageBackground source={require("../../../assets/images/background2.png")} className="flex-1">
-      {/* Action Icons */}
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1">
       <View className="absolute top-6 left-4 flex-row gap-4 z-10">
         <ActionIcon
           icon={<ArrowLeft size={24} color="#DFF2EB" />}
@@ -101,7 +107,7 @@ const Review = () => {
         {/* Submit Button */}
         <Button backgroundColor="bg-[#0A296D]" onPress={handleSubmit} title="Submit" />
       </View>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

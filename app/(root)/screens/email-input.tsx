@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { View, Text, TextInput, ImageBackground, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import Button from "@/components/Button";
 import ActionIcon from "@/components/ActionIcon";
 import useAuth from "@/hooks/useAuth";
 import { ArrowLeft } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const EmailInput = () => {
   const router = useRouter();
@@ -19,7 +20,7 @@ const EmailInput = () => {
   };
 
   return (
-    <ImageBackground source={require("../../../assets/images/bg-signup.png")} resizeMode="cover" className="flex-1">
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 justify-center">
       <View className="flex-1 px-6">
         <View className="mt-8">
           <ActionIcon
@@ -59,7 +60,7 @@ const EmailInput = () => {
           <Button title="Next" backgroundColor="bg-[#4A628A]" onPress={handleNext} />
         )}
       </View>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

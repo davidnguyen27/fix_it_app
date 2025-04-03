@@ -1,9 +1,10 @@
 import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { ArrowLeft, Eye, EyeSlash } from "iconsax-react-native";
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, ImageBackground } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
 
 const ResetPassword = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -11,7 +12,7 @@ const ResetPassword = () => {
   const router = useRouter();
 
   return (
-    <ImageBackground source={require("../../../assets/images/bg-signup.png")} resizeMode="cover" className="flex-1">
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 justify-center">
       <ScrollView className="flex-1 px-6">
         <View className="mt-8">
           <ActionIcon
@@ -77,7 +78,7 @@ const ResetPassword = () => {
         {/* button */}
         <Button title="Create New Password" backgroundColor="bg-[#4A628A]" onPress={() => console.log("change pass")} />
       </ScrollView>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

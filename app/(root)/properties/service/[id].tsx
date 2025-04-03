@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { View, Text, Image, ScrollView, ActivityIndicator, TextInput, TouchableOpacity } from "react-native";
 import ActionIcon from "@/components/ActionIcon";
 import { formatDateToYYYYMMDD, formatTimeToHHMMSS, generateDates } from "@/utils/DateFormat";
-import { isTimeDisabled, timeSlots } from "@/utils/TimeUtil"; // Import từ file util
+import { isTimeDisabled, timeSlots } from "@/utils/TimeUtil";
 import useUser from "@/hooks/useUser";
 import useRepairService from "@/hooks/useService";
-import Button from "@/components/Button";
+import ButtonGradient from "@/components/ButtonGradient";
 import { ArrowLeft, Heart } from "iconsax-react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 
@@ -195,7 +195,7 @@ const ServiceDetail = () => {
           onChangeText={(text) => setNote(text)}
         />
 
-        <Button title="Booking" backgroundColor="bg-[#4A628A]" onPress={handleBooking} />
+        <ButtonGradient title="Booking" colors={["#557A92", "#131A24"]} onPress={handleBooking} />
       </View>
     </ScrollView>
   );

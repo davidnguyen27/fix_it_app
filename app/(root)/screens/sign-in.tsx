@@ -3,9 +3,10 @@ import Button from "@/components/Button";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import useAuth from "@/hooks/useAuth";
 import { Apple, ArrowLeft, Eye, EyeSlash } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const SignIn = () => {
   const router = useRouter();
@@ -21,18 +22,14 @@ const SignIn = () => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/bg-signup.png")}
-      resizeMode="cover"
-      className="flex-1 justify-center"
-    >
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 justify-center">
       <View className="flex-1 px-6">
         {/* Header */}
         <View className="mt-8">
           <ActionIcon
             icon={<ArrowLeft size="28" color="#dff2eb" variant="Outline" />}
             backgroundColor="bg-[#4A628A]"
-            onPress={() => router.push("/(root)/(tabs)")}
+            onPress={() => router.dismissAll()}
           />
           <Text className="text-[20px] text-center font-unbounded">Sign In</Text>
         </View>
@@ -114,7 +111,6 @@ const SignIn = () => {
           </TouchableOpacity>
           <TouchableOpacity className="p-4 mx-5 rounded-full bg-[#D9D9D9]">
             <Image source={require("../../../assets/icons/google-logo.png")} />
-            <Image source={require("../../../assets/icons/google-logo.png")} />
           </TouchableOpacity>
           <TouchableOpacity className="p-4 rounded-full bg-[#D9D9D9]">
             <EvilIcons name="sc-facebook" size={36} color="black" />
@@ -125,7 +121,7 @@ const SignIn = () => {
           Don’t have an account? <Text className="font-unbounded underline">Sign Up</Text>
         </Link>
       </View>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

@@ -1,5 +1,4 @@
 import { GestureResponderEvent, Text, TouchableOpacity } from "react-native";
-import React from "react";
 
 interface ButtonProps {
   title: string;
@@ -13,9 +12,7 @@ const Button = ({ title, onPress, backgroundColor }: ButtonProps) => {
       onPress={onPress}
       className={`${backgroundColor} px-4 py-3 mx-auto mt-10 w-[287px] rounded-[15px] items-center`}
     >
-      <Text className="text-[#DFF2EB] font-unbounded-medium text-[13px]">
-        {title}
-      </Text>
+      <Text className="text-[#DFF2EB] font-unbounded-medium text-[13px]">{title}</Text>
     </TouchableOpacity>
   );
 };

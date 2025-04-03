@@ -1,8 +1,9 @@
-import { View, Text, Image, FlatList, TouchableOpacity, ImageBackground, ActivityIndicator } from "react-native";
+import { View, Text, Image, FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import { ArrowLeft, SearchNormal, TickCircle } from "iconsax-react-native";
 import ActionIcon from "@/components/ActionIcon";
 import { useRouter } from "expo-router";
 import useRepairService from "@/hooks/useService";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Bookmark = () => {
   const router = useRouter();
@@ -14,7 +15,7 @@ const Bookmark = () => {
   });
 
   return (
-    <ImageBackground source={require("../../../assets/images/bg-signup.png")} className="flex-1 px-4 py-6">
+    <LinearGradient colors={["#B9E5E887", "#4A628A87"]} locations={[0.0, 0.92]} className="flex-1 px-4 py-6">
       {/* Header */}
       <View className="flex-row justify-between items-center border-b-hairline border-[#5A5A5A] mb-4 pb-4">
         <ActionIcon
@@ -52,13 +53,6 @@ const Bookmark = () => {
               <View className="flex-1">
                 <Text className="text-[14px] font-unbounded-medium">{item.Name}</Text>
                 <Text className="text-[11px] font-unbounded-light">{item.Category.Name}</Text>
-
-                {/* Rating */}
-                {/* <View className="flex-row items-center mt-2">
-                  <Text className="text-[14px] text-yellow-500">⭐⭐⭐⭐⭐</Text>
-                  <Text className="text-[11px] font-unbounded-medium ml-2">{item.rating}</Text>
-                  <Text className="text-[11px] font-unbounded-light ml-1">| {item.reviews} Reviews</Text>
-                </View> */}
               </View>
             </View>
 
@@ -72,7 +66,7 @@ const Bookmark = () => {
           </View>
         )}
       />
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

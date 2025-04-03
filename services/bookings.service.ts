@@ -1,4 +1,4 @@
-import { defaultAxiosInstance } from "./axiosConfig";
+import { defaultAxiosInstance } from "../config/axios.config";
 
 export interface BookingDataRequest {
   CustomerId: string;
@@ -23,7 +23,6 @@ export const bookingService = {
   },
 
   searchBookings: async (params: SearchBookingParams) => {
-    console.log("Sending API Request with body:", params);
     const response = await defaultAxiosInstance.post(
       `/api/bookings/get-bookings-by-customer/${params.customerId}?Status=${params.Status}&PageNumber=${params.PageNumber}&PageSize=${params.PageSize}`,
       {

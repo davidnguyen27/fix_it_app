@@ -1,8 +1,9 @@
 import ActionIcon from "@/components/ActionIcon";
 import { ArrowLeft } from "iconsax-react-native";
-import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 const EnterAmount = () => {
   const router = useRouter();
@@ -22,7 +23,7 @@ const EnterAmount = () => {
   };
 
   return (
-    <ImageBackground source={require("../../../assets/images/bg-signup.png")} className="flex-1 justify-center">
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 justify-center">
       <View className="px-6">
         {/* Header */}
         <View className="mt-8">
@@ -48,7 +49,7 @@ const EnterAmount = () => {
           <Text className="text-white text-center text-lg font-unbounded-semiBold">Continue</Text>
         </TouchableOpacity>
       </View>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

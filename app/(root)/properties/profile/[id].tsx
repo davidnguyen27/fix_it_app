@@ -1,34 +1,31 @@
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  ImageBackground,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, TextInput, ScrollView, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ActionIcon from "@/components/ActionIcon";
 import Button from "@/components/Button";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import useUser from "@/hooks/useUser";
 import * as ImagePicker from "expo-image-picker";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { storage } from "@/config/firebase";
+import { storage } from "@/config/firebase.config";
 import { ArrowDown2, ArrowLeft, Edit2 } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ProfileDetail = () => {
   const router = useRouter();
-  const { user, setUser } = useGlobalContext();
-  const { update, refetchUser, isLoading } = useUser();
+  const { user } = useGlobalContext();
+  const { update, isLoading } = useUser();
 
+  const [localUser, setLocalUser] = useState<User | null>(user);
   const [isGenderPickerVisible, setIsGenderPickerVisible] = useState(false);
 
+  useEffect(() => {
+    setLocalUser(user);
+  }, [user]);
+
   const handleInputChange = (field: keyof User, value: string) => {
-    if (user) {
-      setUser({ ...user, [field]: value });
+    if (localUser) {
+      setLocalUser({ ...localUser, [field]: value });
     }
   };
 
@@ -75,12 +72,13 @@ const ProfileDetail = () => {
   };
 
   const handleUpdate = async () => {
-    update();
-    refetchUser();
+    if (localUser) {
+      await update(localUser);
+    }
   };
 
   return (
-    <ImageBackground source={require("../../../../assets/images/bg-signup.png")} resizeMode="cover" className="flex-1">
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1">
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1 px-6">
         {/* Header */}
         <View className="mt-8">
@@ -95,7 +93,7 @@ const ProfileDetail = () => {
         {/* Avatar */}
         <View className="items-center mt-5 mb-6">
           <View className="relative">
-            <Image source={{ uri: user?.Avatar }} className="size-[150px] bg-[#B9E5E8] rounded-full" />
+            <Image source={{ uri: localUser?.Avatar }} className="size-[150px] bg-[#B9E5E8] rounded-full" />
             <TouchableOpacity
               className="absolute bottom-0 right-2 size-[35px] bg-[#4A628A] rounded-full border-2 border-[#97C9E3] flex items-center justify-center"
               onPress={pickImage}
@@ -115,7 +113,7 @@ const ProfileDetail = () => {
             maxLength={50}
             textAlignVertical="center"
             numberOfLines={1}
-            defaultValue={user?.Fullname}
+            defaultValue={localUser?.Fullname}
             onChangeText={(text) => handleInputChange("Fullname", text)}
           />
         </View>
@@ -131,7 +129,7 @@ const ProfileDetail = () => {
             textAlignVertical="center"
             numberOfLines={1}
             editable={false}
-            defaultValue={user?.UserName}
+            defaultValue={localUser?.UserName}
             onChangeText={(text) => handleInputChange("UserName", text)}
           />
         </View>
@@ -146,7 +144,7 @@ const ProfileDetail = () => {
             maxLength={50}
             textAlignVertical="center"
             numberOfLines={1}
-            defaultValue={user?.Address}
+            defaultValue={localUser?.Address}
             onChangeText={(text) => handleInputChange("Address", text)}
           />
         </View>
@@ -160,7 +158,7 @@ const ProfileDetail = () => {
             placeholderTextColor="#A9A9A9"
             keyboardType="email-address"
             editable={false}
-            defaultValue={user?.Email}
+            defaultValue={localUser?.Email}
             onChangeText={(text) => handleInputChange("Email", text)}
           />
         </View>
@@ -172,7 +170,7 @@ const ProfileDetail = () => {
             className="bg-[#DFF2EB] rounded-2xl px-4 py-4 flex-row justify-between items-center"
             onPress={() => setIsGenderPickerVisible(!isGenderPickerVisible)}
           >
-            <Text className="font-unbounded-light">{user?.Gender || "Select"} </Text>
+            <Text className="font-unbounded-light">{localUser?.Gender || "Select"} </Text>
             <ArrowDown2 size="16" color="#000000" />
           </TouchableOpacity>
           {isGenderPickerVisible && (
@@ -194,7 +192,7 @@ const ProfileDetail = () => {
         </View>
 
         {/* Continue button */}
-        <View className="mt-2">
+        <View className="mt-6 mb-8">
           {isLoading ? (
             <ActivityIndicator size="large" />
           ) : (
@@ -202,7 +200,7 @@ const ProfileDetail = () => {
           )}
         </View>
       </ScrollView>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

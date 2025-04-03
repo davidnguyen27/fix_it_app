@@ -1,4 +1,4 @@
-import { defaultAxiosInstance } from "./axiosConfig";
+import { defaultAxiosInstance } from "../config/axios.config";
 
 export interface SearchServiceParams {
   Active: boolean;

@@ -1,9 +1,9 @@
 import { authService } from "@/services/auth.service";
 import useLoading from "./useLoading";
-import { useGlobalContext } from "@/context/GlobalProvider";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const useAuth = () => {
   const router = useRouter();
@@ -37,10 +37,13 @@ const useAuth = () => {
   };
 
   const logout = async () => {
-    withLoading(async () => {
+    await withLoading(async () => {
       await AsyncStorage.multiRemove(["AccessToken", "RefreshToken"]);
+      router.dismissAll();
       setUser(null);
-      router.push("/(root)/(tabs)");
+      // setTimeout(() => {
+      //   setUser(null);
+      // }, 100);
     });
   };
 

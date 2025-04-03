@@ -1,12 +1,14 @@
 import Button from "@/components/Button";
 import ActionIcon from "@/components/ActionIcon";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, TextInput, ImageBackground, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, TextInput, ScrollView, ActivityIndicator } from "react-native";
 import useUser from "@/hooks/useUser";
 import useBooking from "@/hooks/useBooking";
 import { formatCurrencyVND } from "@/utils/CurrencyFormat";
 import Toast from "react-native-toast-message";
 import { ArrowLeft } from "iconsax-react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import ButtonGradient from "@/components/ButtonGradient";
 
 const ConfirmBooking = () => {
   const router = useRouter();
@@ -41,11 +43,7 @@ const ConfirmBooking = () => {
   };
 
   return (
-    <ImageBackground
-      source={require("../../../assets/images/bg-signup.png")}
-      resizeMode="cover"
-      className="flex-1 justify-center"
-    >
+    <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0, 0.92]} className="flex-1 justify-center">
       <ScrollView className="flex-1 px-6">
         {/* Header */}
         <View className="mt-8">
@@ -166,15 +164,15 @@ const ConfirmBooking = () => {
         </View>
 
         {/* Booking button */}
-        <View className="mt-8">
+        <View className="mt-6 mb-8">
           {isLoading ? (
             <ActivityIndicator size="large" color="#4A628A" />
           ) : (
-            <Button title="Booking" backgroundColor="bg-[#4A628A]" onPress={handleBooking} />
+            <ButtonGradient title="Booking" colors={["#3E586A", "#131A24"]} onPress={handleBooking} />
           )}
         </View>
       </ScrollView>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 

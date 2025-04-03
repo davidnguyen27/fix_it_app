@@ -51,13 +51,11 @@ const useBooking = (initialParams?: SearchBookingParams) => {
   const updateParams = useCallback((newParams: Partial<SearchBookingParams>) => {
     setParams((prev) => {
       const updatedParams = { ...prev, ...newParams };
-      console.log("Updated params in useBooking:", updatedParams);
       return updatedParams;
     });
   }, []);
 
   useEffect(() => {
-    console.log("Fetching with params:", params);
     refreshPagination(params);
   }, [params]);
 

@@ -2,7 +2,7 @@ import ActionIcon from "@/components/ActionIcon";
 import MenuItem from "@/components/MenuItem";
 import useUser from "@/hooks/useUser";
 import useAuth from "@/hooks/useAuth";
-import { View, Text, Image, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import {
   ArrowLeft,
@@ -17,34 +17,30 @@ import {
   SecuritySafe,
   Setting2,
 } from "iconsax-react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 
 const ProfileScreen = () => {
   const router = useRouter();
   const { user } = useUser();
   const { logout } = useAuth();
 
-  const handleLogout = async () => {
-    logout();
-  };
-
   if (!user) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text className="text-lg font-unbounded text-[#292D32]">Please sign in to view your profile</Text>
-        <TouchableOpacity
-          onPress={() => router.push("/(root)/screens/sign-in")}
-          className="mt-5 py-2 px-6 bg-[#4A628A] rounded-lg"
-        >
-          <Text className="text-white text-[16px]">Sign In</Text>
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" color="#4A628A" />
+      </SafeAreaView>
     );
   }
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <View className="flex-1">
       {/* Header */}
-      <ImageBackground source={require("../../../assets/images/bg-profile.png")} className="h-56 overflow-hidden">
+      <LinearGradient colors={["#DFF2EB87", "#4A628A87"]} locations={[0.0, 1.0]} className="h-56 overflow-hidden">
         <View className="mt-5">
           <View className="ml-4">
             <ActionIcon
@@ -55,7 +51,7 @@ const ProfileScreen = () => {
           </View>
           <Text className="text-[#292D32] text-[20px] font-unbounded-semiBold text-center">Profile</Text>
         </View>
-      </ImageBackground>
+      </LinearGradient>
 
       {/* White Background Container */}
       <View className="bg-white rounded-t-[30px] -mt-7 px-6 flex-1">
